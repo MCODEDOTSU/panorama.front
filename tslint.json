@@ -1,0 +1,27 @@
+{
+  "defaultSeverity": "warning",
+  "extends": [
+    "tslint:recommended"
+  ],
+  "linterOptions": {
+    "exclude": [
+      "node_modules/**",
+      "src/domain/util/libraries/**",
+      "src/components/utils/datatable/VueJsDatatable/src/vue-datatable.vue",
+      "src/components/utils/datatable/VueJsDatatable/src/vue-datatable-pager.vue",
+      "src/components/utils/datatable/VueJsDatatable/src/vue-datatable-pager-button.vue",
+      "src/components/utils/datatable/VueJsDatatable/src/vue-datatable-header.vue",
+      "src/components/utils/datatable/VueJsDatatable/src/vue-datatable-cell.vue"
+    ]
+  },
+  "rules": {
+    "quotemark": [true, "single"],
+    "indent": [true, "spaces", 2],
+    "interface-name": false,
+    "ordered-imports": false,
+    "object-literal-sort-keys": false,
+    "no-consecutive-blank-lines": false,
+    "no-shadowed-variable": false,
+    "max-line-length": [ true, 150 ]
+  }
+}

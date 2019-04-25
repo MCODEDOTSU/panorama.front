@@ -1,0 +1,54 @@
+<template>
+    <header class="manager">
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark nav-backround">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <router-link class="nav-link" to="/" tag="a">На главную <span class="sr-only"></span>
+                        </router-link>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuManagerLink"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Управление
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuManagerLink" v-if="userState.role === 'superadmin'">
+                            <router-link class="nav-link dropdown-item" to="/manager/contractors" tag="a">Контрагенты
+                            </router-link>
+                            <router-link class="nav-link dropdown-item" to="/manager/modules" tag="a">Модули
+                            </router-link>
+                            <router-link class="nav-link dropdown-item" to="/manager/layers" tag="a">Слои</router-link>
+                            <router-link class="nav-link dropdown-item" to="/manager/gis" tag="a">Картография
+                            </router-link>
+                        </div>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuManagerLink" v-else>
+                            <router-link class="nav-link dropdown-item" to="/manager/contractors/modules" tag="a">Модули
+                            </router-link>
+                            <router-link class="nav-link dropdown-item" to="/manager/gis" tag="a">Картография
+                            </router-link>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <router-link class="nav-link" to="/login" tag="a">Выйти <span class="sr-only"></span>
+                        </router-link>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+</template>
+<script lang="ts">
+
+    import {Component, Vue} from 'vue-property-decorator';
+    import {State} from 'vuex-class';
+    import UserState from '@/store/modules/user/types';
+
+    @Component({})
+    export default class Header extends Vue {
+        @State('user') public userState!: UserState;
+    }
+</script>

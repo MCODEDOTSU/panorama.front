@@ -1,0 +1,1 @@
+//# sourceMappingURL=IGeometry.js.map
