@@ -23,3 +23,5 @@ yarn-error.log*
 *.sw*
 
 /src/globals.ts
+/src/globals.js
+/src/globals.js.map

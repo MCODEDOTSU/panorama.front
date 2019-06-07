@@ -1,13 +1,16 @@
-# umgorod.front
+#### panorama.front
 
-## Project setup
+##### Project setup
 ```
 npm install
+copy example.globals.ts to globals.ts
+specify urls for backend
 ```
 
 ### Compiles and hot-reloads for development
 ```
 npm run serve
+tsc -w (to run typescript)
 ```
 
 ### Compiles for production and pushes to remote origin
@@ -36,6 +39,3 @@ npm run test:e2e
 ```
 npm run test:unit
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
