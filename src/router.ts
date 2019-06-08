@@ -13,6 +13,7 @@ import ClosedUsers from './views/closed/users/Users.vue';
 import ClosedModules from './views/closed/modules/Modules.vue';
 import ClosedLayers from './views/closed/layers/Layers.vue';
 import ClosedLayerCompositions from './views/closed/layerCompositions/LayerCompositions.vue';
+import TableConstructor from './views/closed/constructor/TableConstructor.vue';
 
 Vue.use(Router);
 
@@ -57,6 +58,9 @@ export default new Router({
               },
               {
                   path: '/manager/layer/:id', name: 'manager-layer-compositions', component: ClosedLayerCompositions,
+              },
+              {
+                  path: '/constructor/create_table', name: 'constructor-create-table', component: TableConstructor,
               },
           ],
       },
