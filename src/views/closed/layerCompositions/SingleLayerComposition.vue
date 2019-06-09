@@ -54,6 +54,11 @@
                             <layer-style-editor :geometryType="'point'"></layer-style-editor>
                         </b-tab>
 
+                        <!-- Форма - дополнительные поля конструктора -->
+                        <b-tab title="Форма" ref="style-tab">
+                            <table-constructor></table-constructor>
+                        </b-tab>
+
                     </b-tabs>
 
                 </div>
@@ -76,9 +81,10 @@
     import LayerStyleEditor from '@/components/utils/StyleEditor/LayerStyleEditor.vue';
     import StyleEditorState from '@/store/modules/components/utils/styleEditor/types';
     import {VueEditor} from 'vue2-editor';
+    import TableConstructor from '@/views/closed/constructor/TableConstructor.vue';
 
     @Component({
-        components: {LayerStyleEditor, VueEditor},
+        components: {LayerStyleEditor, VueEditor, TableConstructor},
     })
     export default class SingleLayerComposition extends Vue {
 

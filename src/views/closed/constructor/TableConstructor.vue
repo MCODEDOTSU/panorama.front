@@ -1,7 +1,5 @@
 <template>
     <div>
-        <div>Table constructor</div>
-
         <input type="text" class="form-control datatable-search" v-model="tableName" placeholder="Произвольное название таблицы">
 
         <div class="row" v-for="tableField in tableFields">
@@ -15,6 +13,9 @@
             <div class="col-6">
                 <input type="text" class="form-control" placeholder="Наименование поля" v-model="tableField.title">
             </div>
+            <div class="col-2">
+                <input type="checkbox" class="form-control" placeholder="Обязательное" v-model="tableField.required">
+            </div>
         </div>
 
         <button @click="addField">Добавить поле</button>
@@ -27,26 +28,28 @@
     import axios from 'axios';
     import {baseUrlAPI} from '@/globals';
     import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
+    import TableField from '@/domain/entities/constructor/TableField';
 
     @Component
     export default class TableConstructor extends Vue {
 
         private tableName: string = '';
 
-        private tableFields: Array = [];
+        private tableFields: TableField[] = [];
 
         private addField() {
             this.tableFields.push({
                 type: '',
                 title: '',
+                required: false,
             });
         }
 
         private async createTable() {
             try {
-                const res = await axios.post(`${baseUrlAPI}constructor_create`, {
+                const res = await axios.post(`${baseUrlAPI}constructor/constructor_create`, {
                     table_title: this.tableName,
-                    columns: this.tableFields
+                    columns: this.tableFields,
                 });
             } catch {
                 ErrorNotifier.notify();
