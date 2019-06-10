@@ -1,19 +1,20 @@
 <template>
     <div>
-        <input type="text" class="form-control datatable-search" v-model="tableName" placeholder="Произвольное название таблицы">
-
         <div class="row" v-for="tableField in tableFields">
-            <div class="col-4">
+            <div class="col-3">
                 <select class="form-control" v-model="tableField.type">
                     <option value="text_field">Текстовое поле</option>
                     <option value="long_text_field">Длинное текстовое поле</option>
                     <option value="number_field">Числовое поле</option>
                 </select>
             </div>
-            <div class="col-6">
+            <div class="col-4">
                 <input type="text" class="form-control" placeholder="Наименование поля" v-model="tableField.title">
             </div>
-            <div class="col-2">
+            <div class="col-4">
+                <input type="text" class="form-control" placeholder="Техническое наименование поля" v-model="tableField.tech_title">
+            </div>
+            <div class="col-1">
                 <input type="checkbox" class="form-control" placeholder="Обязательное" v-model="tableField.required">
             </div>
         </div>
@@ -33,14 +34,17 @@
     @Component
     export default class TableConstructor extends Vue {
 
-        private tableName: string = '';
-
         private tableFields: TableField[] = [];
+
+        public created() {
+            this.isTableExists();
+        }
 
         private addField() {
             this.tableFields.push({
                 type: '',
                 title: '',
+                tech_title: '',
                 required: false,
             });
         }
@@ -48,12 +52,40 @@
         private async createTable() {
             try {
                 const res = await axios.post(`${baseUrlAPI}constructor/constructor_create`, {
-                    table_title: this.tableName,
+                    table_title: this.$route.params.id,
                     columns: this.tableFields,
                 });
             } catch {
                 ErrorNotifier.notify();
             }
+        }
+
+        private async isTableExists() {
+            try {
+                const res = await axios.get(`${baseUrlAPI}constructor/is_table_exists/${this.$route.params.id}`);
+
+                if (res.data) {
+                    this.getTableInfo();
+                }
+
+            } catch {
+                ErrorNotifier.notify();
+            }
+        }
+
+        private async updateTable() {
+            // TODO: Обновление таблицы
+        }
+
+        private async getTableInfo() {
+            try {
+                const res = await axios.get(`${baseUrlAPI}constructor/get_table_info/${this.$route.params.id}`);
+                this.tableFields = res.data;
+            } catch {
+                ErrorNotifier.notify();
+            }
+
+            // TODO: если таблицы уже существует, получить о ней информацию
         }
 
 

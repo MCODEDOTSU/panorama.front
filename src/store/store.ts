@@ -31,6 +31,9 @@ import {includeList} from '@/store/modules/components/common/includeList/include
 import {styleEditor} from '@/store/modules/components/utils/styleEditor/styleEditor';
 import {map} from '@/store/modules/components/utils/map/map';
 
+// constructor
+import {constructor} from '@/store/modules/constructor/constructor';
+
 Vue.use(Vuex);
 
 export default new Vuex.Store<RootState>({
@@ -73,6 +76,9 @@ export default new Vuex.Store<RootState>({
         sureModal,
         styleEditor,
         map,
+
+        // constructor
+        constructor,
     },
 
     plugins: [createPersistedState({

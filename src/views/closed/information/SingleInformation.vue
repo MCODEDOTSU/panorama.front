@@ -29,6 +29,7 @@
                                         v-model="elementState.element.description"
                                         :editorToolbar="toolbar"></vue-editor>
                         </div>
+                        <additional-information v-if="constructorState.isTableExists"></additional-information>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -48,14 +49,17 @@
     import {Action, State} from 'vuex-class';
     import ElementState from '@/store/modules/manager/element/types';
     import {VueEditor} from 'vue2-editor';
+    import AdditionalInformation from '@/views/closed/information/AdditionalInformation.vue';
+    import ConstructorState from '@/store/modules/constructor/types';
 
     @Component({
-        components: {VueEditor},
+        components: {AdditionalInformation, VueEditor},
     })
     export default class SingleInformation extends Vue {
 
         @Action public managerUpdateElement: any;
         @State('managerElement') public elementState: ElementState;
+        @State('constructor') public constructorState: ConstructorState;
 
         @Provide()
         public toolbar: any = [

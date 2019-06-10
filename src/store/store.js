@@ -26,6 +26,8 @@ import { sureModal } from '@/store/modules/components/common/sureModal/sureModal
 import { includeList } from '@/store/modules/components/common/includeList/includeList';
 import { styleEditor } from '@/store/modules/components/utils/styleEditor/styleEditor';
 import { map } from '@/store/modules/components/utils/map/map';
+// constructor
+import { constructor } from '@/store/modules/constructor/constructor';
 Vue.use(Vuex);
 export default new Vuex.Store({
     state: {},
@@ -57,6 +59,8 @@ export default new Vuex.Store({
         sureModal,
         styleEditor,
         map,
+        // constructor
+        constructor,
     },
     plugins: [createPersistedState({
             paths: ['user.token'],

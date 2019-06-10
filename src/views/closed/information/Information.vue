@@ -23,7 +23,7 @@
                     <label class="title">{{ element.title }}</label>
                     <label class="description">Количество геоэлементов: {{ element.geometries_count }}</label>
                     <div class="actions">
-                        <button class="btn-info" data-toggle="modal" data-target="#singleInformationModal" @click="managerSetSingleElement(element)">Изменить</button>
+                        <button class="btn-info" data-toggle="modal" data-target="#singleInformationModal" @click="showElementInfo(element)">Изменить</button>
                         <button class="btn-info" @click="getElementGeometries(element)">Состав элемента</button>
                         <button class="btn-danger" data-toggle="modal" data-target="#sureModal" @click="setSureModalContent(element)">Удалить</button>
                     </div>
@@ -63,6 +63,7 @@
         @Action public getLayerById: any;
         @Action public managerGetElements: any;
         @Action public managerSetSingleElement: any;
+        @Action public isTableExists: any;
         @Action public managerUnsetSingleElement: any;
         @Action public managerDeleteElement: any;
 
@@ -108,6 +109,15 @@
         public getElementGeometries(element: any) {
             this.managerSetSingleElement(element);
             this.$router.push(`/manager/element/${element.id}`);
+        }
+
+        /**
+         * Показать элемент
+         * @param element
+         */
+        public showElementInfo(element) {
+            this.isTableExists({layerId: this.layerState.layer.id});
+            this.managerSetSingleElement(element);
         }
 
     }
