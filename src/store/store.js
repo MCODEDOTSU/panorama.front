@@ -30,7 +30,14 @@ import { map } from '@/store/modules/components/utils/map/map';
 import { constructor } from '@/store/modules/constructor/constructor';
 Vue.use(Vuex);
 export default new Vuex.Store({
-    state: {},
+    state: {
+        applicationName: '',
+        infomodule: '',
+        geoLayer: '',
+        geoElement: '',
+        geoGeometry: '',
+        constructor: '',
+    },
     mutations: {},
     actions: {},
     modules: {

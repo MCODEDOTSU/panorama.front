@@ -33,12 +33,22 @@ import {map} from '@/store/modules/components/utils/map/map';
 
 // constructor
 import {constructor} from '@/store/modules/constructor/constructor';
+import InfoModuleState from '@/store/modules/info/infomodule/types';
+import GeoLayerState from '@/store/modules/geo/layer/types';
+import GeoElementState from '@/store/modules/geo/element/types';
+import GeoGeometryState from '@/store/modules/geo/geometry/types';
+import ConstructorState from '@/store/modules/constructor/types';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store<RootState>({
     state: {
-
+        applicationName: '',
+        infomodule: '',
+        geoLayer: '',
+        geoElement: '',
+        geoGeometry: '',
+        constructor: '',
     },
     mutations: {
 
