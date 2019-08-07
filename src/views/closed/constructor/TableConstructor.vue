@@ -23,7 +23,8 @@
 
         <div class="row">
             <button type="button" class="btn btn-primary" @click="addField">Добавить поле</button>
-            <button type="button" class="btn btn-primary" @click="createTable">Сформировать таблицу</button>
+            <button v-if="!constructorState.isTableExists" :disabled="tableFields.length === 0" type="button" class="btn btn-primary" @click="createTable">Сформировать таблицу</button>
+            <button v-else type="button" class="btn btn-primary" @click="updateTable">Обновить таблицу</button>
         </div>
     </div>
 </template>
@@ -34,14 +35,17 @@
     import {baseUrlAPI} from '@/globals';
     import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
     import TableField from '@/domain/entities/constructor/TableField';
+    import ConstructorState from '@/store/modules/constructor/types';
+    import {State} from 'vuex-class';
 
     @Component
     export default class TableConstructor extends Vue {
 
         private tableFields: TableField[] = [];
+        @State('constructor') private constructorState: ConstructorState;
 
         public created() {
-            this.isTableExists();
+            this.checkIfTableExists();
         }
 
         private addField() {
@@ -64,7 +68,7 @@
             }
         }
 
-        private async isTableExists() {
+        private async checkIfTableExists() {
             try {
                 const res = await axios.get(`${baseUrlAPI}constructor/is_table_exists/${this.$route.params.id}`);
 

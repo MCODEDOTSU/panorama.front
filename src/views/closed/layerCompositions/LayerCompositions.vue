@@ -75,6 +75,7 @@
         @Action public setStyleByStyleEditor: any;
         @Action public setMapCenterDefault: any;
         @Action public setDefaultStyleByStyleEditor: any;
+        @Action public checkIfTableExists: any;
 
         @State('managerLayer') public layerState: LayerState;
         @State('managerLayerComposition') public layerCompositionState: LayerCompositionState;
@@ -124,7 +125,7 @@
          * Изменяем компонент слоя
          */
         public editLayerComposition(composition: any) {
-
+            this.checkIfTableExists({layerId: this.$route.params.id});
             this.setSingleLayerComposition(composition);
             this.setGeometryTypeByStyleEditor({ geometryType: this.layerCompositionState.composition.geometry_type });
             this.setStyleByStyleEditor({ style: this.layerCompositionState.composition.style });

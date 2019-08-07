@@ -6,7 +6,7 @@ export const state = {
     tableFields: [],
 };
 export const actions = {
-    async isTableExists({ dispatch }, payload) {
+    async checkIfTableExists({ dispatch }, payload) {
         try {
             const res = await axios.get(`${baseUrlAPI}constructor/is_table_exists/${payload.layerId}`);
             state.isTableExists = res.data;

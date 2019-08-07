@@ -63,7 +63,7 @@
         @Action public getLayerById: any;
         @Action public managerGetElements: any;
         @Action public managerSetSingleElement: any;
-        @Action public isTableExists: any;
+        @Action public checkIfTableExists: any;
         @Action public managerUnsetSingleElement: any;
         @Action public managerDeleteElement: any;
 
@@ -116,7 +116,7 @@
          * @param element
          */
         public showElementInfo(element) {
-            this.isTableExists({layerId: this.layerState.layer.id});
+            this.checkIfTableExists({layerId: this.layerState.layer.id});
             this.managerSetSingleElement(element);
         }
 

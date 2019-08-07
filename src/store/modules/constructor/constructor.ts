@@ -11,7 +11,7 @@ export const state: ConstructorState = {
 };
 
 export const actions: ActionTree<ConstructorState, RootState> = {
-    async isTableExists({dispatch}, payload) {
+    async checkIfTableExists({dispatch}, payload) {
         try {
             const res = await axios.get(`${baseUrlAPI}constructor/is_table_exists/${payload.layerId}`);
             state.isTableExists = res.data;
