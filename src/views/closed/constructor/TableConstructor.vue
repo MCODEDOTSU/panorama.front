@@ -19,8 +19,12 @@
             </div>
         </div>
 
-        <button @click="addField">Добавить поле</button>
-        <button @click="createTable">Создать таблицу</button>
+        <hr>
+
+        <div class="row">
+            <button type="button" class="btn btn-primary" @click="addField">Добавить поле</button>
+            <button type="button" class="btn btn-primary" @click="createTable">Сформировать таблицу</button>
+        </div>
     </div>
 </template>
 
@@ -42,7 +46,7 @@
 
         private addField() {
             this.tableFields.push({
-                type: '',
+                type: 'text_field',
                 title: '',
                 tech_title: '',
                 required: false,

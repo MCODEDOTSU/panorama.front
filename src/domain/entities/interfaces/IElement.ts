@@ -1,4 +1,5 @@
 import IGeometry from './IGeometry';
+import TableField from '@/domain/entities/constructor/TableField';
 
 export default interface IElement {
     id: number;
@@ -8,4 +9,5 @@ export default interface IElement {
     geometries: IGeometry[];
     geometries_count: number;
     checked?: boolean;
+    additionalData?: TableField[];
 }

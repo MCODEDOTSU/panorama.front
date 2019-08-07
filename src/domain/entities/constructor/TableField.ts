@@ -3,4 +3,5 @@ export default interface TableField {
     title: string;
     tech_title: string;
     required: boolean;
+    value?: string;
 }
