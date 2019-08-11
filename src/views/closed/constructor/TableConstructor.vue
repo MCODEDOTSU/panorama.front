@@ -9,11 +9,11 @@
                 </select>
             </div>
             <div class="col-4">
-                <input type="text" :name="'наименование под номером ' + key" class="form-control" v-validate="'required'" placeholder="Наименование поля" v-model="tableField.title">
+                <input type="text" :name="'наименование под номером ' + key" data-vv-validate-on="change|blur" class="form-control" v-validate="'required'" placeholder="Наименование поля" v-model="tableField.title">
                 <span class="validation-error" style="color: #ff0000; font-size: 10pt">{{ errors.first('наименование под номером ' + key) }}</span>
             </div>
             <div class="col-4">
-                <input type="text" class="form-control" v-validate="'required'" :name="'техническое_наименование_под_номером_' + key" placeholder="техническое наименование поля" v-model="tableField.tech_title">
+                <input type="text" class="form-control" data-vv-validate-on="change|blur" v-validate="'required'" :name="'техническое_наименование_под_номером_' + key" placeholder="техническое наименование поля" v-model="tableField.tech_title">
                 <span class="validation-error" style="color: #ff0000; font-size: 10pt">{{ errors.first('техническое_наименование_под_номером_' + key) }}</span>
             </div>
             <div class="col-1">
@@ -64,15 +64,20 @@
             });
         }
 
-        private async createTable() {
-            try {
-                const res = await axios.post(`${baseUrlAPI}constructor/constructor_create`, {
-                    table_title: this.$route.params.id,
-                    columns: this.tableFields,
-                });
-            } catch {
-                ErrorNotifier.notify();
-            }
+        private createTable() {
+            // @ts-ignore
+            this.$validator.validateAll().then((validationSuccessed) => {
+                if (validationSuccessed) {
+                    try {
+                        axios.post(`${baseUrlAPI}constructor/constructor_create`, {
+                            table_title: this.$route.params.id,
+                            columns: this.tableFields,
+                        });
+                    } catch {
+                        ErrorNotifier.notify();
+                    }
+                }
+            });
         }
 
         private async checkIfTableExists() {
@@ -88,17 +93,23 @@
             }
         }
 
-        private async updateTable() {
-            try {
-                const res = await axios.post(`${baseUrlAPI}constructor/constructor_update`, {
-                    table_title: this.$route.params.id,
-                    columns: this.tableFields,
-                });
+        private updateTable() {
+            // @ts-ignore
+            this.$validator.validateAll().then((validationSuccessed) => {
+                if (validationSuccessed) {
+                    try {
+                        axios.post(`${baseUrlAPI}constructor/constructor_update`, {
+                            table_title: this.$route.params.id,
+                            columns: this.tableFields,
+                        });
 
-                this.getTableInfo();
-            } catch {
-                ErrorNotifier.notify();
-            }
+                        this.getTableInfo();
+                    } catch {
+                        ErrorNotifier.notify();
+                    }
+                }
+            });
+
         }
 
         private async getTableInfo() {
