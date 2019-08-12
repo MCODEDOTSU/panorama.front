@@ -53,6 +53,7 @@
     import ElementState from '@/store/modules/manager/element/types';
     import SingleInformation from '@/views/closed/information/SingleInformation.vue';
     import SureModal from '@/components/common/SureModal.vue';
+    import ConstructorState from '@/store/modules/constructor/types';
 
     @Component({
         components: {SingleInformation, SureModal},
@@ -69,6 +70,7 @@
 
         @State('managerLayer') public layerState: LayerState;
         @State('managerElement') public elementState: ElementState;
+        @State('constructor') public constructorState: ConstructorState;
 
         public created() {
             this.getLayerById({ id: this.$route.params.id });
@@ -116,6 +118,7 @@
          * @param element
          */
         public showElementInfo(element) {
+            this.constructorState.element = element;
             this.checkIfTableExists({layerId: this.layerState.layer.id});
             this.managerSetSingleElement(element);
         }
