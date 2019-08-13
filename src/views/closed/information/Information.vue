@@ -65,6 +65,7 @@
         @Action public managerGetElements: any;
         @Action public managerSetSingleElement: any;
         @Action public checkIfTableExists: any;
+        @Action public getAdditionalData: any;
         @Action public managerUnsetSingleElement: any;
         @Action public managerDeleteElement: any;
 
@@ -119,7 +120,9 @@
          */
         public showElementInfo(element) {
             this.constructorState.element = element;
-            this.checkIfTableExists({layerId: this.layerState.layer.id});
+            this.checkIfTableExists({layerId: this.layerState.layer.id}).then(() => {
+                this.getAdditionalData({layerId: this.layerState.layer.id});
+            });
             this.managerSetSingleElement(element);
         }
 

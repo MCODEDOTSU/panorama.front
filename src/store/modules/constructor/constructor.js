@@ -25,8 +25,6 @@ export const actions = {
         try {
             const res = await axios.get(`${baseUrlAPI}constructor/get_table_info/${payload.id}`);
             state.tableFields = res.data;
-            // TODO: Убрать дополнительный запрос - присваивать value здесь
-            dispatch('getAdditionalData', { layerId: payload.id });
         }
         catch {
             ErrorNotifier.notify();
@@ -40,16 +38,7 @@ export const actions = {
     async getAdditionalData({}, payload) {
         try {
             const res = await axios.get(`${baseUrlAPI}additional_data/get_additional_data/${state.element.id}/${payload.layerId}`);
-            state.additionalData = res.data;
-            // TODO: Совместить tableFields и additionalData
-            for (const tableField of state.tableFields) {
-                Object.keys(state.additionalData).forEach((additionalDataItem) => {
-                    if (tableField.tech_title === additionalDataItem) {
-                        console.log(state.additionalData[additionalDataItem]);
-                        tableField.value = state.additionalData[additionalDataItem];
-                    }
-                });
-            }
+            state.tableFields = res.data;
         }
         catch {
             ErrorNotifier.notify();
