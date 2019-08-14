@@ -120,9 +120,7 @@
          */
         public showElementInfo(element) {
             this.constructorState.element = element;
-            this.checkIfTableExists({layerId: this.layerState.layer.id}).then(() => {
-                this.getAdditionalData({layerId: this.layerState.layer.id});
-            });
+            this.getAdditionalData({layerId: this.layerState.layer.id});
             this.managerSetSingleElement(element);
         }
 

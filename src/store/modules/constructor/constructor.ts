@@ -43,6 +43,10 @@ export const actions: ActionTree<ConstructorState, RootState> = {
     async getAdditionalData({}, payload) {
         try {
             const res = await axios.get(`${baseUrlAPI}additional_data/get_additional_data/${state.element.id}/${payload.layerId}`);
+            if (res.data) {
+                state.isTableExists = true;
+            }
+
             state.tableFields = res.data;
         } catch {
             ErrorNotifier.notify();
