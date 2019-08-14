@@ -10,10 +10,10 @@ Vue.use(DatatableFactory);
 /* Vue validation */
 import VeeValidate, { Validator } from 'vee-validate';
 import ru from 'vee-validate/dist/locale/ru';
-Validator.localize('ru', ru);
 Vue.use(VeeValidate, {
     fieldsBagName: 'formFields'
 });
+Validator.localize('ru', ru);
 
 /* Редактор текста */
 import { VueEditor } from 'vue2-editor';

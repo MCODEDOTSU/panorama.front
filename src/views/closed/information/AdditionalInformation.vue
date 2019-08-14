@@ -1,7 +1,10 @@
 <template>
     <div>
         <div class="form-group" v-for="field in constructorState.tableFields">
-            <label :for="field.tech_title">{{ field.title }} *</label>
+            <label :for="field.tech_title">{{ field.title }}
+                <span v-if="field.required">*</span>
+                <span></span>
+            </label>
             <resolved-field :field="field"></resolved-field>
         </div>
     </div>
@@ -19,8 +22,6 @@
     export default class AdditionalInformation extends Vue {
 
         @State('constructor') public constructorState: ConstructorState;
-
-
 
     }
 </script>

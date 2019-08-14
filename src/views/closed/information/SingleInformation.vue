@@ -33,7 +33,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" @click="managerUpdateElement" data-dismiss="modal">
+                    <button type="button" class="btn btn-primary" @click="validateAndUpdateElement">
                         Сохранить
                     </button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
@@ -72,5 +72,13 @@
             [{color: []}, {background: []}],
             ['clean'],
         ];
+
+        private validateAndUpdateElement() {
+            // @ts-ignore
+            if (this.$validator.errors.items.length === 0) {
+                this.managerUpdateElement();
+                $('#singleInformationModal').modal('hide');
+            }
+        }
     }
 </script>
