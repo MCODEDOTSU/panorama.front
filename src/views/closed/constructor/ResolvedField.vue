@@ -1,38 +1,26 @@
 <template>
     <div>
-        <input type="text" :id="field.tech_title" v-if="field.type === 'text_field' && field.required === false"
-               class="form-control" v-model="field.value"
-               :placeholder="field.title">
-        <input type="text" :id="field.tech_title" v-if="field.type === 'text_field' && field.required"
-               data-vv-validate-on="change|blur" v-validate="'required'" :name="field.title"
-               class="form-control" v-model="field.value"
-               :placeholder="field.title">
-        <span class="validation-error">{{ errors.first(field.title) }}</span>
+        <text-field :field="field"></text-field>
+        <number-field :field="field"></number-field>
+        <long-text-field :field="field"></long-text-field>
+        <date-field :field="field"></date-field>
 
-        <input type="number" :id="field.tech_title" v-if="field.type === 'number_field' && field.required === false"
-               class="form-control" v-model="field.value"
-               :placeholder="field.title" :name="'числовое  ' + field.title">
-        <input type="number" :id="field.tech_title" v-if="field.type === 'number_field' && field.required"
-               class="form-control" v-model="field.value" data-vv-validate-on="change|blur" v-validate="'required'"
-               :placeholder="field.title" :name="'числовое  ' + field.title">
-        <span class="validation-error">{{ errors.first('числовое  ' + field.title) }}</span>
-
-        <textarea class="form-control" :id="field.tech_title" v-if="field.type ==='long_text_field' && field.required === false"
-                  rows="3" v-model="field.value" :name="field.title + ' '"></textarea>
-        <textarea class="form-control" :id="field.tech_title" v-if="field.type ==='long_text_field' && field.required"
-                  data-vv-validate-on="change|blur" v-validate="'required'"
-                  rows="3" v-model="field.value" :name="field.title + ' '"></textarea>
-        <span class="validation-error">{{ errors.first(field.title + ' ') }}</span>
     </div>
 </template>
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
 
-    @Component
-    export default class ResolvedField extends Vue {
-        @Prop() public field: any;
+    import TextField from '@/components/constructor/fields/TextField.vue';
+    import LongTextField from '@/components/constructor/fields/LongTextField.vue';
+    import NumberField from '@/components/constructor/fields/NumberField.vue';
+    import DateField from '@/components/constructor/fields/DateField.vue';
 
+    @Component({
+        components: {TextField, LongTextField, NumberField, DateField},
+    })
+    export default class ResolvedField extends Vue {
+        @Prop() private field: any;
     }
 </script>
 <style>

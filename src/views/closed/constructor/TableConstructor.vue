@@ -6,6 +6,7 @@
                     <option value="text_field">Текстовое поле</option>
                     <option value="long_text_field">Длинное текстовое поле</option>
                     <option value="number_field">Числовое поле</option>
+                    <option value="date_field">Дата</option>
                 </select>
             </div>
             <div class="col-4">
