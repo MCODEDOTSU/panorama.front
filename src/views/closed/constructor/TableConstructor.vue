@@ -2,11 +2,14 @@
     <div>
         <div class="row" v-for="(tableField, key) in tableFields">
             <div class="col-2">
+                <!-- TODO: При изменении типа поля, очищать tech_title -->
                 <select class="form-control" v-model="tableField.type">
                     <option value="text_field">Текстовое поле</option>
                     <option value="long_text_field">Длинное текстовое поле</option>
                     <option value="number_field">Числовое поле</option>
                     <option value="date_field">Дата</option>
+                    <option value="one_from_many_field">Один из многих</option>
+                    <option value="many_from_many_field">Многие из многих</option>
                 </select>
             </div>
             <div class="col-4">
@@ -14,7 +17,11 @@
                 <span class="validation-error" style="color: #ff0000; font-size: 10pt">{{ errors.first('наименование под номером ' + key) }}</span>
             </div>
             <div class="col-4">
-                <input type="text" class="form-control" data-vv-validate-on="change|blur" v-validate="'required'" :name="'техническое_наименование_под_номером_' + key" placeholder="техническое наименование поля" v-model="tableField.tech_title">
+                <tag-selector v-if="tableField.type === 'one_from_many_field' || tableField.type === 'many_from_many_field'" v-model="tableField.tech_title"
+                              data-vv-validate-on="change|blur" v-validate="'required'" :name="'техническое_наименование_под_номером_' + key"/>
+
+                <input type="text" class="form-control" v-else v-model="tableField.tech_title"
+                       data-vv-validate-on="change|blur" v-validate="'required'" :name="'техническое_наименование_под_номером_' + key" placeholder="техническое наименование поля">
                 <span class="validation-error" style="color: #ff0000; font-size: 10pt">{{ errors.first('техническое_наименование_под_номером_' + key) }}</span>
             </div>
             <div class="col-1">
@@ -45,8 +52,11 @@
     import TableField from '@/domain/entities/constructor/TableField';
     import ConstructorState from '@/store/modules/constructor/types';
     import {State} from 'vuex-class';
+    import TagSelector from 'vue-tag-selector';
 
-    @Component
+    @Component({
+        components: {TagSelector},
+    })
     export default class TableConstructor extends Vue {
 
         private tableFields: TableField[] = [];
@@ -60,7 +70,7 @@
             this.tableFields.push({
                 type: 'text_field',
                 title: '',
-                tech_title: '',
+                tech_title: undefined,
                 required: false,
             });
         }
