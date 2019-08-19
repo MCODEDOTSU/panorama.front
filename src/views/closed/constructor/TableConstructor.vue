@@ -17,10 +17,10 @@
                 <span class="validation-error" style="color: #ff0000; font-size: 10pt">{{ errors.first('наименование под номером ' + key) }}</span>
             </div>
             <div class="col-4">
-                <tag-selector v-if="tableField.type === 'one_from_many_field' || tableField.type === 'many_from_many_field'" v-model="tableField.tech_title"
-                              data-vv-validate-on="change|blur" v-validate="'required'" :name="'техническое_наименование_под_номером_' + key"/>
+                <tag-selector v-if="tableField.type === 'one_from_many_field' || tableField.type === 'many_from_many_field'" v-model="tableField.enums"
+                              name="enums"/>
 
-                <input type="text" class="form-control" v-else v-model="tableField.tech_title"
+                <input type="text" class="form-control" v-model="tableField.tech_title"
                        data-vv-validate-on="change|blur" v-validate="'required'" :name="'техническое_наименование_под_номером_' + key" placeholder="техническое наименование поля">
                 <span class="validation-error" style="color: #ff0000; font-size: 10pt">{{ errors.first('техническое_наименование_под_номером_' + key) }}</span>
             </div>
@@ -72,9 +72,11 @@
                 title: '',
                 tech_title: undefined,
                 required: false,
+                enums: undefined
             });
         }
 
+        // TODO: Перенести в constructor.store.ts
         private createTable() {
             // @ts-ignore
             this.$validator.validateAll().then((validationSuccessed) => {
@@ -91,6 +93,7 @@
             });
         }
 
+        // TODO: Перенести в constructor.store.ts
         private async checkIfTableExists() {
             try {
                 const res = await axios.get(`${baseUrlAPI}constructor/is_table_exists/${this.$route.params.id}`);
@@ -104,6 +107,7 @@
             }
         }
 
+        // TODO: Перенести в constructor.store.ts
         private updateTable() {
             // @ts-ignore
             this.$validator.validateAll().then((validationSuccessed) => {
@@ -123,6 +127,7 @@
 
         }
 
+        // TODO: Перенести в constructor.store.ts
         private async getTableInfo() {
             try {
                 const res = await axios.get(`${baseUrlAPI}constructor/get_table_info/${this.$route.params.id}`);
@@ -132,6 +137,7 @@
             }
         }
 
+        // TODO: Перенести в constructor.store.ts
         private async dropColumn(tableField: TableField) {
             try {
                 const res = await axios.post(`${baseUrlAPI}constructor/drop_column`, {
