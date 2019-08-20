@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-for="enumValue in JSON.parse(field.enums)" class="one-from-many-div" v-if="field.type === 'one_from_many_field'">
+        <div v-for="enumValue in JSON.parse(field.enums)" class="one-from-many-div" v-if="field.type === 'many_from_many_field'">
             <label :for="enumValue">{{ enumValue }}</label>
             <input type="radio" :id="enumValue" class="form-control" :value="enumValue" v-model="field.value">
         </div>

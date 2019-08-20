@@ -5,6 +5,7 @@
         <long-text-field :field="field"></long-text-field>
         <date-field :field="field"></date-field>
         <one-from-many-field :field="field"></one-from-many-field>
+        <many-from-many-field :field="field"></many-from-many-field>
 
     </div>
 </template>
@@ -17,9 +18,10 @@
     import NumberField from '@/components/constructor/fields/NumberField.vue';
     import DateField from '@/components/constructor/fields/DateField.vue';
     import OneFromManyField from '@/components/constructor/fields/OneFromManyField.vue';
+    import ManyFromManyField from '@/components/constructor/fields/ManyFromManyField.vue';
 
     @Component({
-        components: {OneFromManyField, TextField, LongTextField, NumberField, DateField},
+        components: {ManyFromManyField, OneFromManyField, TextField, LongTextField, NumberField, DateField},
     })
     export default class ResolvedField extends Vue {
         @Prop() private field: any;
