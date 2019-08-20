@@ -72,7 +72,7 @@
                 title: '',
                 tech_title: undefined,
                 required: false,
-                enums: undefined
+                enums: undefined,
             });
         }
 
