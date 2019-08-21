@@ -60,6 +60,7 @@
         @Action public managerUpdateElement: any;
         @State('managerElement') public elementState: ElementState;
         @State('constructor') public constructorState: ConstructorState;
+        @Provide('validator') public $validator = this.$validator;
 
         @Provide()
         public toolbar: any = [
@@ -74,11 +75,12 @@
         ];
 
         private validateAndUpdateElement() {
-            // @ts-ignore
-            if (this.$validator.errors.items.length === 0) {
-                this.managerUpdateElement();
-                $('#singleInformationModal').modal('hide');
-            }
+            this.$validator.validateAll().then((validationSuccessed) => {
+                if (validationSuccessed) {
+                    this.managerUpdateElement();
+                    $('#singleInformationModal').modal('hide');
+                }
+            });
         }
     }
 </script>

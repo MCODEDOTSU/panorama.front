@@ -12,10 +12,11 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Provide, Vue} from 'vue-property-decorator';
+    import {Component, Inject, Prop, Vue} from 'vue-property-decorator';
 
     @Component
     export default class TextField extends Vue {
         @Prop() private field: any;
+        @Inject('validator') private $validator: any;
     }
 </script>
