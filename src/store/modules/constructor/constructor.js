@@ -10,18 +10,6 @@ export const state = {
         title: '',
     },
 };
-export const mutations = {
-    getTableInfo(state, payload) {
-        const resolvedResult = [];
-        for (const singleField of payload.data) {
-            if (singleField.enums) {
-                singleField.enums = JSON.parse(singleField.enums);
-            }
-            resolvedResult.push(singleField);
-        }
-        state.tableFields = resolvedResult;
-    },
-};
 export const actions = {
     async checkIfTableExists({ dispatch }, payload) {
         try {
@@ -36,7 +24,7 @@ export const actions = {
     async getTableInfo({ commit, dispatch }, payload) {
         try {
             const res = await axios.get(`${baseUrlAPI}constructor/get_table_info/${payload.id}`);
-            commit('getTableInfo', res);
+            state.tableFields = res.data;
         }
         catch {
             ErrorNotifier.notify();
@@ -61,6 +49,6 @@ export const actions = {
     },
 };
 export const constructor = {
-    state, actions, mutations,
+    state, actions,
 };
 //# sourceMappingURL=constructor.js.map
