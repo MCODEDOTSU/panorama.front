@@ -1,8 +1,25 @@
 <template>
     <div>
+        <div class="row">
+
+            <div class="col-2">
+                <p>Тип</p>
+            </div>
+            <div class="col-4">
+                <p>Наименование</p>
+            </div>
+            <div class="col-4">
+                <p>Тех. наименование</p>
+            </div>
+            <div class="col-1">
+                <p>*</p>
+            </div>
+            <div class="col-1">
+                <p>Удалить</p>
+            </div>
+        </div>
         <div class="row" v-for="(tableField, key) in tableFields">
             <div class="col-2">
-                <!-- TODO: При изменении типа поля, очищать tech_title -->
                 <select class="form-control" v-model="tableField.type">
                     <option value="text_field">Текстовое поле</option>
                     <option value="long_text_field">Длинное текстовое поле</option>
@@ -76,24 +93,25 @@
             });
         }
 
-        // TODO: Перенести в constructor.store.ts
         private createTable() {
             // @ts-ignore
             this.$validator.validateAll().then((validationSuccessed) => {
                 if (validationSuccessed) {
-                    try {
-                        axios.post(`${baseUrlAPI}constructor/constructor_create`, {
-                            table_title: this.$route.params.id,
-                            columns: this.tableFields,
-                        });
-                    } catch {
+                    axios.post(`${baseUrlAPI}constructor/constructor_create`, {
+                        table_title: this.$route.params.id,
+                        columns: this.tableFields,
+                    }).then(() => {
+                        this.constructorState.isTableExists = true;
+                        this.getTableInfo();
+
+                    }).catch(() => {
                         ErrorNotifier.notify();
-                    }
+
+                    });
                 }
             });
         }
 
-        // TODO: Перенести в constructor.store.ts
         private async checkIfTableExists() {
             try {
                 const res = await axios.get(`${baseUrlAPI}constructor/is_table_exists/${this.$route.params.id}`);
@@ -107,27 +125,23 @@
             }
         }
 
-        // TODO: Перенести в constructor.store.ts
         private updateTable() {
             // @ts-ignore
             this.$validator.validateAll().then((validationSuccessed) => {
                 if (validationSuccessed) {
-                    try {
-                        axios.post(`${baseUrlAPI}constructor/constructor_update`, {
-                            table_title: this.$route.params.id,
-                            columns: this.tableFields,
-                        });
-
+                    axios.post(`${baseUrlAPI}constructor/constructor_update`, {
+                        table_title: this.$route.params.id,
+                        columns: this.tableFields,
+                    }).then(() => {
                         this.getTableInfo();
-                    } catch {
+
+                    }).catch(() => {
                         ErrorNotifier.notify();
-                    }
+                    });
                 }
             });
-
         }
 
-        // TODO: Перенести в constructor.store.ts
         private async getTableInfo() {
             try {
                 const res = await axios.get(`${baseUrlAPI}constructor/get_table_info/${this.$route.params.id}`);
