@@ -18,7 +18,7 @@
                 <p>Удалить</p>
             </div>
         </div>
-        <div class="row" v-for="(tableField, key) in tableFields">
+        <div class="row constructor-table-fields" v-for="(tableField, key) in tableFields">
             <div class="col-2">
                 <select class="form-control" v-model="tableField.type">
                     <option value="text_field">Текстовое поле</option>
@@ -26,7 +26,7 @@
                     <option value="number_field">Числовое поле</option>
                     <option value="date_field">Дата</option>
                     <option value="one_from_many_field">Один из многих</option>
-                    <option value="many_from_many_field">Многие из многих</option>
+<!--                    <option value="many_from_many_field">Многие из многих</option>-->
                 </select>
             </div>
             <div class="col-4">
@@ -45,7 +45,7 @@
                 <input type="checkbox" class="form-control" placeholder="Обязательное" v-model="tableField.required">
             </div>
             <div class="col-1">
-                <button type="button" class="btn btn-primary" @click="dropColumn(tableField)">X</button>
+                <button type="button" class="btn btn-primary" @click="dropColumn(tableField, key)">X</button>
             </div>
         </div>
 
@@ -70,6 +70,8 @@
     import ConstructorState from '@/store/modules/constructor/types';
     import {State} from 'vuex-class';
     import TagSelector from 'vue-tag-selector';
+    import SuccessNotifier from '@/domain/util/notifications/SuccessNotifier';
+    import {arrayIndexOf} from '@/domain/services/common/ArrayActions';
 
     @Component({
         components: {TagSelector},
@@ -103,10 +105,9 @@
                     }).then(() => {
                         this.constructorState.isTableExists = true;
                         this.getTableInfo();
-
+                        SuccessNotifier.notify('Таблица создана', `Таблица для данного слоя создана`);
                     }).catch(() => {
                         ErrorNotifier.notify();
-
                     });
                 }
             });
@@ -134,7 +135,7 @@
                         columns: this.tableFields,
                     }).then(() => {
                         this.getTableInfo();
-
+                        SuccessNotifier.notify('Таблица создана', `Таблица для данного слоя обновлена`);
                     }).catch(() => {
                         ErrorNotifier.notify();
                     });
@@ -151,18 +152,26 @@
             }
         }
 
-        // TODO: Перенести в constructor.store.ts
-        private async dropColumn(tableField: TableField) {
-            try {
-                const res = await axios.post(`${baseUrlAPI}constructor/drop_column`, {
-                    column_tech_title: tableField.tech_title,
-                    table_id: this.$route.params.id,
-                });
+        private async dropColumn(tableField: TableField , key: number) {
+            if(tableField.id) {
+                try {
+                    const res = await axios.post(`${baseUrlAPI}constructor/drop_column`, {
+                        column_tech_title: tableField.tech_title,
+                        table_id: this.$route.params.id,
+                    });
 
-                this.getTableInfo();
-            } catch {
-                ErrorNotifier.notify();
+                    this.getTableInfo();
+                } catch {
+                    ErrorNotifier.notify();
+                }
+            } else {
+                this.tableFields.splice(key, 1);
             }
         }
     }
 </script>
+<style>
+    .constructor-table-fields {
+        margin-bottom: 10px;
+    }
+</style>

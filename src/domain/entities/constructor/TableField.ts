@@ -1,4 +1,5 @@
 export default interface TableField {
+    id?: number;
     type: string;
     title: string | [];
     tech_title: string;
