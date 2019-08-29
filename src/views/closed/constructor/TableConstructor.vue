@@ -6,10 +6,10 @@
                     Группа:
                 </div>
                 <div class="col-3">
-                    <input type="text" class="form-control" placeholder="Группа" v-model="groupKey">
+                    <input type="text" class="form-control" placeholder="Группа" v-model="tableGroup.group">
                 </div>
                 <div class="col-2">
-                    <button type="button" class="btn btn-primary" @click="addField">Добавить поле</button>
+                    <button type="button" class="btn btn-primary" @click="addField(groupKey)">Добавить поле</button>
                 </div>
             </div>
             <div>
@@ -33,10 +33,10 @@
                         <p>Удалить</p>
                     </div>
                 </div>
-                <div class="row constructor-table-fields" v-for="(tableField, key) in tableGroup">
+                <div class="row constructor-table-fields" v-for="(tableField, key) in tableGroup.columns">
                     <div class="col-2">
-                        <select class="form-control">
-                            <option v-for="(tableGroup, groupKey) in tableFields" value="text_field">{{ groupKey }}</option>
+                        <select class="form-control" v-model="tableField.group" @change="changeGroup(tableField, key, groupKey)">
+                            <option v-for="tableGroup in tableFields" :value="tableGroup.group">{{ tableGroup.group }}</option>
                         </select>
                     </div>
                     <div class="col-2">
@@ -65,7 +65,7 @@
                         <input type="checkbox" class="form-control" placeholder="Обязательное" v-model="tableField.required">
                     </div>
                     <div class="col-1">
-                        <button type="button" class="btn btn-primary" @click="dropColumn(tableField, key)">X</button>
+                        <button type="button" class="btn btn-primary" @click="dropColumn(tableField, key, groupKey)">X</button>
                     </div>
                 </div>
 
@@ -73,7 +73,7 @@
             </div>
         </div>
         <div class="row">
-            <button type="button" class="btn btn-primary">Добавить группу</button>
+            <button type="button" class="btn btn-primary" @click="addGroup">Добавить группу</button>
 
             <button v-if="!constructorState.isTableExists" :disabled="tableFields.length === 0" type="button"
                     class="btn btn-primary" @click="createTable">Сформировать таблицу
@@ -95,21 +95,22 @@
     import TagSelector from 'vue-tag-selector';
     import SuccessNotifier from '@/domain/util/notifications/SuccessNotifier';
     import {arrayIndexOf} from '@/domain/services/common/ArrayActions';
+    import TableGroup from '@/domain/entities/constructor/TableGroup';
 
     @Component({
         components: {TagSelector},
     })
     export default class TableConstructor extends Vue {
 
-        private tableFields: TableField[] = [];
+        private tableFields: TableGroup[] = [];
         @State('constructor') private constructorState: ConstructorState;
 
         public created() {
             this.checkIfTableExists();
         }
 
-        private addField() {
-            this.tableFields.push({
+        private addField(groupKey: string) {
+            this.tableFields[groupKey].columns.push({
                 type: 'text_field',
                 title: '',
                 tech_title: undefined,
@@ -118,13 +119,51 @@
             });
         }
 
+        private addGroup() {
+            this.tableFields.push({
+                group: 'Новая группа',
+                columns: [{
+                    type: 'text_field',
+                    title: '',
+                    tech_title: undefined,
+                    required: false,
+                    enums: undefined,
+                }],
+            });
+        }
+
+        private changeGroup(tableField, columnKey, groupKey) {
+            for (const tableGroup of this.tableFields) {
+                if (tableGroup.group === tableField.group) {
+                    tableGroup.columns.push(tableField);
+                    this.tableFields[groupKey].columns.splice(columnKey, 1);
+                }
+            }
+        }
+
+        /**
+         * Превратить погрупповой массив в простой
+         * @param tableGroups
+         */
+        private plainizeFields(tableGroups: TableGroup[]) {
+            const plainizedColumns = [];
+            for (const tableGroup of tableGroups) {
+                for (const column of tableGroup.columns) {
+                    plainizedColumns.push(column);
+                }
+            }
+            return plainizedColumns;
+        }
+
         private createTable() {
             // @ts-ignore
             this.$validator.validateAll().then((validationSuccessed) => {
                 if (validationSuccessed) {
+                    const plainizedFields = this.plainizeFields(this.tableFields);
+
                     axios.post(`${baseUrlAPI}constructor/constructor_create`, {
                         table_title: this.$route.params.id,
-                        columns: this.tableFields,
+                        columns: plainizedFields,
                     }).then(() => {
                         this.constructorState.isTableExists = true;
                         this.getTableInfo();
@@ -153,9 +192,11 @@
             // @ts-ignore
             this.$validator.validateAll().then((validationSuccessed) => {
                 if (validationSuccessed) {
+                    const plainizedFields = this.plainizeFields(this.tableFields);
+
                     axios.post(`${baseUrlAPI}constructor/constructor_update`, {
                         table_title: this.$route.params.id,
-                        columns: this.tableFields,
+                        columns: plainizedFields,
                     }).then(() => {
                         this.getTableInfo();
                         SuccessNotifier.notify('Таблица создана', `Таблица для данного слоя обновлена`);
@@ -175,7 +216,7 @@
             }
         }
 
-        private async dropColumn(tableField: TableField , key: number) {
+        private async dropColumn(tableField: TableField, key: number, groupKey: string) {
             if (tableField.id) {
                 try {
                     const res = await axios.post(`${baseUrlAPI}constructor/drop_column`, {
@@ -188,7 +229,7 @@
                     ErrorNotifier.notify();
                 }
             } else {
-                this.tableFields.splice(key, 1);
+                this.tableFields[groupKey].columns.splice(key, 1);
             }
         }
     }
