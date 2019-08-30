@@ -14,23 +14,37 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="singleInformationTitle">Наименование *</label>
-                            <input type="text" id="singleInformationTitle" required
-                                   class="form-control"
-                                   placeholder="Наименование элемента"
-                                   v-model="elementState.element.title">
+                    <ul class="nav nav-tabs" id="tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="main-tab" data-toggle="tab" href="#main" role="tab" aria-controls="main" aria-selected="true">Главная</a>
+                        </li>
+
+                        <additional-group-tabs></additional-group-tabs>
+
+                    </ul>
+                    <div class="tab-content" id="mainContent">
+                        <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="main-tab">
+                            <form>
+                                <div class="form-group">
+                                    <label for="singleInformationTitle">Наименование *</label>
+                                    <input type="text" id="singleInformationTitle" required
+                                           class="form-control"
+                                           placeholder="Наименование элемента"
+                                           v-model="elementState.element.title">
+                                </div>
+                                <div class="form-group">
+                                    <label for="singleInformationDescription">Описание</label>
+                                    <vue-editor id="singleInformationDescription"
+                                                ref="wysiwygContents"
+                                                v-model="elementState.element.description"
+                                                :editorToolbar="toolbar"></vue-editor>
+                                </div>
+                            </form>
                         </div>
-                        <div class="form-group">
-                            <label for="singleInformationDescription">Описание</label>
-                            <vue-editor id="singleInformationDescription"
-                                        ref="wysiwygContents"
-                                        v-model="elementState.element.description"
-                                        :editorToolbar="toolbar"></vue-editor>
+                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            <additional-information v-if="constructorState.isTableExists"></additional-information>
                         </div>
-                        <additional-information v-if="constructorState.isTableExists"></additional-information>
-                    </form>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" @click="validateAndUpdateElement">
@@ -51,9 +65,10 @@
     import {VueEditor} from 'vue2-editor';
     import AdditionalInformation from '@/views/closed/information/AdditionalInformation.vue';
     import ConstructorState from '@/store/modules/constructor/types';
+    import AdditionalGroupTabs from '@/views/closed/information/AdditonalGroupTabs.vue';
 
     @Component({
-        components: {AdditionalInformation, VueEditor},
+        components: {AdditionalInformation, AdditionalGroupTabs, VueEditor},
     })
     export default class SingleInformation extends Vue {
 
