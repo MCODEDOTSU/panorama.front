@@ -125,7 +125,7 @@
 
         @Action public getConstructorByLayer: any;
 
-        @State('constructor') private constructorState: ConstructorState;
+        @State('konstructor') private constructorState: ConstructorState;
 
         /***
          * Добавить группу
