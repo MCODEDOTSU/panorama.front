@@ -26,8 +26,6 @@ import {map} from '@/store/modules/components/utils/map/map';
 
 // constructor
 import {konstructor} from '@/store/modules/constructor/constructor';
-import InfoModuleState from '@/store/modules/info/infomodule/types';
-import ConstructorState from '@/store/modules/constructor/types';
 
 Vue.use(Vuex);
 

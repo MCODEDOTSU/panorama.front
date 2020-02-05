@@ -58,6 +58,7 @@
                             <option value="date_field">Дата</option>
                             <option value="one_from_many_field">Один из многих</option>
                             <option value="many_from_many_field">Многие из многих</option>
+                            <option value="doc_field">Загрузка документа</option>
                         </select>
                     </div>
                     <div class="col-3 col col-title">
