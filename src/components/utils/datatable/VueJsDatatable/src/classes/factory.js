@@ -22,7 +22,7 @@ class DatatableFactory {
 
         this.table_types.push(table_type);
 
-        if(callback && typeof callback === 'function'){
+        if (callback && typeof callback === 'function'){
             callback(table_type);
         }
 
@@ -36,7 +36,7 @@ class DatatableFactory {
         Vue.component('datatable-header', VueDatatableHeader);
         Vue.component('datatable-button', VueDatatablePagerButton);
 
-        if(this.use_default_type){
+        if (this.use_default_type){
             this.registerTableType('datatable', function(table_type){
                 table_type.mergeSettings(this.default_table_settings.properties);
             }.bind(this));

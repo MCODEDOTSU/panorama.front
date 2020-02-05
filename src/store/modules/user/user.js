@@ -20,11 +20,13 @@ export const mutations = {
      */
     getUser(state, payload) {
         state.user = payload;
-        if (state.role === 'superadmin') {
-            Router.push({ name: 'manager-contractors' });
-        }
-        else {
-            Router.push({ name: 'manager-contractors-modules' });
+        if (Router.currentRoute.name.indexOf('manager') === -1) {
+            if (state.role === 'superadmin') {
+                Router.push({ name: 'manager-contractors' });
+            }
+            else {
+                Router.push({ name: 'manager-contractors-modules' });
+            }
         }
     },
 };
@@ -39,6 +41,7 @@ export const actions = {
     getUser({ commit, state, dispatch }) {
         axios.get(baseUrlAPI + 'user').then((response) => {
             const payload = response.data;
+            state.role = response.data.role;
             commit('getUser', payload);
         }, () => {
             ErrorNotifier.notify();
@@ -49,6 +52,16 @@ export const actions = {
             const url = `${baseUrlAPI}refresh`;
             const result = await axios.post(url, state.user);
             state.token = 'Bearer ' + result.data.token;
+        }
+        catch {
+            ErrorNotifier.notify();
+        }
+    },
+    async logout({}, payload) {
+        try {
+            const url = `${baseUrlAPI}logout`;
+            const result = await axios.get(url);
+            Router.push({ name: 'home' });
         }
         catch {
             ErrorNotifier.notify();

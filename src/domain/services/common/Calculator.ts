@@ -8,6 +8,7 @@ export const lengthConverter = (lenght: number) => {
 };
 
 export const perimeterConverter = (perimeter: number) => {
+    return perimeter;
     if (perimeter >= 1000) {
         perimeter /= 1000;
         return `${perimeter.toFixed(2)} км`;

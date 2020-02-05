@@ -5,5 +5,5 @@ export default interface IPoint {
     title: string;
     description: string;
     address: IAddress;
-    layer_composition_id?: number;
+    layer_id?: number;
 }

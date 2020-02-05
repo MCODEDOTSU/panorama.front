@@ -63,7 +63,7 @@ export const createOLSelectInteraction = (action: any) => {
  */
 export const updateOLFeaturesStyle = (layer: any, styles: any) => {
     layer.getSource().forEachFeature((feature) => {
-        const i = arrayIndexOf(styles, feature.get('layer_composition_id'));
+        const i = arrayIndexOf(styles, feature.get('layer_id'));
         if (i !== -1) {
             updateOLFeatureStyle(feature, styles[i]);
         }

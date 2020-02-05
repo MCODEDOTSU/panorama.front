@@ -8,7 +8,7 @@ export const fetchPoints = (points, resolvedItems) => {
             address: point.address,
             edited: false,
             add: false,
-            layer_composition_id: point.layer_composition_id,
+            layer_id: point.layer_id,
         });
     }
     return resolvedItems;

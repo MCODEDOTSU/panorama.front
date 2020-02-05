@@ -62,7 +62,7 @@ export default {
 			return this.table_instance && this.total_rows > 0;
 		},
 		total_rows(){
-			if(this.table_instance){
+			if (this.table_instance){
 				return this.table_instance.total_rows;
 			}
 
@@ -75,21 +75,21 @@ export default {
 			return this.settings.get('pager.classes.disabled');
 		},
 		previous_link_classes(){
-			if(this.page - 1 < 1){
+			if (this.page - 1 < 1){
 				return this.settings.get('pager.classes.disabled');
 			}
 
 			return '';
 		},
 		next_link_classes(){
-			if(this.page + 1 > this.total_pages){
+			if (this.page + 1 > this.total_pages){
 				return this.settings.get('pager.classes.disabled');
 			}
 
 			return '';
 		},
 		total_pages(){
-			if(!(this.total_rows > 0)){
+			if (!(this.total_rows > 0)){
 				return 0;
 			}
 
@@ -113,7 +113,7 @@ export default {
 			this.$emit('change', number);
 		},
 		getClassForPage(number){
-			if(this.page == number){
+			if (this.page == number){
 				return this.settings.get('pager.classes.selected');
 			}
 
@@ -122,14 +122,14 @@ export default {
 	},
 	watch: {
 		total_rows(){
-			if(this.page > this.total_pages){
+			if (this.page > this.total_pages){
 				this.setPageNum(this.total_pages);
 			}
 		},
 		perPage(){
 			var page = this.page;
 
-			if(page > this.total_pages){
+			if (page > this.total_pages){
 				page = this.total_pages
 			}
 
@@ -137,14 +137,14 @@ export default {
 		}
 	},
 	created(){
-		if(Vue.$datatables[this.table]){
+		if (Vue.$datatables[this.table]){
 			this.table_instance = Vue.$datatables[this.table];
 			this.table_instance.per_page = this.perPage;
 			return;
 		}
 
 		this.$root.$on('table.ready', function(table_name){
-			if(table_name === this.table){
+			if (table_name === this.table){
 				this.table_instance = Vue.$datatables[this.table];
 				this.table_instance.per_page = this.perPage;
 			}

@@ -1,1 +1,1 @@
-{"version":3,"file":"example.globals.js","sourceRoot":"","sources":["example.globals.ts"],"names":[],"mappings":"AAAA,MAAM,CAAC,MAAM,UAAU,GAAG,+BAA+B,CAAC;AAC1D,MAAM,CAAC,MAAM,OAAO,GAAG,2BAA2B,CAAC"}
+{"version":3,"file":"example.globals.js","sourceRoot":"","sources":["example.globals.ts"],"names":[],"mappings":"AAAA,MAAM,CAAC,MAAM,UAAU,GAAG,mCAAmC,CAAC;AAC9D,MAAM,CAAC,MAAM,OAAO,GAAG,+BAA+B,CAAC"}

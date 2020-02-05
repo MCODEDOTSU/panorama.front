@@ -14,39 +14,11 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <ul class="nav nav-tabs" id="tabs" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="main-tab" data-toggle="tab" href="#main" role="tab" aria-controls="main" aria-selected="true">Главная</a>
-                        </li>
-
-                        <additional-group-tabs></additional-group-tabs>
-
-                    </ul>
-                    <div class="tab-content" id="mainContent">
-                        <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="main-tab">
-                            <form>
-                                <div class="form-group">
-                                    <label for="singleInformationTitle">Наименование *</label>
-                                    <input type="text" id="singleInformationTitle" required
-                                           class="form-control"
-                                           placeholder="Наименование элемента"
-                                           v-model="elementState.element.title">
-                                </div>
-                                <div class="form-group">
-                                    <label for="singleInformationDescription">Описание</label>
-                                    <vue-editor id="singleInformationDescription"
-                                                ref="wysiwygContents"
-                                                v-model="elementState.element.description"
-                                                :editorToolbar="toolbar"></vue-editor>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                            <additional-information v-if="constructorState.isTableExists"></additional-information>
-                        </div>
-                    </div>
+                    <additional-group-tabs></additional-group-tabs>
+                    <additional-information></additional-information>
                 </div>
                 <div class="modal-footer">
+                    <span class="validation-error" v-if="fieldsNonCompleteness" style="color: #ff0000; font-size: 10pt">Проверьте заполненность полей во всех вкладках</span>
                     <button type="button" class="btn btn-primary" @click="validateAndUpdateElement">
                         Сохранить
                     </button>
@@ -64,7 +36,6 @@
     import ElementState from '@/store/modules/manager/element/types';
     import {VueEditor} from 'vue2-editor';
     import AdditionalInformation from '@/views/closed/information/AdditionalInformation.vue';
-    import ConstructorState from '@/store/modules/constructor/types';
     import AdditionalGroupTabs from '@/views/closed/information/AdditonalGroupTabs.vue';
 
     @Component({
@@ -72,30 +43,25 @@
     })
     export default class SingleInformation extends Vue {
 
-        @Action public managerUpdateElement: any;
-        @State('managerElement') public elementState: ElementState;
-        @State('constructor') public constructorState: ConstructorState;
         @Provide('validator') public $validator = this.$validator;
 
-        @Provide()
-        public toolbar: any = [
-            [{header: [1, 2, 3, 4, 5, 6, false]}],
-            ['bold', 'italic', 'underline', 'strike'],
-            [{align: []}],
-            ['blockquote', 'code-block'],
-            [{list: 'ordered'}, {list: 'bullet'}, {list: 'check'}],
-            [{indent: '-1'}, {indent: '+1'}],
-            [{color: []}, {background: []}],
-            ['clean'],
-        ];
+        @Action public managerUpdateElement: any;
+
+        @State('managerElement') public elementState: ElementState;
+
+        @Provide() private fieldsNonCompleteness = false;
 
         private validateAndUpdateElement() {
             this.$validator.validateAll().then((validationSuccessed) => {
                 if (validationSuccessed) {
+                    this.fieldsNonCompleteness = false;
                     this.managerUpdateElement();
                     $('#singleInformationModal').modal('hide');
+                } else {
+                    this.fieldsNonCompleteness = true;
                 }
             });
         }
+
     }
 </script>

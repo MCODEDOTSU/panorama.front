@@ -3,6 +3,6 @@ export default interface IGeometry {
     title: string;
     description?: string;
     geom: string;
-    layer_composition_id: number;
+    layer_id: number;
     olFeature?: any;
 }

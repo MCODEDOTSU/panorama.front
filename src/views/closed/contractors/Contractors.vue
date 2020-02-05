@@ -29,7 +29,13 @@
                 <div class="col-2"><label class="title">{{ contractor.inn }}</label></div>
                 <div class="col-2"><label class="title">{{ contractor.kpp }}</label></div>
                 <div class="col-3"><label class="title">
-                    {{ contractor.address.city }}, {{ contractor.address.street }}, {{ contractor.address.build }}
+                    <span v-if="contractor.address">
+                        <span>{{ contractor.address.city }}</span>
+                        <span v-if="contractor.address.city && contractor.address.street">, </span>
+                        <span>{{ contractor.address.street }}</span>
+                        <span v-if="(contractor.address.city || contractor.address.street) && contractor.address.build">, </span>
+                        <span>{{ contractor.address.build }}</span>
+                    </span>
                 </label></div>
             </div>
             <div class="row row-footer">

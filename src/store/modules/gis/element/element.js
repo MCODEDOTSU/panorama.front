@@ -5,11 +5,13 @@ import axios from 'axios';
 export const state = {
     element: {
         id: 0,
+        layer_id: 0,
         title: 'Новый элемент',
         description: '',
-        layer_id: 0,
-        geometries: [],
-        geometries_count: 0,
+        geometry: '',
+        length: 0,
+        area: 0,
+        perimeter: 0,
     },
 };
 export const actions = {
@@ -40,6 +42,22 @@ export const actions = {
         }
     },
     /**
+     * Изменить геометрию элемента
+     */
+    async updateGeometry({ rootState }, payload) {
+        try {
+            if (payload.id !== 0) {
+                const res = await axios.put(`${baseUrlAPI}gis/geometry/${payload.id}`, {
+                    geometry: payload.geometry,
+                });
+                SuccessNotifier.notify('Данные сохранены', `Геометрия элемента обновлена`);
+            }
+        }
+        catch {
+            ErrorNotifier.notify();
+        }
+    },
+    /**
      * Выделить элемент
      * @param payload
      */
@@ -52,11 +70,13 @@ export const actions = {
     unsetSingleElement({}, payload) {
         state.element = {
             id: 0,
+            layer_id: payload.layerId ? payload.layerId : 0,
             title: 'Новый элемент',
             description: '',
-            layer_id: payload.layerId,
-            geometries: [],
-            geometries_count: 0,
+            geometry: '',
+            length: 0,
+            area: 0,
+            perimeter: 0,
         };
     },
     /**

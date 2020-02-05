@@ -6,4 +6,6 @@ export default interface TableField {
     enums?: [];   // Значения для типов столбцов - один ко многим и многие ко многим
     required: boolean;
     value?: string;
+    group?: string;
+    is_deleted: boolean;
 }

@@ -37,7 +37,7 @@
                                    v-model="contractorState.contractor.inn">
                         </div>
                         <div class="form-group">
-                            <label for="singleContractorKPP">КПП *</label>
+                            <label for="singleContractorKPP">КПП</label>
                             <input type="number" id="singleContractorKPP"
                                    class="form-control"
                                    placeholder="КПП"

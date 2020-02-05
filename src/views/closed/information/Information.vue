@@ -21,10 +21,12 @@
             <div class="row row-body" v-for="element in elementState.elements">
                 <div class="col-6">
                     <label class="title">{{ element.title }}</label>
-                    <label class="description">Количество геоэлементов: {{ element.geometries_count }}</label>
+                    <label class="description">
+                        <!--span v-if="element.length">Длина: {{ setLength(element.length) }}</span>
+                        <span v-if="element.area">Площадь: <span v-html="setArea(element.area)"></span>, периметр: <span v-html="setPerimeter(element.perimeter)"></span></span-->
+                    </label>
                     <div class="actions">
                         <button class="btn-info" data-toggle="modal" data-target="#singleInformationModal" @click="showElementInfo(element)">Изменить</button>
-                        <button class="btn-info" @click="getElementGeometries(element)">Состав элемента</button>
                         <button class="btn-danger" data-toggle="modal" data-target="#sureModal" @click="setSureModalContent(element)">Удалить</button>
                     </div>
                 </div>
@@ -48,12 +50,13 @@
 <script lang="ts">
 
     import {Component, Vue} from 'vue-property-decorator';
-    import {Action, State} from 'vuex-class';
+    import {Action, Mutation, State} from 'vuex-class';
     import LayerState from '@/store/modules/manager/layer/types';
     import ElementState from '@/store/modules/manager/element/types';
     import SingleInformation from '@/views/closed/information/SingleInformation.vue';
     import SureModal from '@/components/common/SureModal.vue';
     import ConstructorState from '@/store/modules/constructor/types';
+    import {lengthConverter, perimeterConverter, areaConverter} from '@/domain/services/common/Calculator';
 
     @Component({
         components: {SingleInformation, SureModal},
@@ -64,18 +67,21 @@
         @Action public getLayerById: any;
         @Action public managerGetElements: any;
         @Action public managerSetSingleElement: any;
-        @Action public checkIfTableExists: any;
+        @Action public getConstructorByLayer: any;
         @Action public getAdditionalData: any;
         @Action public managerUnsetSingleElement: any;
         @Action public managerDeleteElement: any;
+
+        @Mutation public unsetAdditionalInfoValues: any;
 
         @State('managerLayer') public layerState: LayerState;
         @State('managerElement') public elementState: ElementState;
         @State('constructor') public constructorState: ConstructorState;
 
-        public created() {
-            this.getLayerById({ id: this.$route.params.id });
+        public async created() {
+            await this.getLayerById({ id: this.$route.params.id });
             this.managerGetElements({ layerId: this.$route.params.id });
+            await this.getConstructorByLayer({ layerId: this.$route.params.id });
         }
 
         /**
@@ -103,15 +109,8 @@
             this.managerUnsetSingleElement({
                 layerId: this.$route.params.id,
             });
-        }
-
-        /**
-         * Перейти на компонент редактирования состава слоя
-         * @param element
-         */
-        public getElementGeometries(element: any) {
-            this.managerSetSingleElement(element);
-            this.$router.push(`/manager/element/${element.id}`);
+            this.unsetAdditionalInfoValues();
+            this.getAdditionalData({layerId: this.$route.params.id});
         }
 
         /**
@@ -122,6 +121,18 @@
             this.constructorState.element = element;
             this.getAdditionalData({layerId: this.layerState.layer.id});
             this.managerSetSingleElement(element);
+        }
+
+        public setLength(length) {
+            return lengthConverter(length);
+        }
+
+        public setPerimeter(length) {
+            return perimeterConverter(length);
+        }
+
+        public setArea(length) {
+            return areaConverter(length);
         }
 
     }

@@ -8,7 +8,7 @@ export const addAuthorizationHeader = (userState: any) => {
 export const addAuthorizationHeaderFromLocalStorage = (storage: any) => {
     const token = JSON.parse(storage).user.token;
     // noinspection TsLint
-    if(token) {
+    if (token) {
         axios.defaults.headers.common['Authorization'] = token;
     }
 };

@@ -33,8 +33,7 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <router-link class="nav-link" to="/login" tag="a">Выйти <span class="sr-only"></span>
-                        </router-link>
+                        <button @click="logout" title="Выйти из Системы" class="btn btn-link nav-link router-link-active">Выйти</button>
                     </li>
                 </ul>
             </div>
@@ -44,11 +43,15 @@
 <script lang="ts">
 
     import {Component, Vue} from 'vue-property-decorator';
-    import {State} from 'vuex-class';
+    import {State, Action} from 'vuex-class';
     import UserState from '@/store/modules/user/types';
 
     @Component({})
     export default class Header extends Vue {
+
         @State('user') public userState!: UserState;
+
+        @Action public logout: any;
+
     }
 </script>

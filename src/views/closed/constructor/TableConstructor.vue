@@ -1,19 +1,29 @@
 <template>
-    <div>
-        <div v-for="(tableGroup, groupKey) in tableFields">
-            <div class="row">
-                <div class="col-1">
+    <div class="table-constructor">
+        <div class="alert alert-info" v-if="!constructorState.tableFields.length">
+            Для данного слоя дополнительные поля формы не заданы.
+            Для чтого, что бы создать дополнительные поля в конструкторе формы,
+            необходимо создать группу полей, нажав на кнопку "Добавить группу"
+        </div>
+        <div class="alert alert-info" v-else>
+            Для добавления нового поля в группу нажмите "Добавить поле". Укажите тип поля, наименование и техническое наименование поля
+        </div>
+        <div v-for="(tableGroup, groupKey) in constructorState.tableFields">
+            <div class="row align-items-center group-header">
+                <div class="col-2">
                     Группа:
                 </div>
-                <div class="col-3">
+                <div class="col-7">
                     <input type="text" class="form-control" placeholder="Группа" v-model="tableGroup.group">
                 </div>
-                <div class="col-2">
-                    <button type="button" class="btn btn-primary" @click="addField(groupKey)">Добавить поле</button>
+                <div class="col-3 action">
+                    <button type="button" class="btn btn-primary" @click="addField(groupKey, tableGroup.group)">Добавить
+                        поле
+                    </button>
                 </div>
             </div>
             <div>
-                <div class="row">
+                <div class="row no-gutters align-items-center constructor-table-fields-header">
                     <div class="col-2">
                         <p>Группа</p>
                     </div>
@@ -26,21 +36,22 @@
                     <div class="col-3">
                         <p>Тех. наименование</p>
                     </div>
-                    <div class="col-1">
-                        <p>*</p>
-                    </div>
-                    <div class="col-1">
-                        <p>Удалить</p>
+                    <div class="col-2">
+                        <p>Обязательное?</p>
                     </div>
                 </div>
-                <div class="row constructor-table-fields" v-for="(tableField, key) in tableGroup.columns">
-                    <div class="col-2">
-                        <select class="form-control" v-model="tableField.group" @change="changeGroup(tableField, key, groupKey)">
-                            <option v-for="tableGroup in tableFields" :value="tableGroup.group">{{ tableGroup.group }}</option>
+                <div class="row constructor-table-fields" v-bind:class="{deleted: tableField.is_deleted}"
+                     v-for="(tableField, key) in tableGroup.columns">
+                    <div class="col-2 col col-group">
+                        <select class="form-control" v-model="tableField.group"
+                                @change="changeGroup(tableField, key, groupKey)">
+                            <option v-for="tableGroup in constructorState.tableFields" :value="tableGroup.group">{{
+                                tableGroup.group }}
+                            </option>
                         </select>
                     </div>
-                    <div class="col-2">
-                        <select class="form-control" v-model="tableField.type">
+                    <div class="col-2 col col-type">
+                        <select class="form-control" v-model="tableField.type" :disabled="tableField.id">
                             <option value="text_field">Текстовое поле</option>
                             <option value="long_text_field">Длинное текстовое поле</option>
                             <option value="number_field">Числовое поле</option>
@@ -49,36 +60,52 @@
                             <option value="many_from_many_field">Многие из многих</option>
                         </select>
                     </div>
-                    <div class="col-3">
-                        <input type="text" :name="'наименование под номером ' + key" data-vv-validate-on="change|blur" class="form-control" v-validate="'required'" placeholder="Наименование поля" v-model="tableField.title">
-                        <span class="validation-error" style="color: #ff0000; font-size: 10pt">{{ errors.first('наименование под номером ' + key) }}</span>
+                    <div class="col-3 col col-title">
+                        <input type="text" :name="'наименование группы ' + tableGroup.group + ' под номером ' + key"
+                               data-vv-validate-on="change|blur" class="form-control" v-validate="'required'"
+                               placeholder="Наименование поля" v-model="tableField.title">
+                        <span class="validation-error">{{ errors.first('наименование группы ' + tableGroup.group + ' под номером ' + key) }}</span>
                     </div>
-                    <div class="col-3">
-                        <tag-selector v-if="tableField.type === 'one_from_many_field' || tableField.type === 'many_from_many_field'" v-model="tableField.enums"
-                                      name="enums"/>
-
+                    <div class="col-3 col col-tech">
                         <input type="text" class="form-control" v-model="tableField.tech_title"
-                               data-vv-validate-on="change|blur" v-validate="'required'" :name="'техническое_наименование_под_номером_' + key" placeholder="техническое наименование поля">
-                        <span class="validation-error" style="color: #ff0000; font-size: 10pt">{{ errors.first('техническое_наименование_под_номером_' + key) }}</span>
+                               data-vv-validate-on="change|blur" v-validate="'required'"
+                               :name="'тех_наименование группы' + tableGroup.group + ' под номером ' + key"
+                               placeholder="техническое наименование поля">
+                        <span class="validation-error">{{ errors.first('тех_наименование группы' + tableGroup.group + ' под номером ' + key) }}</span>
                     </div>
-                    <div class="col-1">
-                        <input type="checkbox" class="form-control" placeholder="Обязательное" v-model="tableField.required">
+                    <div class="col-2 col col-required col-action">
+                        <div class="input-container">
+                            <select class="form-control" v-model="tableField.required">
+                                <option value="true">Да</option>
+                                <option value="false">Нет</option>
+                            </select>
+                        </div>
+                        <div class="btn-container">
+                            <button type="button" class="btn btn-warning btn-link" v-if="tableField.is_deleted === true"
+                                    @click="undoColumn(tableField, key, groupKey)"><i class="fas fa-trash-restore"></i>
+                            </button>
+                            <button type="button" class="btn btn-danger btn-link" v-else
+                                    @click="dropColumn(tableField, key, groupKey)"><i class="far fa-trash-alt"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="col-1">
-                        <button type="button" class="btn btn-primary" @click="dropColumn(tableField, key, groupKey)">X</button>
+                    <div class="col-12 col col-enums" v-if="tableField.type === 'one_from_many_field' || tableField.type === 'many_from_many_field'">
+                        <div class="row no-gutters">
+                            <div class="col-4 col">
+                                <div class="alert alert-info">Перечислите значения, разделяя их пробелом</div>
+                            </div>
+                            <div class="col-8 col">
+                                <tag-selector  v-model="tableField.enums" name="enums"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <hr>
             </div>
         </div>
-        <div class="row">
-            <button type="button" class="btn btn-primary" @click="addGroup">Добавить группу</button>
-
-            <button v-if="!constructorState.isTableExists" :disabled="tableFields.length === 0" type="button"
-                    class="btn btn-primary" @click="createTable">Сформировать таблицу
-            </button>
-            <button v-else type="button" class="btn btn-primary" @click="updateTable">Обновить таблицу</button>
+        <div class="action">
+            <button type="button" class="btn btn-primary btn-link" @click="addGroup"><i class="fas fa-plus-circle"></i>Добавить группу</button>
         </div>
 
     </div>
@@ -86,156 +113,91 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import axios from 'axios';
-    import {baseUrlAPI} from '@/globals';
-    import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
     import TableField from '@/domain/entities/constructor/TableField';
     import ConstructorState from '@/store/modules/constructor/types';
-    import {State} from 'vuex-class';
+    import {Action, State} from 'vuex-class';
     import TagSelector from 'vue-tag-selector';
-    import SuccessNotifier from '@/domain/util/notifications/SuccessNotifier';
-    import {arrayIndexOf} from '@/domain/services/common/ArrayActions';
-    import TableGroup from '@/domain/entities/constructor/TableGroup';
 
     @Component({
-        components: {TagSelector},
+        components: { TagSelector },
     })
     export default class TableConstructor extends Vue {
 
-        private tableFields: TableGroup[] = [];
+        @Action public getConstructorByLayer: any;
+
         @State('constructor') private constructorState: ConstructorState;
 
-        public created() {
-            this.checkIfTableExists();
-        }
-
-        private addField(groupKey: string) {
-            this.tableFields[groupKey].columns.push({
-                type: 'text_field',
-                title: '',
-                tech_title: undefined,
-                required: false,
-                enums: undefined,
-            });
-        }
-
+        /***
+         * Добавить группу
+         */
         private addGroup() {
-            this.tableFields.push({
+            this.constructorState.tableFields.push({
                 group: 'Новая группа',
                 columns: [{
                     type: 'text_field',
                     title: '',
-                    tech_title: undefined,
+                    tech_title: 'name1',
                     required: false,
                     enums: undefined,
+                    group: 'Новая группа',
+                    is_deleted: false,
                 }],
             });
         }
 
+        /***
+         * Изменить группу
+         * @param tableField
+         * @param columnKey
+         * @param groupKey
+         */
         private changeGroup(tableField, columnKey, groupKey) {
-            for (const tableGroup of this.tableFields) {
+            for (const tableGroup of this.constructorState.tableFields) {
                 if (tableGroup.group === tableField.group) {
                     tableGroup.columns.push(tableField);
-                    this.tableFields[groupKey].columns.splice(columnKey, 1);
+                    this.constructorState.tableFields[groupKey].columns.splice(columnKey, 1);
                 }
             }
         }
 
-        /**
-         * Превратить погрупповой массив в простой
-         * @param tableGroups
+        /***
+         * Добавить поле
          */
-        private plainizeFields(tableGroups: TableGroup[]) {
-            const plainizedColumns = [];
-            for (const tableGroup of tableGroups) {
-                for (const column of tableGroup.columns) {
-                    plainizedColumns.push(column);
-                }
-            }
-            return plainizedColumns;
-        }
-
-        private createTable() {
-            // @ts-ignore
-            this.$validator.validateAll().then((validationSuccessed) => {
-                if (validationSuccessed) {
-                    const plainizedFields = this.plainizeFields(this.tableFields);
-
-                    axios.post(`${baseUrlAPI}constructor/constructor_create`, {
-                        table_title: this.$route.params.id,
-                        columns: plainizedFields,
-                    }).then(() => {
-                        this.constructorState.isTableExists = true;
-                        this.getTableInfo();
-                        SuccessNotifier.notify('Таблица создана', `Таблица для данного слоя создана`);
-                    }).catch(() => {
-                        ErrorNotifier.notify();
-                    });
-                }
+        private addField(groupKey: string, groupName: string) {
+            this.constructorState.tableFields[groupKey].columns.push({
+                type: 'text_field',
+                title: '',
+                tech_title: 'name1',
+                required: false,
+                enums: undefined,
+                group: groupName,
+                is_deleted: false,
             });
         }
 
-        private async checkIfTableExists() {
-            try {
-                const res = await axios.get(`${baseUrlAPI}constructor/is_table_exists/${this.$route.params.id}`);
-
-                if (res.data) {
-                    this.getTableInfo();
-                }
-
-            } catch {
-                ErrorNotifier.notify();
-            }
-        }
-
-        private updateTable() {
-            // @ts-ignore
-            this.$validator.validateAll().then((validationSuccessed) => {
-                if (validationSuccessed) {
-                    const plainizedFields = this.plainizeFields(this.tableFields);
-
-                    axios.post(`${baseUrlAPI}constructor/constructor_update`, {
-                        table_title: this.$route.params.id,
-                        columns: plainizedFields,
-                    }).then(() => {
-                        this.getTableInfo();
-                        SuccessNotifier.notify('Таблица создана', `Таблица для данного слоя обновлена`);
-                    }).catch(() => {
-                        ErrorNotifier.notify();
-                    });
-                }
-            });
-        }
-
-        private async getTableInfo() {
-            try {
-                const res = await axios.get(`${baseUrlAPI}constructor/get_table_info/${this.$route.params.id}`);
-                this.tableFields = res.data;
-            } catch {
-                ErrorNotifier.notify();
-            }
-        }
-
+        /***
+         * Удалить поле
+         * @param tableField
+         * @param key
+         * @param groupKey
+         */
         private async dropColumn(tableField: TableField, key: number, groupKey: string) {
-            if (tableField.id) {
-                try {
-                    const res = await axios.post(`${baseUrlAPI}constructor/drop_column`, {
-                        column_tech_title: tableField.tech_title,
-                        table_id: this.$route.params.id,
-                    });
-
-                    this.getTableInfo();
-                } catch {
-                    ErrorNotifier.notify();
-                }
-            } else {
-                this.tableFields[groupKey].columns.splice(key, 1);
-            }
+            const group = Object.assign({}, this.constructorState.tableFields[groupKey]);
+            group.columns[key].is_deleted = true;
+            this.constructorState.tableFields[groupKey] = Object.assign({}, group);
         }
+
+        /***
+         * Восстановить поле
+         * @param tableField
+         * @param key
+         * @param groupKey
+         */
+        private async undoColumn(tableField: TableField, key: number, groupKey: string) {
+            const group = Object.assign({}, this.constructorState.tableFields[groupKey]);
+            group.columns[key].is_deleted = false;
+            this.constructorState.tableFields[groupKey] = Object.assign({}, group);
+        }
+
     }
 </script>
-<style>
-    .constructor-table-fields {
-        margin-bottom: 10px;
-    }
-</style>

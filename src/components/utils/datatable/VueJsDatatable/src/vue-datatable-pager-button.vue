@@ -30,15 +30,15 @@ export default {
 		li_classes(){
 			var classes = [];
 
-			if(this.settings.get('pager.classes.li')){
+			if (this.settings.get('pager.classes.li')){
 				classes.push(this.settings.get('pager.classes.li'));
 			}
 
-			if(this.disabled){
+			if (this.disabled){
 				classes.push(this.settings.get('pager.classes.disabled'));
 			}
 
-			if(this.selected){
+			if (this.selected){
 				classes.push(this.settings.get('pager.classes.selected'));
 			}
 
@@ -47,7 +47,7 @@ export default {
 		a_classes(){
 			var classes = [];
 
-			if(this.settings.get('pager.classes.a')){
+			if (this.settings.get('pager.classes.a')){
 				classes.push(this.settings.get('pager.classes.a'));
 			}
 
@@ -59,7 +59,7 @@ export default {
 	},
 	methods: {
 		sendClick(){
-			if(!this.disabled){
+			if (!this.disabled){
 				this.$emit('click', this.value);
 			}
 		}

@@ -164,7 +164,40 @@
                 </div>
             </div>
         </div>
-
+        <div>
+            <div class="form-group">
+                <label for="styleEditorPointList">Связывать элементы в список</label>
+                <select id="styleEditorPointList" class="form-control"
+                        v-model="styleEditorState.style.list.hasList">
+                    <option value="true">Да</option>
+                    <option value="false">Нет</option>
+                </select>
+            </div>
+            <div class="form-group" v-if="styleEditorState.style.list.hasList">
+                <label for="styleEditorPointListVisibility">Отображать связь на карте</label>
+                <select id="styleEditorPointListVisibility" class="form-control"
+                        v-model="styleEditorState.style.list.visibility">
+                    <option value="true">Отображать</option>
+                    <option value="false">Скрывать</option>
+                </select>
+            </div>
+            <div class="form-group" v-if="styleEditorState.style.list.visibility">
+                <label>Цвет линии связи</label>
+                <color-picker v-model="styleEditorState.style.list.color"
+                              v-on:change="onChangeListColor"></color-picker>
+            </div>
+            <div class="form-group" v-if="styleEditorState.style.list.visibility">
+                <label for="styleEditorPointListOpacity">Прозрачность линии связи</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">%</div>
+                    </div>
+                    <input type="number" id="styleEditorPointListOpacity" class="form-control"
+                           step="5" min="0" max="100"
+                           v-model="styleEditorState.style.list.opacity"/>
+                </div>
+            </div>
+        </div>
     </form>
 
 </template>
@@ -174,7 +207,6 @@
     import {Action, State} from 'vuex-class';
     import StyleEditorState from '@/store/modules/components/utils/styleEditor/types';
     import ColorPicker from '@/components/utils/ColorPicker/ColorPicker.vue';
-    import GeoLayerState from '@/store/modules/geo/layer/types';
 
     interface HTMLInputEvent extends Event {
         target: HTMLInputElement & EventTarget;
@@ -186,7 +218,6 @@
     export default class LayerStyleEditor extends Vue {
 
         @State('styleEditor') public styleEditorState: StyleEditorState;
-        @State('geoLayer') public geoLayerState!: GeoLayerState;
 
         @Action public setMapStyles: any;
         @Action public setMapElements: any;
@@ -210,6 +241,16 @@
         public onChangeFillColor(color: string) {
             const style = this.styleEditorState.style;
             style.shape.fill.color = color;
+            this.styleEditorState.style = Object.assign({}, style);
+        }
+
+        /**
+         * Изменили значение цвета линии связи
+         * @param color
+         */
+        public onChangeListColor(color: string) {
+            const style = this.styleEditorState.style;
+            style.list.color = color;
             this.styleEditorState.style = Object.assign({}, style);
         }
 

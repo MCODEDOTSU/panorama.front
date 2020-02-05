@@ -52,11 +52,11 @@ class Settings {
     _mergeObjects(obj_1, obj_2){
         for(var key in obj_2){
 
-            if(obj_2[key] === null){
+            if (obj_2[key] === null){
                 obj_1[key] = obj_2[key];
 
                 continue;
-            }else if(typeof obj_2[key] === 'object'){
+            }else if (typeof obj_2[key] === 'object'){
                 obj_1[key] = this._mergeObjects(obj_1[key], obj_2[key]);
 
                 continue;

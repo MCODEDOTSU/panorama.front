@@ -14,55 +14,98 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="singleLayerTitle">Наименование *</label>
-                            <input type="text" id="singleLayerTitle" required
-                                   class="form-control"
-                                   placeholder="Наименование слоя"
-                                   v-model="layerState.layer.title">
-                        </div>
-                        <div class="form-group">
-                            <label for="singleLayerDescription">Описание</label>
-                            <vue-editor id="singleLayerDescription"
-                                        ref="wysiwygContents"
-                                        v-model="layerState.layer.description"
-                                        :editorToolbar="toolbar"></vue-editor>
-                        </div>
-                        <div class="form-group">
-                            <label for="singleLayerParentId">Родительский слой</label>
-                            <select id="singleLayerParentId" class="form-control" v-model="layerState.layer.parent_id"
-                                    disabled>
-                                <option value="0"></option>
-                                <option v-for="layer in layerState.layers" v-if="layerState.layer.id !== layer.id"
-                                        :value="layer.id" :title="layer.description">
-                                    {{ layer.title }}
-                                </option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="singleLayerModuleId">Включить в модуль *</label>
-                            <select id="singleLayerModuleId" required
-                                    class="form-control"
-                                    v-model="layerState.layer.module_id">
-                                <option v-for="module in moduleState.modules" :value="module.id"
-                                        :title="module.description">
-                                    {{ module.title }}
-                                </option>
-                            </select>
-                        </div>
-                    </form>
+
+                    <b-tabs>
+
+                        <!-- Свойства компонента слоя -->
+                        <b-tab title="Свойства" active>
+
+                            <form>
+                                <div class="form-group">
+                                    <label for="singleLayerAlias">Алиас *</label>
+                                    <input type="text" id="singleLayerAlias" required
+                                           class="form-control"
+                                           placeholder="Алиас слоя"
+                                           v-model="layerState.layer.alias">
+                                </div>
+                                <div class="form-group">
+                                    <label for="singleLayerTitle">Наименование *</label>
+                                    <input type="text" id="singleLayerTitle" required
+                                           class="form-control"
+                                           placeholder="Наименование слоя"
+                                           v-model="layerState.layer.title">
+                                </div>
+                                <div class="form-group">
+                                    <label for="singleLayerDescription">Описание</label>
+                                    <vue-editor id="singleLayerDescription"
+                                                ref="wysiwygContents"
+                                                v-model="layerState.layer.description"
+                                                :editorToolbar="toolbar"></vue-editor>
+                                </div>
+                                <div class="form-group">
+                                    <label for="singleLayerParentId">Родительский слой</label>
+                                    <select id="singleLayerParentId" class="form-control" v-model="layerState.layer.parent_id"
+                                            disabled>
+                                        <option value="0"></option>
+                                        <option v-for="layer in layerState.layers" v-if="layerState.layer.id !== layer.id"
+                                                :value="layer.id" :title="layer.description">
+                                            {{ layer.title }}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="singleLayerModuleId">Включить в модуль *</label>
+                                    <select id="singleLayerModuleId" required
+                                            class="form-control"
+                                            v-model="layerState.layer.module_id">
+                                        <option v-for="module in moduleState.modules" :value="module.id"
+                                                :title="module.description">
+                                            {{ module.title }}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="singleLayerVisibility">Видимость слоя *</label>
+                                    <select id="singleLayerVisibility" required
+                                            class="form-control"
+                                            v-model="layerState.layer.visibility">
+                                        <option value="false" title="Скрытый слой">Скрытый слой</option>
+                                        <option value="true" title="Отображаемый слой">Отображаемый слой</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="singleLayerGeometryType">Тип геометрии *</label>
+                                    <select id="singleLayerGeometryType" required
+                                            class="form-control"
+                                            v-model="layerState.layer.geometry_type"
+                                            :disabled="layerState.layer.id !== 0"
+                                            v-on:change="geometryTypeChanged">
+                                        <option value="point">Точечный элемент</option>
+                                        <option value="linestring">Линейный элемент</option>
+                                        <option value="polygon">Полигональный элемент</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </b-tab>
+
+                        <!-- Стиль компонента слоя -->
+                        <b-tab title="Стиль" ref="style-tab" @click="resizeMap">
+                            <layer-style-editor :geometryType="layerState.layer.geometry_type"></layer-style-editor>
+                        </b-tab>
+
+                        <!-- Форма - дополнительные поля конструктора -->
+                        <b-tab title="Форма" ref="style-tab">
+                            <table-constructor></table-constructor>
+                        </b-tab>
+
+                    </b-tabs>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary"
-                            @click="updateLayer"
+                            @click="updateSingleLayer"
                             data-dismiss="modal">
                         Сохранить
-                    </button>
-                    <button type="button" class="btn btn-primary"
-                            @click="$router.push(`/manager/layer/${layerState.layer.id}`)"
-                            data-dismiss="modal">
-                        Состав слоя
                     </button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                 </div>
@@ -73,25 +116,21 @@
 
 <script lang="ts">
 
-    import {Component, Vue, Provide} from 'vue-property-decorator';
+    import {Component, Vue, Watch, Provide} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import ModuleState from '@/store/modules/manager/module/types';
     import LayerState from '@/store/modules/manager/layer/types';
+    import LayerStyleEditor from '@/components/utils/StyleEditor/LayerStyleEditor.vue';
+    import StyleEditorState from '@/store/modules/components/utils/styleEditor/types';
     import {VueEditor} from 'vue2-editor';
+    import TableConstructor from '@/views/closed/constructor/TableConstructor.vue';
 
     @Component({
-        components: {VueEditor},
+        components: {LayerStyleEditor, VueEditor, TableConstructor},
     })
     export default class SingleLayer extends Vue {
 
-        @Action public managerGetModules: any;
-        @Action public updateLayer: any;
-
-        @State('managerModule') public moduleState: ModuleState;
-        @State('managerLayer') public layerState: LayerState;
-
-        @Provide()
-        public toolbar: any = [
+        @Provide() public toolbar: any = [
             [{header: [1, 2, 3, 4, 5, 6, false]}],
             ['bold', 'italic', 'underline', 'strike'],
             [{align: []}],
@@ -102,8 +141,49 @@
             ['clean'],
         ];
 
+        @Action public managerGetModules: any;
+        @Action public updateLayer: any;
+        @Action public mapUpdateSize: any;
+        @Action public setGeometryTypeByStyleEditor: any;
+        @Action public setDefaultStyleByStyleEditor: any;
+        @Action public getConstructorByLayer: any;
+        @Action public updateConstructorTable: any;
+
+        @State('managerModule') public moduleState: ModuleState;
+        @State('managerLayer') public layerState: LayerState;
+        @State('styleEditor') public styleEditorState: StyleEditorState;
+
+        @Watch('styleEditorState.style', {deep: true})
+        public onChangeJsonStyle() {
+            this.layerState.layer.style = Object.assign({}, this.styleEditorState.style);
+        }
+
         public async created() {
             await this.managerGetModules();
+            await this.getConstructorByLayer({ layerId: this.layerState.layer.id });
+        }
+
+        /**
+         * Был изменен тип геометрии компонента слоя
+         */
+        public geometryTypeChanged() {
+            this.setGeometryTypeByStyleEditor({ geometryType: this.layerState.layer.geometry_type });
+            this.setDefaultStyleByStyleEditor();
+        }
+
+        /**
+         * Изменить размеры карты для её отображения
+         */
+        public resizeMap() {
+            this.mapUpdateSize();
+        }
+
+        /**
+         * Обновить данные слоя
+         */
+        public async updateSingleLayer() {
+            await this.updateLayer();
+            this.updateConstructorTable({ layerId: this.layerState.layer.id });
         }
 
     }

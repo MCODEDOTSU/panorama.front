@@ -97,12 +97,21 @@ export const actions = {
      * @param payload
      */
     addFeatureToMap({}, payload) {
-        const i = arrayIndexOf(state.styles, payload.layer_composition_id);
-        if (i === -1 || !payload.geom) {
-            return;
+        if (payload.style) {
+            if (!payload.geom) {
+                return;
+            }
+            const feature = createOLFeature(payload.id, payload.geom, payload.property, payload.style);
+            state.layer.getSource().addFeature(feature);
         }
-        const feature = createOLFeature(payload.id, payload.geom, payload.property, state.styles[i]);
-        state.layer.getSource().addFeature(feature);
+        else {
+            const i = arrayIndexOf(state.styles, payload.layer_id);
+            if (i === -1 || !payload.geom) {
+                return;
+            }
+            const feature = createOLFeature(payload.id, payload.geom, payload.property, state.styles[i]);
+            state.layer.getSource().addFeature(feature);
+        }
     },
     /**
      * Удалить элемент с карты

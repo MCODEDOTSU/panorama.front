@@ -3,14 +3,16 @@ import { baseUrlAPI } from '@/globals';
 import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
 import { editUpdatedItem, removeDeletedItem } from '@/domain/services/common/UpdateItemService';
 import axios from 'axios';
+import { plainizeFields } from '@/domain/services/common/AdditionalFieldsService';
 export const state = {
     element: {
         id: 0,
+        layer_id: 0,
         title: '',
         description: '',
-        layer_id: 0,
-        geometries: [],
-        geometries_count: 0,
+        length: 0,
+        area: 0,
+        perimeter: 0,
     },
     elements: [],
 };
@@ -45,7 +47,7 @@ export const actions = {
     async managerUpdateElement({ rootState }) {
         try {
             // Дополнительные данные для элемента - с использованием конструктора
-            state.element.additionalData = rootState.constructor.tableFields;
+            state.element.additionalData = plainizeFields(rootState.constructor.tableFields);
             if (state.element.id !== 0) {
                 const res = await axios.put(`${baseUrlAPI}manager/element/${state.element.id}`, state.element);
                 SuccessNotifier.notify('Данные сохранены', `Элемент "${state.element.title}" изменен`);
@@ -90,11 +92,12 @@ export const actions = {
     managerUnsetSingleElement({}, payload) {
         state.element = {
             id: 0,
+            layer_id: payload.layerId ? payload.layerId : 0,
             title: '',
             description: '',
-            layer_id: payload.layerId,
-            geometries: [],
-            geometries_count: 0,
+            length: 0,
+            area: 0,
+            perimeter: 0,
         };
     },
 };

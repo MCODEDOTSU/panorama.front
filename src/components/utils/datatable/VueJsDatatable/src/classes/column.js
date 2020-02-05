@@ -14,19 +14,19 @@ class Column {
     }
 
     setAlignment(value){
-        if(!value || typeof value !== 'string'){
+        if (!value || typeof value !== 'string'){
             this.align = 'left';
 
             return this;
         }
 
-        if(value.toLowerCase() === 'center'){
+        if (value.toLowerCase() === 'center'){
             this.align = 'center';
 
             return this;
         }
 
-        if(value.toLowerCase() === 'right'){
+        if (value.toLowerCase() === 'right'){
             this.align = 'right';
 
             return this;
@@ -38,15 +38,15 @@ class Column {
     }
 
     isFilterable(props){
-        if(props.filterable === false){
+        if (props.filterable === false){
             return false;
         }
 
-        if(!props.field && !props.representedAs){
+        if (!props.field && !props.representedAs){
             return false;
         }
 
-        if(this.component && !(this.representedAs || this.field)){
+        if (this.component && !(this.representedAs || this.field)){
             return false;
         }
 
@@ -54,15 +54,15 @@ class Column {
     }
 
     isSortable(props){
-        if(props.sortable === false){
+        if (props.sortable === false){
             return false;
         }
 
-        if(!props.field && !props.representedAs){
+        if (!props.field && !props.representedAs){
             return false;
         }
 
-        if(this.component && !(this.representedAs || this.field)){
+        if (this.component && !(this.representedAs || this.field)){
             return false;
         }
 
@@ -70,11 +70,11 @@ class Column {
     }
 
     getRepresentation(row) {
-        if(this.representedAs && typeof this.representedAs === 'function'){
+        if (this.representedAs && typeof this.representedAs === 'function'){
             return this.representedAs(row);
         }
 
-        if(this.component && this.filterable){
+        if (this.component && this.filterable){
             return this.plain_text_function(row, this);
         }
 

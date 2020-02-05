@@ -1,6 +1,8 @@
 import { baseUrlAPI } from '@/globals';
+import { plainizeFields } from '@/domain/services/common/AdditionalFieldsService';
 import axios from 'axios';
 import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
+import SuccessNotifier from '@/domain/util/notifications/SuccessNotifier';
 export const state = {
     isTableExists: false,
     tableFields: [],
@@ -10,21 +12,67 @@ export const state = {
         title: '',
     },
 };
+export const mutations = {
+    unsetAdditionalInfoValues() {
+        state.element = {
+            id: 0,
+            title: '',
+        };
+        for (const group of state.tableFields) {
+            for (const column of group.columns) {
+                column.value = '';
+            }
+        }
+    },
+};
 export const actions = {
-    async checkIfTableExists({ dispatch }, payload) {
+    /***
+     * Проверить, сущетсвует ли таблица с доп. полями
+     * @param dispatch
+     * @param payload
+     */
+    async getConstructorByLayer({ dispatch }, payload) {
         try {
-            const res = await axios.get(`${baseUrlAPI}constructor/is_table_exists/${payload.layerId}`);
-            state.isTableExists = res.data;
-            dispatch('getTableInfo', { id: payload.layerId });
+            const res = await axios.get(`${baseUrlAPI}constructor/${payload.layerId}`);
+            state.isTableExists = res.data.length === 0 ? false : true;
+            state.tableFields = res.data;
         }
         catch {
             ErrorNotifier.notify();
         }
     },
-    async getTableInfo({ commit, dispatch }, payload) {
+    /***
+     * Создать или обновить таблицу
+     * @param payload
+     */
+    async updateConstructorTable({}, payload) {
         try {
-            const res = await axios.get(`${baseUrlAPI}constructor/get_table_info/${payload.id}`);
-            state.tableFields = res.data;
+            const plainizedFields = plainizeFields(state.tableFields);
+            if (state.isTableExists === true) {
+                const res = await axios.put(`${baseUrlAPI}constructor/${payload.layerId}`, {
+                    columns: plainizedFields,
+                });
+                SuccessNotifier.notify('Данные сохранены', `Метаданные слоя обновлены`);
+            }
+            else {
+                const res = await axios.post(`${baseUrlAPI}constructor/${payload.layerId}`, {
+                    columns: plainizedFields,
+                });
+                state.isTableExists = true;
+                SuccessNotifier.notify('Данные сохранены', `Метаданные слоя созданы`);
+            }
+        }
+        catch {
+            ErrorNotifier.notify();
+        }
+    },
+    /***
+     * Очистить конструкт для нового слоя
+     */
+    unsetConstructorByLayer() {
+        try {
+            state.isTableExists = false;
+            state.tableFields = [];
         }
         catch {
             ErrorNotifier.notify();
@@ -37,11 +85,17 @@ export const actions = {
      */
     async getAdditionalData({}, payload) {
         try {
-            const res = await axios.get(`${baseUrlAPI}additional_data/get_additional_data/${state.element.id}/${payload.layerId}`);
-            if (res.data) {
-                state.isTableExists = true;
-            }
-            state.tableFields = res.data;
+            const res = await axios.get(`${baseUrlAPI}constructor/${payload.layerId}/${state.element.id}`);
+            state.isTableExists = res.data.length === 0 ? false : true;
+            state.tableFields = res.data.map((field) => {
+                field.columns = field.columns.map((column) => {
+                    if (column.type === 'many_from_many_field') {
+                        column.value = JSON.parse(column.value);
+                    }
+                    return column;
+                });
+                return field;
+            });
         }
         catch {
             ErrorNotifier.notify();
@@ -49,6 +103,6 @@ export const actions = {
     },
 };
 export const constructor = {
-    state, actions,
+    state, actions, mutations,
 };
 //# sourceMappingURL=constructor.js.map

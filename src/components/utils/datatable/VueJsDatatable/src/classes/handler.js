@@ -6,7 +6,7 @@ class Handler {
         this.displayHandler = this.handleDisplay;
     }
     handleFilter(data, filter, columns){
-        if(!filter){
+        if (!filter){
             return data;
         }
 
@@ -14,7 +14,7 @@ class Handler {
 
         return data.filter(function(row){
 			for(var i in filter_strings){
-				if(!this.rowMatches(row, filter_strings[i], columns)){
+				if (!this.rowMatches(row, filter_strings[i], columns)){
 					return false;
 				}
 			}
@@ -24,7 +24,7 @@ class Handler {
     }
     rowMatches(row, filter_string, columns){
         for(var i in columns){
-            if(columns[i].matches(row, filter_string)){
+            if (columns[i].matches(row, filter_string)){
                 return true;
             }
         }
@@ -32,7 +32,7 @@ class Handler {
         return false;
     }
     handleSort(filtered_data, sort_column, sort_dir){
-		if(!sort_column || sort_dir === null){
+		if (!sort_column || sort_dir === null){
 			return filtered_data;
 		}
 
@@ -40,13 +40,13 @@ class Handler {
 			var value_a = sort_column.getRepresentation(a);
 			var value_b = sort_column.getRepresentation(b);
 
-			if(value_a == value_b){
+			if (value_a == value_b){
 				return 0;
 			}
 
 			var sort_val = value_a > value_b ? 1 : -1;
 
-			if(sort_dir === 'desc'){
+			if (sort_dir === 'desc'){
 				sort_val *= -1;
 			}
 
@@ -54,11 +54,11 @@ class Handler {
 		});
     }
     handlePaginate(sorted_data, page_count, page_number){
-		if(!page_count){
+		if (!page_count){
 			return sorted_data;
 		}
 
-		if(page_number < 1){
+		if (page_number < 1){
 			page_number = 1;
 		}
 

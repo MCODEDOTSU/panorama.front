@@ -1,71 +1,72 @@
 <template>
-    <div class="geom-data manager">
+    <div class='geom-data manager'>
 
         <!-- Компонент Карты -->
-        <ol-map :editor="true"
-                v-on:modifyend="onModifyend"
-                v-on:drawend="onDrawend"></ol-map>
+        <ol-map :editor='true'
+                v-on:modifyend='onModifyend'
+                v-on:drawend='onDrawend'></ol-map>
 
-        <a @click="$router.go(-1)" class="btn-come-back">
-            <i class="fas fa-arrow-left"></i><label>назад</label>
+        <a @click='$router.go(-1)' class='btn-come-back'>
+            <i class='fas fa-arrow-left'></i><label>назад</label>
         </a>
 
         <!-- Список слоев и элементов -->
-        <div class="geom-data-list">
+        <div class='geom-data-list'>
 
             <h2>Картографические слои</h2>
 
-            <ul class="layers-list">
-                <li class="layer-item" v-bind:class="{'empty': (layer.elements.length === 0)}"
-                    v-for="(layer, i) in this.layerState.layers" :key="layer.id">
+            <ul class='layers-list'>
+                <li class='layer-item' v-bind:class='{empty: (layer.elements.length === 0)}'
+                    v-for='(layer, i) in this.layerState.layers' :key='layer.id'>
 
                     <!-- Строка со слоем -->
-                    <span class="layer-item-content">
-                        <button class="btn-checked layer-item-select" v-bind:class="{ checked: layer.checked }"
-                                @click="selectLayer(i)"
-                                :disabled="layer.elements.length === 0">
-                        </button>
+                    <span class='layer-item-content'>
+                        <div class='btn-checked layer-item-select' v-bind:class='{ checked: layer.checked }'
+                             @click='selectLayer(i)'
+                             :disabled='layer.elements.length === 0'>
+                        </div>
                         <label>{{layer.title}}</label>
-                        <button class="layer-item-hidden"
-                                @click="hiddenLayer(i)">
-                                <i class="fas fa-angle-down" v-if="!layer.hidden"></i>
-                                <i class="fas fa-angle-up" v-else></i>
-                            </button>
-                        <button class="btn-action btn-add-element"
-                                title="Создать элемент"
-                                v-show="!layer.hidden"
-                                @click="createElement(i)">
-                            <i class="fas fa-plus-circle"></i>
-                        </button>
+                        <div class='btn layer-item-hidden' v-if='layer.elements.length !== 0'
+                             @click='hiddenLayer(i)'>
+                                <i class='fas fa-angle-down' v-if='!layer.hidden'></i>
+                                <i class='fas fa-angle-up' v-else></i>
+                        </div>
+                        <div class='btn btn-action btn-add-element'
+                             v-bind:class='{empty: (layer.elements.length === 0)}'
+                             title='Создать элемент'
+                             v-show='!layer.hidden'
+                             @click='createElement(i)'>
+                            <i class='fas fa-plus-circle'></i>
+                        </div>
                     </span>
 
                     <!-- Список элементов слоя -->
-                    <ul class="elements-list" v-show="!layer.hidden">
-                        <li class="element-item" v-for="(element, j) in layer.elements" :key="element.id">
+                    <ul class='elements-list' v-show='!layer.hidden'>
+                        <li class='element-item' v-for='(element, j) in layer.elements' :key='element.id'>
 
-                            <span v-bind:class="{'is-editor': elementState.element.id === element.id}">
+                            <span v-bind:class='{editor: elementState.element.id === element.id}'>
 
-                                <button v-if="element.geometries_count !== 0"
-                                        @click="selectElement(i, j)"
-                                        class="btn-checked element-item-select"
-                                        v-bind:class="{checked: element.checked}">
-                                </button>
-                                <i v-else class="fas fa-exclamation-triangle" title="Геометрия элемента не задана"></i>
+                                <div v-if='element.geometry'
+                                     @click='selectElement(i, j)'
+                                     class='btn-checked element-item-select'
+                                     v-bind:class='{checked: element.checked}'>
+                                </div>
+                                <i v-else class='fas fa-exclamation-triangle' title='Геометрия элемента не задана'></i>
 
                                 <!-- Редактор элемента -->
-                                <single-element v-if="elementState.element.id === element.id"></single-element>
+                                <single-element v-if='elementState.element.id === element.id'></single-element>
 
                                 <!-- Отображение элемента в списке -->
-                                <label v-else v-bind:class="{warning: element.geometries_count === 0}">
+                                <label v-else v-bind:class='{warning: !element.geometry}'>
                                     {{ element.title }}
-                                    <button class="btn-action btn-edit" title="Редактировать элемент"
-                                        @click="changeElement(i, j)">
-                                        <i class="fa fa-pen"></i>
+                                    <button class='btn-action btn-edit' title='Редактировать элемент'
+                                            @click='changeElement(i, j)'>
+                                        <i class='fa fa-pen'></i>
                                     </button>
-                                    <button class="btn-action btn-delete" title="Удалить элемент"
-                                            data-toggle="modal" data-target="#sureModal"
-                                            @click="setSureModalContent(i, j)">
-                                        <i class="fas fa-trash"></i>
+                                    <button class='btn-action btn-delete' title='Удалить элемент'
+                                            data-toggle='modal' data-target='#sureModal'
+                                            @click='setSureModalContent(i, j)'>
+                                        <i class='fas fa-trash'></i>
                                     </button>
                                 </label>
                                 <!-- конец Отображение элемента в списке -->
@@ -86,14 +87,12 @@
     </div>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 
     import {Component, Provide, Vue, Prop, Watch} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import LayerState from '@/store/modules/gis/layer/types';
     import ElementState from '@/store/modules/gis/element/types';
-    import GeometryState from '@/store/modules/gis/geometry/types';
-    import LayerCompositionState from '@/store/modules/gis/layerComposition/types';
     import OlMap from '@/components/utils/Map/Map.vue';
     import SingleElement from './SingleElement.vue';
     import SureModal from '@/components/common/SureModal.vue';
@@ -101,18 +100,15 @@
     import {editUpdatedItem} from '@/domain/services/common/UpdateItemService';
 
     @Component({
-        components: { OlMap, SingleElement, SureModal },
+        components: {OlMap, SingleElement, SureModal},
     })
     export default class GisDataEditor extends Vue {
 
         @State('gisLayer') public layerState!: LayerState;
         @State('gisElement') public elementState!: ElementState;
-        @State('gisGeometry') public geometryState!: GeometryState;
-        @State('gisLayerComposition') public layerCompositionState!: LayerCompositionState;
 
         // Слои
         @Action public gisGetLayersToContractor: any;
-        @Action public gisGetLayerCompositionsToContractor: any;
         @Action public selectedLayer: any;
         @Action public unselectedLayer: any;
         @Action public setCurrentIndex: any;
@@ -120,14 +116,11 @@
 
         // Элементы
         @Action public updateElement: any;
+        @Action public updateGeometry: any;
         @Action public deleteElement: any;
         @Action public setSingleElement: any;
         @Action public unsetSingleElement: any;
         @Action public selectedElement: any;
-
-        // Геометрия элемента
-        @Action public updateGeometry: any;
-        @Action public setSingleGeometry: any;
 
         // Интерфейсы
         @Action public setSureModal: any;
@@ -137,14 +130,16 @@
         @Action public addFeatureToMap: any;
         @Action public removeFeatureFromMap: any;
         @Action public setMapInteraction: any;
+        @Action public focusOfFeature: any;
         @Action public focusOfFeatures: any;
 
+        @Provide('pointList') public pointList = [];
+
         public async created() {
-            await this.gisGetLayerCompositionsToContractor();
             await this.gisGetLayersToContractor();
             // Задаем стиль
             this.setMapStyles({
-                styles: this.layerCompositionState.styles,
+                styles: this.layerState.styles,
             });
         }
 
@@ -154,34 +149,29 @@
          * @param j
          */
         public async selectElement(i, j) {
+
             // Получаем элемент и снимаем/ставим галочку
             const elements = this.layerState.layers[i].elements;
             elements[j].checked = !elements[j].checked;
             this.layerState.layers[i].elements = elements.slice(0);
 
             if (elements[j].checked) { // Если галочку поставили
-                // Получаем геометрию элемента
-                await this.selectedElement({ i, j });
-                // Запоминаем ИД геообъектов для фокусировки на них
-                const geometriesIds = [];
                 // Рисуем на карте элемент
-                this.layerState.layers[i].elements[j].geometries.forEach((geometry) => {
-                    this.addFeatureToMap({
-                        id: `${geometry.type}-${geometry.id}`,
-                        layer_composition_id: geometry.layer_composition_id,
-                        geom: geometry.geom,
-                        property: geometry,
-                    });
-                    geometriesIds.push(`${geometry.type}-${geometry.id}`);
+                this.addFeatureToMap({
+                    id: elements[j].id,
+                    layer_id: this.layerState.layers[i].id,
+                    geom: elements[j].geometry,
+                    property: this.getPropertiesElement(elements[j]),
                 });
-                // Фокусируемся
-                this.focusOfFeatures({ids: geometriesIds});
+                this.focusOfFeature({id: elements[j].id});
             } else { // Если галочку сняли
                 // Стираем элемент с карты
-                this.layerState.layers[i].elements[j].geometries.forEach((geometry) => {
-                    this.removeFeatureFromMap({ id: `${geometry.type}-${geometry.id}` });
-                });
+                this.removeFeatureFromMap({id: elements[j].id});
             }
+
+            // Связь между точками
+            this.drawElementsList();
+
         }
 
         /**
@@ -189,6 +179,7 @@
          * @param i
          */
         public async selectLayer(i) {
+
             // Получаем слой и ставим/снимаем галочку
             const layers = this.layerState.layers;
             layers[i].checked = !layers[i].checked;
@@ -197,40 +188,38 @@
                 // Для каждого элемента слоя так же ставим галочку и сбрасываем геометрию
                 layers[i].elements.forEach((element) => {
                     element.checked = layers[i].checked;
-                    element.geometries = [];
                 });
-                // Запрос на получение геометрии каждого элемента слоя
-                await this.selectedLayer({ i });
                 // Запоминаем ИД геообъектов для фокусировки на них
-                const geometriesIds = [];
+                const ids = [];
                 // Рисуем все элементы на карте
                 this.layerState.layers[i].elements.forEach((element) => {
-                    element.geometries.forEach((geometry) => {
-                        this.addFeatureToMap({
-                            id: `${geometry.type}-${geometry.id}`,
-                            layer_composition_id: geometry.layer_composition_id,
-                            geom: geometry.geom,
-                            property: geometry,
-                        });
-                        geometriesIds.push(`${geometry.type}-${geometry.id}`);
+                    // Рисуем на карте элемент
+                    this.addFeatureToMap({
+                        id: element.id,
+                        layer_id: this.layerState.layers[i].id,
+                        geom: element.geometry,
+                        property: this.getPropertiesElement(element),
                     });
+                    ids.push(element.id);
                 });
                 // Фокусируемся
-                this.focusOfFeatures({ids: geometriesIds});
+                this.focusOfFeatures({ids});
             } else { // Если галочку сняли
                 // Удаляем все элементы с карты
                 this.layerState.layers[i].elements.forEach((element) => {
-                    element.geometries.forEach((geometry) => {
-                        this.removeFeatureFromMap({ id: `${geometry.type}-${geometry.id}` });
-                    });
+                    // Стираем элемент с карты
+                    this.removeFeatureFromMap({id: element.id});
                 });
                 // Для каждого элемента слоя так же ставим галочку и сбрасываем геометрию
                 layers[i].elements.forEach((element) => {
                     element.checked = layers[i].checked;
-                    element.geometries = [];
                 });
             }
             this.layerState.layers = layers.slice(0);
+
+            // Связь между точками
+            this.drawElementsList();
+
         }
 
         /**
@@ -240,6 +229,66 @@
             const layers = this.layerState.layers;
             layers[i].hidden = !layers[i].hidden;
             this.layerState.layers = layers.slice(0);
+        }
+
+        /**
+         * Отобразить связанный элементов на карте
+         */
+        public drawElementsList() {
+
+            // Стираем старые линии
+            this.pointList.forEach((id) => {
+                this.removeFeatureFromMap({ id });
+            });
+            this.pointList = [];
+
+            // Рисуем новые линии
+            const layers = this.layerState.layers.filter((a) => {
+                return (a.geometry_type === 'point' && a.style.list && a.style.list.visibility);
+            });
+            layers.forEach((layer) => {
+                layer.elements.filter((a) => {
+                    return (a.checked && a.element_next_id);
+                }).forEach((element) => {
+                    const next = layer.elements.find((a) => {
+                        return (a.id === element.element_next_id && a.checked);
+                    });
+                    if (next) {
+                        let x = '';
+                        let y = '';
+                        let geometry = /^POINT\((.+)\)$/.exec(element.geometry);
+                        if (geometry.length === 2) {
+                            x = geometry[1];
+                        }
+                        geometry = /^POINT\((.+)\)$/.exec(next.geometry);
+                        if (geometry.length === 2) {
+                            y = geometry[1];
+                        }
+                        if (x !== '' && y !== '') {
+                            // Рисуем на карте элемент
+                            this.addFeatureToMap({
+                                id: `${element.id}:${next.id}`,
+                                geom: `LINESTRING(${x}, ${y})`,
+                                property: {
+                                    id: element.id,
+                                    element_next_id: next.id,
+                                },
+                                style: {
+                                    id: layer.id,
+                                    font: Object.assign({}, layer.style.font),
+                                    stroke: {
+                                        color: layer.style.list.color,
+                                        opacity: layer.style.list.opacity,
+                                        width: 1,
+                                    },
+                                },
+                            });
+                            // Запоминаем линии
+                            this.pointList.push(`${element.id}:${next.id}`);
+                        }
+                    }
+                });
+            });
         }
 
         /**
@@ -258,6 +307,8 @@
                 layerIndex: i,
                 elementIndex: (this.layerState.layers[i].elements.length - 1),
             });
+            // Меняем режим работы карты на рисование
+            this.setMapInteraction({ mode: this.layerState.layers[i].geometry_type });
         }
 
         /**
@@ -277,10 +328,16 @@
                 layerIndex: i,
                 elementIndex: j,
             });
+
+            if (!this.layerState.layers[i].elements[j].geometry) {
+                // Меняем режим работы карты на 'рисование'
+                this.setMapInteraction({ mode: this.layerState.layers[i].geometry_type });
+            }
+
         }
 
         /**
-         * Выкинуть окно: "Вы уверены, что хотите удалить?"
+         * Выкинуть окно: 'Вы уверены, что хотите удалить?'
          * @param i
          * @param j
          */
@@ -288,7 +345,7 @@
             const element = Object.assign({}, this.layerState.layers[i].elements[j]);
             this.setSureModal({
                 title: 'Удалить элемент?',
-                text: `Вы уверены, что хотите удалить элемент "${element.title}" из системы?`,
+                text: `Вы уверены, что хотите удалить элемент '${element.title}' из системы?`,
                 action: async () => {
                     // Запрос на удаление элемента
                     await this.deleteElement({
@@ -296,10 +353,8 @@
                         elementTitle: element.title,
                     });
                     // Удаляем с карты
-                    if (this.layerState.layers[i].elements[j].geometries) {
-                        this.layerState.layers[i].elements[j].geometries.forEach((geometry) => {
-                            this.removeFeatureFromMap({ id: geometry.id });
-                        });
+                    if (this.layerState.layers[i].elements[j].geometry) {
+                        this.removeFeatureFromMap({ id: this.layerState.layers[i].elements[j].id });
                     }
                     // Удаляем элемент из списка
                     this.layerState.layers[i].elements.splice(j, 1);
@@ -314,16 +369,10 @@
          * @param e
          */
         public onModifyend(e) {
-            // Присваиваем значения для SingleGeometry
-            this.setSingleGeometry({
+            this.updateGeometry({
                 id: e.properties.id,
-                title: e.properties.title,
-                description: e.properties.description,
-                geom: e.geom,
-                layer_composition_id: e.properties.layer_composition_id,
+                geometry: e.geom,
             });
-            // Сохраняем в базу
-            this.updateGeometry({ type: e.properties.type });
         }
 
         /**
@@ -331,44 +380,40 @@
          */
         public async onDrawend(e) {
 
-            const geometryId = this.geometryState.geometry.id;
-
             // Обновляем геометрию
-            this.geometryState.geometry.geom = e.geom;
-            this.geometryState.geometry.type = getGeometryTypeByGeom(e.geom);
-            await this.updateGeometry({
-                type: getGeometryTypeByGeom(e.geom),
-                elementId: this.elementState.element.id,
+            this.elementState.element.geometry = e.geom;
+            this.updateGeometry({
+                id: this.elementState.element.id,
+                geometry: e.geom,
             });
 
             // Меняем режим работы с картой
             this.setMapInteraction({ mode: '' });
 
-            if (geometryId === 0) {
-                // Добавляем геометрию к элементу
-                this.elementState.element.geometries.push(this.geometryState.geometry);
-            } else {
-                this.elementState.element.geometries =
-                    editUpdatedItem(this.elementState.element.geometries, this.geometryState.geometry);
-            }
-
-            // Находим элемент в списке и меняем его данные
-            const i = this.layerState.currentLayerIndex;
-            const j = this.layerState.currentElementIndex;
-            this.layerState.layers[i].elements[j] =
-                Object.assign({}, this.layerState.layers[i].elements[j], this.elementState.element);
-
-            // Перерисовывем на карте
-            this.layerState.layers[i].elements[j].geometries.forEach((geometry) => {
-                this.removeFeatureFromMap({ id: `${geometry.type}-${geometry.id}` });
-                this.addFeatureToMap({
-                    id: `${geometry.type}-${geometry.id}`,
-                    layer_composition_id: geometry.layer_composition_id,
-                    geom: geometry.geom,
-                    property: geometry,
-                });
+            // Рисуем на карте элемент
+            this.addFeatureToMap({
+                id: this.elementState.element.id,
+                layer_id: this.elementState.element.layer_id,
+                geom: this.elementState.element.geometry,
+                property: this.getPropertiesElement(this.elementState.element),
             });
 
         }
+
+        /**
+         * Сформировать свойства элемента
+         * @param element
+         */
+        public getPropertiesElement(element) {
+            return {
+                id: element.id,
+                title: element.title,
+                description: element.description,
+                lenght: element.lenght,
+                area: element.area,
+                perimeter: element.perimeter,
+            };
+        }
+
     }
 </script>

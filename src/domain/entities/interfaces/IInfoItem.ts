@@ -9,5 +9,5 @@ export default interface IInfoItem {
     edited?: boolean;
     add?: boolean;
     translated_title?: string; // Переведенное название элемента (например, для слоя "отключений")
-    layer_composition_id?: number;
+    layer_id?: number;
 }

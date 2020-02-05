@@ -6,7 +6,6 @@
         <date-field :field="field"></date-field>
         <one-from-many-field :field="field"></one-from-many-field>
         <many-from-many-field :field="field"></many-from-many-field>
-
     </div>
 </template>
 
@@ -27,9 +26,3 @@
         @Prop() private field: any;
     }
 </script>
-<style>
-    .validation-error {
-        color: #ff0000;
-        font-size: 10pt
-    }
-</style>

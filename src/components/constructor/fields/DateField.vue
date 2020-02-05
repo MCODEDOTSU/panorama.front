@@ -1,6 +1,7 @@
 <template>
     <div>
-        <datepicker v-if="field.type ==='date_field'" placeholder="Выбрать дату" :language="ru"
+        <datepicker v-if="field.type === 'date_field'" placeholder="Выбрать дату"
+                    :language="ru" :input-class="'form-control'"
                     v-model="resolvedDate"></datepicker>
     </div>
 </template>

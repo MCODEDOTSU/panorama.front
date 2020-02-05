@@ -43,21 +43,21 @@ export default {
 			var available_classes = this.settings.get('table.sorting.classes');
 			var classes = available_classes.canSort;
 
-			if(!this.canSort){
+			if (!this.canSort){
 				return '';
 			}
 
-			if(!this.is_sorted){
+			if (!this.is_sorted){
 				classes = classes.concat(available_classes.sortNone);
 
 				return this.joinClasses(classes);
 			}
 
-			if(this.is_sorted_ascending){
+			if (this.is_sorted_ascending){
 				classes = classes.concat(available_classes.sortAsc);
 			}
 
-			if(this.is_sorted_descending){
+			if (this.is_sorted_descending){
 				classes = classes.concat(available_classes.sortDesc);
 			}
 
@@ -69,9 +69,9 @@ export default {
 			return this.unique(classes).join(' ');
 		},
 		toggleSort(){
-			if(!this.direction || this.direction === null){
+			if (!this.direction || this.direction === null){
 				this.$emit('change', 'asc', this.column);
-			}else if(this.direction === 'asc'){
+			}else if (this.direction === 'asc'){
 				this.$emit('change', 'desc', this.column);
 			}else{
 				this.$emit('change', null, this.column);

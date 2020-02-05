@@ -19,7 +19,7 @@ const defaultStyle = {
             radius: 5, rotation: 0,
         },
         icon: {
-            src: `${baseUrl}storage/images/compositions/default.png`,
+            src: `${baseUrl}storage/images/layer/default.png`,
             anchor: [24, 24], opacity: 0, scale: 1, rotation: 0,
         },
         pointType: 'shape',
@@ -27,6 +27,12 @@ const defaultStyle = {
             font: '16px Calibri, sans-serif', textBaseline: 'bottom', offsetY: -6,
             fill: { color: '#000000' },
             stroke: { color: '#ffffff', width: 3 },
+        },
+        list: {
+            hasList: false,
+            visibility: false,
+            color: '#000000',
+            opacity: 0,
         },
     },
     linestring: {
@@ -53,7 +59,6 @@ const defaultStyle = {
 export const state: StyleEditorState = {
     geometryType: '',
     style: defaultStyle.point,
-    jsonStyle: JSON.stringify(defaultStyle.point),
 };
 
 export const actions: ActionTree<StyleEditorState, RootState> = {
@@ -71,13 +76,10 @@ export const actions: ActionTree<StyleEditorState, RootState> = {
      * @param payload
      */
     setStyleByStyleEditor({}, payload) {
-        if (payload.style !== '') {
-            const style = (state.geometryType === 'point' ? defaultStyle.point : (
-                state.geometryType === 'linestring' ? defaultStyle.linestring : defaultStyle.polygon
-            ));
-            state.style = Object.assign({}, style, JSON.parse(payload.style));
-            state.jsonStyle = payload.style;
-        }
+        const style = (state.geometryType === 'point' ? defaultStyle.point : (
+            state.geometryType === 'linestring' ? defaultStyle.linestring : defaultStyle.polygon
+        ));
+        state.style = Object.assign({}, style, payload.style);
     },
 
     /**
@@ -88,14 +90,6 @@ export const actions: ActionTree<StyleEditorState, RootState> = {
             state.geometryType === 'linestring' ? defaultStyle.linestring : defaultStyle.polygon
         ));
         state.style = Object.assign({}, style);
-        state.jsonStyle = JSON.stringify(state.style);
-    },
-
-    /**
-     * Обновить json стиля
-     */
-    jsonStyleUpdate() {
-        state.jsonStyle = JSON.stringify(state.style);
     },
 
     /**
@@ -108,7 +102,7 @@ export const actions: ActionTree<StyleEditorState, RootState> = {
         formData.append('file', payload.file);
 
         try {
-            const res = await axios.post(`${baseUrlAPI}manager/composition/upload`, formData, {
+            const res = await axios.post(`${baseUrlAPI}manager/layer/upload`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
             const style = state.style;

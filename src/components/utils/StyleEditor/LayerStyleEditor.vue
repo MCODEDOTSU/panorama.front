@@ -29,7 +29,6 @@
 
         @State('styleEditor') public styleEditorState: StyleEditorState;
 
-        @Action public jsonStyleUpdate: any;
         @Action public setMapStyles: any;
         @Action public removeFeatureFromMap: any;
         @Action public addFeatureToMap: any;
@@ -37,10 +36,6 @@
 
         @Watch('styleEditorState.style', {deep: true})
         public onChangeStyle() {
-
-            // Изменяем json-стиля
-            this.jsonStyleUpdate();
-
             // Обновляем стиль на карте
             // noinspection TypeScriptUnresolvedVariable
             this.setMapStyles({
@@ -60,14 +55,14 @@
             if (type === 'point') {
                 // Добавляем на карту точку
                 this.addFeatureToMap({
-                    id: 'style-editor', layer_composition_id: 1,
+                    id: 'style-editor', layer_id: 1,
                     geom: 'POINT(48.0355525016785 46.3538888154049)',
-                    property: { title: 'Точечный геоэлемент', layer_composition_id: 1 },
+                    property: { title: 'Точечный геоэлемент', layer_id: 1 },
                 });
             } else if (type === 'linestring') {
                 // Добавляем на карту линию
                 this.addFeatureToMap({
-                    id: 'style-editor', layer_composition_id: 1,
+                    id: 'style-editor', layer_id: 1,
                     geom: `LINESTRING(48.0336213111877 46.3516524398736,
                         48.0339002609253 46.3519338431522,
                         48.0376124382019 46.3529113380201,
@@ -77,12 +72,12 @@
                         48.0333423614502 46.3540665366874,
                         48.0337715148926 46.3544960274008,
                         48.0353379249573 46.3547033665372)`,
-                    property: { title: 'Линейный геоэлемент', layer_composition_id: 1 },
+                    property: { title: 'Линейный геоэлемент', layer_id: 1 },
                 });
             } else {
                 // Добавляем на карту полигон
                 this.addFeatureToMap({
-                    id: 'style-editor', layer_composition_id: 1,
+                    id: 'style-editor', layer_id: 1,
                     geom: `POLYGON((48.0351877212524 46.3537110935444,
                         48.0341362953186 46.3548810851708,
                         48.0366039276123 46.3545256473257,
@@ -91,7 +86,7 @@
                         48.0363893508911 46.3531631141696,
                         48.0342864990234 46.3515043323028,
                         48.0351877212524 46.3537110935444))`,
-                    property: { title: 'Полигональный геоэлемент', layer_composition_id: 1 },
+                    property: { title: 'Полигональный геоэлемент', layer_id: 1 },
                 });
             }
 

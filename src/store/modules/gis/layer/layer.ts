@@ -9,6 +9,7 @@ import {arrayIndexOf} from '@/domain/services/common/ArrayActions';
 
 export const state: LayerState = {
     layers: [],
+    styles: [],
 };
 
 export const actions: ActionTree<LayerState, RootState> = {
@@ -19,7 +20,16 @@ export const actions: ActionTree<LayerState, RootState> = {
     async gisGetLayers() {
         try {
             const res = await axios.get(`${baseUrlAPI}gis/layer`);
-            state.layers = res.data;
+            // Получаем стиль
+            const styles = [];
+            const layers = [];
+            res.data.forEach((layer) => {
+                const style = JSON.parse(layer.style);
+                styles.push(Object.assign({}, style, { id: layer.id }));
+                layers.push(Object.assign({}, layer, { style }));
+            });
+            state.styles = styles;
+            state.layers = layers;
         } catch {
             ErrorNotifier.notify();
         }
@@ -31,25 +41,16 @@ export const actions: ActionTree<LayerState, RootState> = {
     async gisGetLayersToContractor() {
         try {
             const res = await axios.get(`${baseUrlAPI}gis/layer/contractor`);
-            state.layers = res.data;
-        } catch {
-            ErrorNotifier.notify();
-        }
-    },
-
-    /**
-     * Выделяем элемент
-     */
-    async selectedElement({}, payload) {
-        const i = payload.i;
-        const j = payload.j;
-        try {
-            const element = state.layers[i].elements[j];
-            if (!element.geometries) {
-                const res = await axios.get(`${baseUrlAPI}gis/element/geometries/${element.id}`);
-                element.geometries = res.data;
-                state.layers[i].elements[j] = Object.assign({}, element);
-            }
+            // Получаем стиль
+            const styles = [];
+            const layers = [];
+            res.data.forEach((layer) => {
+                const style = JSON.parse(layer.style);
+                styles.push(Object.assign({}, style, { id: layer.id }));
+                layers.push(Object.assign({}, layer, { style }));
+            });
+            state.styles = styles;
+            state.layers = layers;
         } catch {
             ErrorNotifier.notify();
         }
@@ -62,12 +63,12 @@ export const actions: ActionTree<LayerState, RootState> = {
         const i = payload.i;
         try {
             const layer = state.layers[payload.i];
-            const res = await axios.get(`${baseUrlAPI}gis/layer/geometries/${layer.id}`);
-            res.data.forEach((geometry) => {
-                const j = arrayIndexOf(layer.elements, geometry.element_id);
-                layer.elements[j].geometries.push(geometry);
-            });
-            state.layers[payload.i] = Object.assign({}, layer);
+            // const res = await axios.get(`${baseUrlAPI}gis/layer/geometries/${layer.id}`);
+            // res.data.forEach((geometry) => {
+            //     const j = arrayIndexOf(layer.elements, geometry.element_id);
+            //     layer.elements[j].geometries.push(geometry);
+            // });
+            // state.layers[payload.i] = Object.assign({}, layer);
         } catch {
             ErrorNotifier.notify();
         }

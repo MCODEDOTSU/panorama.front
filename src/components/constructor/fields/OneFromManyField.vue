@@ -2,7 +2,7 @@
     <div>
         <div v-for="enumValue in field.enums" class="one-from-many-div" v-if="field.type === 'one_from_many_field'">
             <label :for="enumValue">{{ enumValue }}</label>
-            <input class="form-control" style="width: 20px" type="radio" :id="enumValue" :value="enumValue"
+            <input class="form-control" type="radio" :id="enumValue" :value="enumValue"
                    v-model="resolvedValue">
         </div>
     </div>
@@ -13,6 +13,7 @@
 
     @Component
     export default class OneFromManyField extends Vue {
+
         @Prop() private field: any;
 
         get resolvedValue() {
@@ -29,9 +30,3 @@
         }
     }
 </script>
-<style>
-    .one-from-many-div {
-        display: inline-block;
-        margin-left: 30px
-    }
-</style>

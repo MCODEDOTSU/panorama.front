@@ -2,7 +2,7 @@ export default interface IGeometry {
     id: number;
     title: string;
     description?: string;
-    layer_composition_id: number;
+    layer_id: number;
     length?: number;
     perimeter?: number;
     area?: number;

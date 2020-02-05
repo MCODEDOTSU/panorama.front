@@ -1,3 +1,5 @@
+import TableGroup from '@/domain/entities/constructor/TableGroup';
+
 /**
  * @param data - любой набор элементов
  * @param childEls - дочерние элементы
@@ -22,3 +24,22 @@ export const addEditFieldToSingleItem = (item: any) => {
     item.childElsVisibility = false;
     return item;
 };
+
+/**
+ * Превратить погрупповой массив в простой
+ * @param tableGroups
+ */
+export function plainizeFields(tableGroups: TableGroup[]) {
+    const plainizedColumns = [];
+    for (const tableGroup of tableGroups) {
+        for (const column of tableGroup.columns) {
+            if (column.type === 'many_from_many_field') {
+                column.value = JSON.stringify(column.value);
+            }
+            plainizedColumns.push(column);
+        }
+    }
+    return plainizedColumns;
+}
+
+

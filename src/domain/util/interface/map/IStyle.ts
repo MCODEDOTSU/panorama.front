@@ -44,4 +44,10 @@ export default interface IStyle {
         offsetY?: number;
         placement?: string;
     };
+    list?: {
+        hasList: boolean;
+        visibility: boolean;
+        color: string;
+        opacity: number;
+    };
 }
