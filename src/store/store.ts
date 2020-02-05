@@ -25,7 +25,7 @@ import {styleEditor} from '@/store/modules/components/utils/styleEditor/styleEdi
 import {map} from '@/store/modules/components/utils/map/map';
 
 // constructor
-import {constructor} from '@/store/modules/constructor/constructor';
+import {construct} from '@/store/modules/constructor/constructor';
 import InfoModuleState from '@/store/modules/info/infomodule/types';
 import ConstructorState from '@/store/modules/constructor/types';
 
@@ -68,7 +68,7 @@ export default new Vuex.Store<RootState>({
         map,
 
         // constructor
-        constructor,
+        construct,
     },
 
     plugins: [createPersistedState({

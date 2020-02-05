@@ -108,6 +108,6 @@ export const actions: ActionTree<ConstructorState, RootState> = {
     },
 };
 
-export const constructor: Module<ConstructorState, RootState> = {
+export const construct: Module<ConstructorState, RootState> = {
     state, actions, mutations,
 };
