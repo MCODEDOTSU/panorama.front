@@ -1,1 +1,0 @@
-{"version":3,"file":"SuccessNotifier.js","sourceRoot":"","sources":["SuccessNotifier.ts"],"names":[],"mappings":"AAAA,OAAO,GAAG,MAAM,KAAK,CAAC;AAEtB,MAAM,eAAe;IAEV,MAAM,CAAC,MAAM,CAAC,KAAa,EAAE,IAAY;QAC5C,GAAG,CAAC,SAAS,CAAC,OAAO,CAAC;YAClB,KAAK,EAAE,IAAI;SACd,CAAC,CAAC;IACP,CAAC;CACJ;AAED,eAAe,eAAe,CAAC"}
