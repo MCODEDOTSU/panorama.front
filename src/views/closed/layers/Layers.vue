@@ -10,13 +10,13 @@
         <!-- Список слоёв -->
         <div class="grid-data">
             <div class="row row-header">
-                <div class="col-4">Наименование</div>
-                <div class="col-2">Геотип</div>
-                <div class="col-3">Родительский слой</div>
+                <div class="col-6">Наименование</div>
+                <div class="col-3">Геотип</div>
+                <!--div class="col-3">Родительский слой</div-->
                 <div class="col-3">Включен в модуль</div>
             </div>
             <div class="row row-body" v-for="layer in layerState.layers">
-                <div class="col-4">
+                <div class="col-6">
                     <label class="title">{{ layer.title }}</label>
                     <label class="description" v-html="layer.description"></label>
                     <div class="actions">
@@ -24,20 +24,21 @@
                         <button class="btn-danger" data-toggle="modal" data-target="#sureModal" @click="setSureModalContent(layer)">Удалить</button>
                     </div>
                 </div>
-                <div class="col-2">
+                <div class="col-3">
                     <label class="title">{{ getGeometryTypeTitle(layer.geometry_type) }}</label>
                 </div>
-                <div class="col-3">
+                <!--div class="col-3">
                     <label class="title" v-if="layer.parent">{{ layer.parent.title }}</label>
                     <label class="title" v-else>-</label>
-                </div>
+                </div-->
                 <div class="col-3">
                     <label class="title">{{ layer.module.title }}</label>
                 </div>
             </div>
             <div class="row row-footer">
                 <div class="col-6">Наименование</div>
-                <div class="col-3">Родительский слой</div>
+                <div class="col-3">Геотип</div>
+                <!--div class="col-3">Родительский слой</div-->
                 <div class="col-3">Включен в модуль</div>
             </div>
         </div>

@@ -42,17 +42,17 @@
                                                 v-model="layerState.layer.description"
                                                 :editorToolbar="toolbar"></vue-editor>
                                 </div>
-                                <div class="form-group">
-                                    <label for="singleLayerParentId">Родительский слой</label>
-                                    <select id="singleLayerParentId" class="form-control" v-model="layerState.layer.parent_id"
-                                            disabled>
-                                        <option value="0"></option>
-                                        <option v-for="layer in layerState.layers" v-if="layerState.layer.id !== layer.id"
-                                                :value="layer.id" :title="layer.description">
-                                            {{ layer.title }}
-                                        </option>
-                                    </select>
-                                </div>
+                                <!--<div class="form-group">-->
+                                    <!--<label for="singleLayerParentId">Родительский слой</label>-->
+                                    <!--<select id="singleLayerParentId" class="form-control" v-model="layerState.layer.parent_id"-->
+                                            <!--disabled>-->
+                                        <!--<option value="0"></option>-->
+                                        <!--<option v-for="layer in layerState.layers" v-if="layerState.layer.id !== layer.id"-->
+                                                <!--:value="layer.id" :title="layer.description">-->
+                                            <!--{{ layer.title }}-->
+                                        <!--</option>-->
+                                    <!--</select>-->
+                                <!--</div>-->
                                 <div class="form-group">
                                     <label for="singleLayerModuleId">Включить в модуль *</label>
                                     <select id="singleLayerModuleId" required

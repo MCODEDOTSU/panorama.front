@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@types/bootstrap": "^4.3.1",
-    "@types/jquery": "^3.3.31",
+    "@types/jquery": "^3.3.32",
     "@types/vue-color": "^2.4.2",
     "axios": "^0.18.1",
     "bootstrap": "^4.4.1",
@@ -29,7 +29,7 @@
     "vuejs-datepicker": "^1.6.2",
     "vuex": "^3.1.2",
     "vuex-class": "^0.3.2",
-    "vuex-persistedstate": "^2.7.0"
+    "vuex-persistedstate": "^2.7.1"
   },
   "devDependencies": {
     "@types/jest": "^23.3.14",
@@ -42,7 +42,8 @@
     "@vue/cli-service": "^3.12.1",
     "@vue/test-utils": "^1.0.0-beta.31",
     "babel-core": "7.0.0-bridge.0",
-    "bootstrap-vue": "^2.3.0",
+    "babel-loader": "^8.0.6",
+    "bootstrap-vue": "^2.4.0",
     "install": "^0.12.2",
     "node-sass": "^4.13.1",
     "npm": "^6.13.7",
