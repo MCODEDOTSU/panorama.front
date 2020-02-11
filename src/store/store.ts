@@ -23,6 +23,7 @@ import {sureModal} from '@/store/modules/components/common/sureModal/sureModal';
 import {includeList} from '@/store/modules/components/common/includeList/includeList';
 import {styleEditor} from '@/store/modules/components/utils/styleEditor/styleEditor';
 import {map} from '@/store/modules/components/utils/map/map';
+import {fileuploader} from '@/store/modules/components/utils/fileuploader/fileuploader';
 
 // constructor
 import {konstructor} from '@/store/modules/constructor/constructor';
@@ -62,6 +63,7 @@ export default new Vuex.Store<RootState>({
         sureModal,
         styleEditor,
         map,
+        fileuploader,
 
         // constructor
         konstructor,
