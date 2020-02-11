@@ -37,7 +37,7 @@
             </form>
         </div>
         <div v-if="constructorState.isTableExists" v-for="group in constructorState.tableFields" class="tab-pane addition-information-tab fade" role="tabpanel"
-             :aria-labelledby="group.group + '-tab'" :id="group.group" >
+             :aria-labelledby="group.groupTechName + '-tab'" :id="group.groupTechName" >
             <div class="form-group" v-for="field in group.columns">
                 <label :for="field.tech_title">{{ field.title }}
                     <span v-if="field.required">*</span>

@@ -5,8 +5,8 @@
                aria-selected="true">Главная</a>
         </li>
         <li class="nav-item" v-for="field in constructorState.tableFields">
-            <a class="nav-link" :id="field.group  + '-tab'" data-toggle="tab" :href="'#' + field.group" role="tab"
-               :aria-controls="field.group" aria-selected="false">{{ field.group }}</a>
+            <a class="nav-link" :id="field.groupTechName  + '-tab'" data-toggle="tab" :href="'#' + field.groupTechName" role="tab"
+               :aria-controls="field.groupTechName" aria-selected="false">{{ field.group }}</a>
         </li>
     </ul>
 </template>
