@@ -1,12 +1,15 @@
 <template>
     <div>
-        <text-field :field="field"></text-field>
-        <number-field :field="field"></number-field>
-        <long-text-field :field="field"></long-text-field>
-        <date-field :field="field"></date-field>
-        <one-from-many-field :field="field"></one-from-many-field>
-        <many-from-many-field :field="field"></many-from-many-field>
-        <doc-field :field="field"></doc-field>
+        <text-field :field="field"/>
+        <number-field :field="field"/>
+        <long-text-field :field="field"/>
+        <date-field :field="field"/>
+        <one-from-many-field :field="field"/>
+        <many-from-many-field :field="field"/>
+        <doc-field
+                :field="field"
+                @attachFile="attachFile"
+        />
     </div>
 </template>
 
@@ -26,5 +29,12 @@
     })
     export default class ResolvedField extends Vue {
         @Prop() private field: any;
+
+        private attachFile(file: any) {
+            this.$emit('attachFile', {
+                file,
+                field: this.field,
+            });
+        }
     }
 </script>

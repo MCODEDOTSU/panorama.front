@@ -43,7 +43,10 @@
                     <span v-if="field.required">*</span>
                     <span></span>
                 </label>
-                <resolved-field :field="field"></resolved-field>
+                <resolved-field
+                    :field="field"
+                    @attachFile="attachFile"
+                ></resolved-field>
             </div>
         </div>
     </div>
@@ -92,6 +95,10 @@
             return this.elementState.elements.find((a) => {
                 return a.element_next_id === this.elementState.element.id;
             });
+        }
+
+        private attachFile(data: any) {
+            data.field.value = data.file;
         }
 
     }

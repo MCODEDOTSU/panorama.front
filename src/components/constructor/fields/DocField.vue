@@ -15,11 +15,14 @@
         @Provide() private file = '';
         @Provide() private fileName = '';
 
-        private processFile(event) {
+        private processFile() {
             // TODO: introduce variable
             // @ts-ignore
             this.file = this.$refs.file.files[0];
-            this.fileName = event.target.files[0].name;
+            // @ts-ignore
+            this.fileName = this.$refs.file.files[0].name;
+
+            this.$emit('attachFile', this.$refs.file);
         }
 
         private attachFile() {
