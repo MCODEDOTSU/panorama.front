@@ -33,7 +33,7 @@ export default new Vuex.Store<RootState>({
     state: {
         applicationName: '',
         infomodule: '',
-        constructor: '',
+        konstructor: '',
     },
     mutations: {
 

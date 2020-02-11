@@ -5,5 +5,5 @@ import ConstructorState from '@/store/modules/constructor/types';
 export default interface RootState {
     applicationName?: string;
     infomodule?: InfoModuleState | any;
-    constructor?: ConstructorState | any;
+    konstructor?: ConstructorState | any;
 }
