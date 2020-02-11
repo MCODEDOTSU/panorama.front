@@ -2,6 +2,9 @@
     <div>
         <input v-if="field.type === 'doc_field'" id="file" ref="file" type="file" @change="processFile()"/>
         <span @click="attachFile">{{ fileName }}</span>
+        <span>
+            <a href="javascript:void(0)" @click="download">Скачать файл</a>
+        </span>
     </div>
 </template>
 
@@ -17,6 +20,7 @@
         @Provide() private fileName = '';
 
         @Action private uploadFile: any;
+        @Action private downloadFile: any;
         @State('fileuploader') private fileUploader: any;
 
         private processFile() {
@@ -34,6 +38,10 @@
 
         private attachFile() {
             document.getElementById('file').click();
+        }
+
+        private download() {
+            this.downloadFile({filepath: this.field.value});
         }
     }
 </script>

@@ -27,6 +27,15 @@ export const actions: ActionTree<FileUploaderState, RootState> = {
             ErrorNotifier.notify();
         }
     },
+
+    async downloadFile({state}, payload) {
+        console.log(payload);
+        try {
+            const res = await axios.post(`${baseUrlAPI}util/download`, payload)
+        } catch {
+            ErrorNotifier.notify();
+        }
+    }
 };
 
 export const fileuploader: Module<FileUploaderState, RootState> = {
