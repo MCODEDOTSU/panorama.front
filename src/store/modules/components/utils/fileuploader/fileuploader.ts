@@ -12,19 +12,19 @@ export const state: FileUploaderState = {
 
 export const actions: ActionTree<FileUploaderState, RootState> = {
     async uploadFile({}, payload) {
-        let formData = new FormData();
-        // formData.append('files[' + i + ']', file);
+        const formData = new FormData();
+        formData.append('fileres', payload.files[0]);
 
         try {
             const res = await axios.post(`${baseUrlAPI}util/upload`, formData, {
                 headers: {
-                    'Content-Type':'multipart/form-data'
-                }
+                    'Content-Type': 'multipart/form-data',
+                },
             });
         } catch {
             ErrorNotifier.notify();
         }
-    }
+    },
 };
 
 export const fileuploader: Module<FileUploaderState, RootState> = {
