@@ -11,7 +11,7 @@ export const state: FileUploaderState = {
 };
 
 export const actions: ActionTree<FileUploaderState, RootState> = {
-    async uploadFile({}, payload) {
+    async uploadFile({state}, payload) {
         const formData = new FormData();
         formData.append('fileres', payload.files[0]);
 
@@ -21,6 +21,8 @@ export const actions: ActionTree<FileUploaderState, RootState> = {
                     'Content-Type': 'multipart/form-data',
                 },
             });
+
+            state.path = res.data;
         } catch {
             ErrorNotifier.notify();
         }

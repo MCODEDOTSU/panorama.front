@@ -7,7 +7,7 @@
 
 <script lang="ts">
     import {Component, Prop, Provide, Vue} from 'vue-property-decorator';
-    import {Action} from 'vuex-class';
+    import {Action, State} from 'vuex-class';
 
     @Component
     export default class DocField extends Vue {
@@ -17,6 +17,7 @@
         @Provide() private fileName = '';
 
         @Action private uploadFile: any;
+        @State('fileuploader') private fileUploader: any;
 
         private processFile() {
             // TODO: introduce variable
@@ -25,9 +26,10 @@
             // @ts-ignore
             this.fileName = this.$refs.file.files[0].name;
 
-            this.uploadFile(this.$refs.file);
+            this.uploadFile(this.$refs.file).then(() => {
+                this.$emit('attachFilePath', this.fileUploader.path);
+            });
 
-            this.$emit('attachFile', this.$refs.file);
         }
 
         private attachFile() {

@@ -8,7 +8,7 @@
         <many-from-many-field :field="field"/>
         <doc-field
                 :field="field"
-                @attachFile="attachFile"
+                @attachFilePath="attachFilePath"
         />
     </div>
 </template>
@@ -30,11 +30,8 @@
     export default class ResolvedField extends Vue {
         @Prop() private field: any;
 
-        private attachFile(file: any) {
-            this.$emit('attachFile', {
-                file,
-                field: this.field,
-            });
+        private attachFilePath(filePath: string) {
+            this.field.value = filePath;
         }
     }
 </script>

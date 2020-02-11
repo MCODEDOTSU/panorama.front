@@ -45,8 +45,7 @@
                 </label>
                 <resolved-field
                     :field="field"
-                    @attachFile="attachFile"
-                ></resolved-field>
+                />
             </div>
         </div>
     </div>
@@ -96,10 +95,5 @@
                 return a.element_next_id === this.elementState.element.id;
             });
         }
-
-        private attachFile(data: any) {
-            data.field.value = data.file;
-        }
-
     }
 </script>
