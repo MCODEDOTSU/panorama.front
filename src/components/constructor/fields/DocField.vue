@@ -1,6 +1,6 @@
 <template>
     <div>
-        <input id="file" ref="file" type="file" @change="processFile()"/>
+        <input v-if="field.type === 'doc_field'" id="file" ref="file" type="file" @change="processFile()"/>
         <span @click="attachFile">{{ fileName }}</span>
     </div>
 </template>
