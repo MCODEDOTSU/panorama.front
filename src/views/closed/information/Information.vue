@@ -76,7 +76,7 @@
 
         @State('managerLayer') public layerState: LayerState;
         @State('managerElement') public elementState: ElementState;
-        @State('constructor') public constructorState: ConstructorState;
+        @State('konstructor') public constructorState: ConstructorState;
 
         public async created() {
             await this.getLayerById({ id: this.$route.params.id });

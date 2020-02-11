@@ -18,6 +18,6 @@
 
     @Component
     export default class AdditionalGroupTabs extends Vue {
-        @State('constructor') public constructorState: ConstructorState;
+        @State('konstructor') public constructorState: ConstructorState;
     }
 </script>

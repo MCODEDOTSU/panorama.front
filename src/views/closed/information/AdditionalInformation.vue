@@ -66,7 +66,7 @@
 
         @Action public getLayerById: any;
 
-        @State('constructor') public constructorState: ConstructorState;
+        @State('konstructor') public constructorState: ConstructorState;
         @State('managerLayer') public layerState: LayerState;
         @State('managerElement') public elementState: ElementState;
 

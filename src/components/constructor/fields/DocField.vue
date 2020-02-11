@@ -12,8 +12,8 @@
     export default class DocField extends Vue {
         @Prop() private field: any;
 
-        @Provide() private file;
-        @Provide() private fileName;
+        @Provide() private file = '';
+        @Provide() private fileName = '';
 
         private processFile(event) {
             // TODO: introduce variable
