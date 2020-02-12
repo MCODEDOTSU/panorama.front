@@ -9,7 +9,7 @@
                 @click="download">Скачать файл
             </button>
             <button type="button" class="btn btn-danger btn-link"
-                @click="remove"><i class="far fa-trash-alt"></i>
+                @click="remove(field)"><i class="far fa-trash-alt"></i>
             </button>
         </span>
     </div>
@@ -19,6 +19,7 @@
     import {Component, Prop, Provide, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
+    import TableField from '@/domain/entities/constructor/TableField';
 
     @Component
     export default class DocField extends Vue {
@@ -31,6 +32,7 @@
         @Action private downloadFile: any;
         @Action private deleteFile: any;
         @State('fileuploader') private fileUploader: any;
+        @State('konstructor') private konstructor: any;
 
         private processFile() {
             // TODO: introduce variable
@@ -58,8 +60,15 @@
             }
         }
 
-        private remove() {
-            this.deleteFile({filepath: this.field.value.path});
+        private remove(field: TableField) {
+            this.deleteFile({
+                filepath: this.field.value.path,
+                tableIdentifier: field.table_identifier,
+                columnName: field.tech_title,
+                elementId: this.konstructor.element.id,
+            }).then(() => {
+                field.value = null;
+            });
         }
     }
 </script>

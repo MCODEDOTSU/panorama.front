@@ -8,4 +8,5 @@ export default interface TableField {
     value?: string;
     group?: string;
     is_deleted: boolean;
+    table_identifier?: string;
 }
