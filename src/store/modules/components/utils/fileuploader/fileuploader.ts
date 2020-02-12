@@ -19,7 +19,7 @@ export const actions: ActionTree<FileUploaderState, RootState> = {
         formData.append('fileres', payload.files[0]);
 
         try {
-            const res = await axios.post(`${baseUrlAPI}util/upload`, formData, {
+            const res = await axios.post(`${baseUrlAPI}util/file/upload`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -33,7 +33,7 @@ export const actions: ActionTree<FileUploaderState, RootState> = {
 
     async downloadFile({state}, payload) {
         try {
-            const res = await axios.post(`${baseUrlAPI}util/download`, payload, {
+            const res = await axios.post(`${baseUrlAPI}util/file/download`, payload, {
                 responseType: 'blob',
             });
             const url = window.URL.createObjectURL(new Blob([res.data]));
@@ -42,6 +42,14 @@ export const actions: ActionTree<FileUploaderState, RootState> = {
             link.setAttribute('download', payload.filepath.name);
             document.body.appendChild(link);
             link.click();
+        } catch {
+            ErrorNotifier.notify();
+        }
+    },
+
+    async deleteFile({}, payload) {
+        try {
+            const res = await axios.post(`${baseUrlAPI}util/file/delete`, payload);
         } catch {
             ErrorNotifier.notify();
         }

@@ -5,7 +5,12 @@
         <span v-else @click="attachFile">{{ fileName }}</span>
         <br>
         <span v-if="field.value !== null">
-            <a href="javascript:void(0)" @click="download">Скачать файл</a>
+            <button type="button" class="btn btn-danger btn-link"
+                @click="download">Скачать файл
+            </button>
+            <button type="button" class="btn btn-danger btn-link"
+                @click="remove"><i class="far fa-trash-alt"></i>
+            </button>
         </span>
     </div>
 </template>
@@ -24,6 +29,7 @@
 
         @Action private uploadFile: any;
         @Action private downloadFile: any;
+        @Action private deleteFile: any;
         @State('fileuploader') private fileUploader: any;
 
         private processFile() {
@@ -50,6 +56,10 @@
             } else {
                 ErrorNotifier.notifyWithCustomMessage('Путь к файлу не найден');
             }
+        }
+
+        private remove() {
+            this.deleteFile({filepath: this.field.value.path});
         }
     }
 </script>
