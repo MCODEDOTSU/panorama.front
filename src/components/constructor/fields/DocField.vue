@@ -1,17 +1,22 @@
 <template>
     <div v-if="field.type === 'doc_field'">
-        <input id="file" hidden ref="file" type="file" @change="processFile()"/>
-        <span v-if="fileName === ''" @click="attachFile">Прикрепить</span>
-        <span v-else @click="attachFile">{{ fileName }}</span>
-        <br>
-        <span v-if="field.value !== null">
+        <div class="file-type">
+            <span >Тип документа: </span>
+            <label v-for="enumValue in field.enums">"{{ enumValue }}" &nbsp</label>
+        </div>
+        <div>
+            <input id="file" hidden ref="file" type="file" @change="processFile()"/>
+            <span v-if="fileName === ''" @click="attachFile">Прикрепить</span>
+            <span v-else @click="attachFile">{{ fileName }}</span>
+        </div>
+        <div v-if="field.value !== null">
             <button type="button" class="btn btn-danger btn-link"
                 @click="download">Скачать файл
             </button>
             <button type="button" class="btn btn-danger btn-link"
                 @click="remove(field)"><i class="far fa-trash-alt"></i>
             </button>
-        </span>
+        </div>
     </div>
 </template>
 
@@ -41,7 +46,10 @@
             // @ts-ignore
             this.fileName = this.$refs.file.files[0].name;
 
-            this.uploadFile(this.$refs.file).then(() => {
+            this.uploadFile({
+                fileres: this.$refs.file,
+                identifier: this.field.id,
+            }).then(() => {
                 this.fileUploader.path.name = this.fileName;
                 this.$emit('attachFilePath', this.fileUploader.path);
             });
@@ -73,3 +81,8 @@
     }
 </script>
 
+<style>
+    .file-type {
+        color: red;
+    }
+</style>

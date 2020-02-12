@@ -4,6 +4,7 @@ import RootState from '@/store/types';
 import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
 import {baseUrlAPI} from '@/globals';
 import axios from 'axios';
+import SuccessNotifier from '@/domain/util/notifications/SuccessNotifier';
 
 export const state: FileUploaderState = {
     path: {
@@ -16,19 +17,19 @@ export const state: FileUploaderState = {
 export const actions: ActionTree<FileUploaderState, RootState> = {
     async uploadFile({state}, payload) {
         const formData = new FormData();
-        formData.append('fileres', payload.files[0]);
+        formData.append('fileres', payload.fileres.files[0]);
+        formData.append('identifier', payload.identifier);
 
-        try {
-            const res = await axios.post(`${baseUrlAPI}util/file/upload`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-
-            state.path.path = res.data;
-        } catch {
-            ErrorNotifier.notify();
-        }
+        axios.post(`${baseUrlAPI}util/file/upload`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        }).then((response) => {
+            state.path.path = response.data;
+            SuccessNotifier.notify('', 'Файл загружен');
+        }).catch((error) => {
+            ErrorNotifier.notifyWithCustomMessage(error.response.data);
+        });
     },
 
     async downloadFile({state}, payload) {

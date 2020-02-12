@@ -101,6 +101,16 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 col col-enums" v-if="tableField.type === 'doc_field'">
+                        <div class="row no-gutters">
+                            <div class="col-4 col">
+                                <div class="alert alert-info">Перечислите типы файлов, разделяя их пробелом</div>
+                            </div>
+                            <div class="col-8 col">
+                                <tag-selector  v-model="tableField.enums" name="enums"/>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <hr>
