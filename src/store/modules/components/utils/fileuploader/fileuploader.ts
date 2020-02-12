@@ -33,7 +33,9 @@ export const actions: ActionTree<FileUploaderState, RootState> = {
 
     async downloadFile({state}, payload) {
         try {
-            const res = await axios.post(`${baseUrlAPI}util/download`, payload);
+            const res = await axios.post(`${baseUrlAPI}util/download`, payload, {
+                responseType: 'blob',
+            });
             const url = window.URL.createObjectURL(new Blob([res.data]));
             const link = document.createElement('a');
             link.href = url;

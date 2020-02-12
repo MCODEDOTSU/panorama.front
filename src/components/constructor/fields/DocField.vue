@@ -13,7 +13,7 @@
 <script lang="ts">
     import {Component, Prop, Provide, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import ErrorNotifier from "@/domain/util/notifications/ErrorNotifier";
+    import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
 
     @Component
     export default class DocField extends Vue {
@@ -48,7 +48,7 @@
             if (this.field.value) {
                 this.downloadFile({filepath: this.field.value});
             } else {
-                ErrorNotifier.notifyWithCustomMessage('Путь к файлу не найден')
+                ErrorNotifier.notifyWithCustomMessage('Путь к файлу не найден');
             }
         }
     }
