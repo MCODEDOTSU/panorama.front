@@ -6,7 +6,10 @@ import {baseUrlAPI} from '@/globals';
 import axios from 'axios';
 
 export const state: FileUploaderState = {
-    path: '',
+    path: {
+        path: '',
+        name: '',
+    },
     file: null,
 };
 
@@ -22,20 +25,25 @@ export const actions: ActionTree<FileUploaderState, RootState> = {
                 },
             });
 
-            state.path = res.data;
+            state.path.path = res.data;
         } catch {
             ErrorNotifier.notify();
         }
     },
 
     async downloadFile({state}, payload) {
-        console.log(payload);
         try {
-            const res = await axios.post(`${baseUrlAPI}util/download`, payload)
+            const res = await axios.post(`${baseUrlAPI}util/download`, payload);
+            const url = window.URL.createObjectURL(new Blob([res.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', payload.filepath.name);
+            document.body.appendChild(link);
+            link.click();
         } catch {
             ErrorNotifier.notify();
         }
-    }
+    },
 };
 
 export const fileuploader: Module<FileUploaderState, RootState> = {

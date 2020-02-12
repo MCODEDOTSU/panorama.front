@@ -1,8 +1,10 @@
 <template>
-    <div>
-        <input v-if="field.type === 'doc_field'" id="file" ref="file" type="file" @change="processFile()"/>
-        <span @click="attachFile">{{ fileName }}</span>
-        <span>
+    <div v-if="field.type === 'doc_field'">
+        <input id="file" hidden ref="file" type="file" @change="processFile()"/>
+        <span v-if="fileName === ''" @click="attachFile">Прикрепить</span>
+        <span v-else @click="attachFile">{{ fileName }}</span>
+        <br>
+        <span v-if="field.value !== null">
             <a href="javascript:void(0)" @click="download">Скачать файл</a>
         </span>
     </div>
@@ -11,6 +13,7 @@
 <script lang="ts">
     import {Component, Prop, Provide, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
+    import ErrorNotifier from "@/domain/util/notifications/ErrorNotifier";
 
     @Component
     export default class DocField extends Vue {
@@ -31,6 +34,7 @@
             this.fileName = this.$refs.file.files[0].name;
 
             this.uploadFile(this.$refs.file).then(() => {
+                this.fileUploader.path.name = this.fileName;
                 this.$emit('attachFilePath', this.fileUploader.path);
             });
 
@@ -41,7 +45,11 @@
         }
 
         private download() {
-            this.downloadFile({filepath: this.field.value});
+            if (this.field.value) {
+                this.downloadFile({filepath: this.field.value});
+            } else {
+                ErrorNotifier.notifyWithCustomMessage('Путь к файлу не найден')
+            }
         }
     }
 </script>
