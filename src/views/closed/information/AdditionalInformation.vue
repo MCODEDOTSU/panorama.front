@@ -8,8 +8,13 @@
                     <input type="text" id="singleInformationTitle" required
                            class="form-control"
                            placeholder="Наименование элемента"
-                           v-model="elementState.element.title">
+                           v-model="elementState.element.title"
+                           name="main-name"
+                           data-vv-validate-on="change|blur"
+                           v-validate="'required'">
                 </div>
+                <span class="validation-error">{{ errors.first('main-name') }}</span>
+
                 <!-- Description -->
                 <div class="form-group">
                     <label for="singleInformationDescription">Описание</label>
@@ -53,7 +58,7 @@
 
 <script lang="ts">
 
-    import {Component, Provide, Vue} from 'vue-property-decorator';
+    import {Component, Inject, Provide, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import ConstructorState from '@/store/modules/constructor/types';
     import ElementState from '@/store/modules/manager/element/types';
@@ -85,6 +90,8 @@
             ['clean'],
         ];
 
+        @Inject('validator') private $validator: any;
+
         public async created() {
             await this.getLayerById({ id: this.$route.params.id });
             this.style = Object.assign({}, this.layerState.layer.style);
@@ -97,3 +104,13 @@
         }
     }
 </script>
+
+<style>
+    .validation-error {
+        font-size: 10px;
+        line-height: 1;
+        display: inline-block;
+        padding: 4px 0;
+        color: red;
+    }
+</style>
