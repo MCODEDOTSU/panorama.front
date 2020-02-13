@@ -20,7 +20,7 @@ export const actions: ActionTree<FileUploaderState, RootState> = {
         formData.append('fileres', payload.fileres.files[0]);
         formData.append('identifier', payload.identifier);
 
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             axios.post(`${baseUrlAPI}util/file/upload`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -53,12 +53,14 @@ export const actions: ActionTree<FileUploaderState, RootState> = {
         }
     },
 
-    async deleteFile({}, payload) {
-        try {
-            const res = await axios.post(`${baseUrlAPI}util/file/delete`, payload);
-        } catch {
-            ErrorNotifier.notify();
-        }
+    deleteFile({}, payload) {
+        return new Promise((resolve) => {
+            axios.post(`${baseUrlAPI}util/file/delete`, payload).then((response) => {
+                resolve(response.data);
+            }).catch(() => {
+                ErrorNotifier.notify();
+            });
+        });
     },
 };
 

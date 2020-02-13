@@ -11,7 +11,7 @@
             <div>
                 <button class="btn btn-danger btn-link" @click="download(attachedFile)">{{ attachedFile.name }}</button>
                 <button type="button" class="btn btn-danger btn-link"
-                    @click="remove(field, attachedFile)"><i class="far fa-trash-alt"></i>
+                    @click="remove(field, attachedFile, index)"><i class="far fa-trash-alt"></i>
                 </button>
             </div>
         </div>
@@ -73,14 +73,15 @@
             }
         }
 
-        private remove(field: TableField, attachedFile: IFile) {
+        private remove(field: TableField, attachedFile: IFile, index: number) {
             this.deleteFile({
                 filepath: attachedFile.path,
                 tableIdentifier: field.table_identifier,
                 columnName: field.tech_title,
                 elementId: this.konstructor.element.id,
-            }).then(() => {
-                field.value = null;
+                index,
+            }).then((response) => {
+                field.value = response;
             });
         }
     }
