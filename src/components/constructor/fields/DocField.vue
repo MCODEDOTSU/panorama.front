@@ -3,7 +3,7 @@
         <div class="file-type">
             <span >Тип документа: </span>
             <label v-for="enumValue in field.enums">"{{ enumValue }}" &nbsp</label>
-            <span>Кол-во: {{ totalQuantity }}</span>
+            <span>Осталось файлов: {{ totalQuantity }}</span>
         </div>
         <input id="file" hidden ref="file" type="file" @change="processFile()"/>
         <span @click="attachFile">Прикрепить</span>
@@ -29,7 +29,7 @@
     export default class DocField extends Vue {
         @Prop() private field: any;
 
-        @Provide() private totalQuantity: number = 5;
+        @Provide() private totalQuantityValue: number = 3;
 
         @Provide() private file = '';
         @Provide() private fileName = '';
@@ -46,6 +46,11 @@
             this.file = this.$refs.file.files[0];
             // @ts-ignore
             this.fileName = this.$refs.file.files[0].name;
+
+            if (this.totalQuantity <= 0) {
+                ErrorNotifier.notifyWithCustomMessage('Достигнуто максимальное кол-во прикрепляемых файлов');
+                return;
+            }
 
             this.uploadFile({
                 fileres: this.$refs.file,
@@ -83,6 +88,14 @@
             }).then((response) => {
                 field.value = response;
             });
+        }
+
+        get totalQuantity() {
+            if (this.field.value) {
+                return this.totalQuantityValue - this.field.value.length;
+            }
+
+            return this.totalQuantityValue;
         }
     }
 </script>
