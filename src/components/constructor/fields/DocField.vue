@@ -53,6 +53,7 @@
             this.uploadFile({
                 fileres: this.$refs.file,
                 identifier: this.field.id,
+                elementId: this.konstructor.element.id,
             }).then(() => {
                 this.fileUploader.path.name = this.fileName;
 

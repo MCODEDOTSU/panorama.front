@@ -19,6 +19,7 @@ export const actions: ActionTree<FileUploaderState, RootState> = {
         const formData = new FormData();
         formData.append('fileres', payload.fileres.files[0]);
         formData.append('identifier', payload.identifier);
+        formData.append('elementId', payload.elementId);
 
         return new Promise((resolve) => {
             axios.post(`${baseUrlAPI}util/file/upload`, formData, {
