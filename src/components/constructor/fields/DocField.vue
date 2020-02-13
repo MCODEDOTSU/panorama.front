@@ -3,19 +3,17 @@
         <div class="file-type">
             <span >Тип документа: </span>
             <label v-for="enumValue in field.enums">"{{ enumValue }}" &nbsp</label>
+            <span>Кол-во: {{ totalQuantity }}</span>
         </div>
-        <div>
-            <input id="file" hidden ref="file" type="file" @change="processFile()"/>
-            <span v-if="fileName === ''" @click="attachFile">Прикрепить</span>
-            <span v-else @click="attachFile">{{ fileName }}</span>
-        </div>
-        <div v-if="field.value !== null">
-            <button type="button" class="btn btn-danger btn-link"
-                @click="download">Скачать файл
-            </button>
-            <button type="button" class="btn btn-danger btn-link"
-                @click="remove(field)"><i class="far fa-trash-alt"></i>
-            </button>
+        <input id="file" hidden ref="file" type="file" @change="processFile()"/>
+        <span @click="attachFile">Прикрепить</span>
+        <div v-for="(attachedFile, index) in field.value" :key="index">
+            <div>
+                <button class="btn btn-danger btn-link" @click="download(attachedFile)">{{ attachedFile.name }}</button>
+                <button type="button" class="btn btn-danger btn-link"
+                    @click="remove(field, attachedFile)"><i class="far fa-trash-alt"></i>
+                </button>
+            </div>
         </div>
     </div>
 </template>
@@ -25,10 +23,13 @@
     import {Action, State} from 'vuex-class';
     import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
     import TableField from '@/domain/entities/constructor/TableField';
+    import {IFile} from '@/store/modules/components/utils/fileuploader/types';
 
     @Component
     export default class DocField extends Vue {
         @Prop() private field: any;
+
+        @Provide() private totalQuantity: number = 5;
 
         @Provide() private file = '';
         @Provide() private fileName = '';
@@ -51,7 +52,11 @@
                 identifier: this.field.id,
             }).then(() => {
                 this.fileUploader.path.name = this.fileName;
-                this.$emit('attachFilePath', this.fileUploader.path);
+
+                if (!this.field.value) {
+                    this.field.value = [];
+                }
+                this.field.value.push({...this.fileUploader.path});
             });
 
         }
@@ -60,17 +65,17 @@
             document.getElementById('file').click();
         }
 
-        private download() {
-            if (this.field.value) {
-                this.downloadFile({filepath: this.field.value});
+        private download(attachedFile: IFile) {
+            if (attachedFile) {
+                this.downloadFile({filepath: attachedFile});
             } else {
                 ErrorNotifier.notifyWithCustomMessage('Путь к файлу не найден');
             }
         }
 
-        private remove(field: TableField) {
+        private remove(field: TableField, attachedFile: IFile) {
             this.deleteFile({
-                filepath: this.field.value.path,
+                filepath: attachedFile.path,
                 tableIdentifier: field.table_identifier,
                 columnName: field.tech_title,
                 elementId: this.konstructor.element.id,

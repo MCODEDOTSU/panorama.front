@@ -15,21 +15,26 @@ export const state: FileUploaderState = {
 };
 
 export const actions: ActionTree<FileUploaderState, RootState> = {
-    async uploadFile({state}, payload) {
+    uploadFile({state}, payload) {
         const formData = new FormData();
         formData.append('fileres', payload.fileres.files[0]);
         formData.append('identifier', payload.identifier);
 
-        axios.post(`${baseUrlAPI}util/file/upload`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        }).then((response) => {
-            state.path.path = response.data;
-            SuccessNotifier.notify('', 'Файл загружен');
-        }).catch((error) => {
-            ErrorNotifier.notifyWithCustomMessage(error.response.data);
+        return new Promise((resolve, reject) => {
+            axios.post(`${baseUrlAPI}util/file/upload`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }).then((response) => {
+                state.path.path = response.data;
+                SuccessNotifier.notify('', 'Файл загружен');
+                resolve();
+            }).catch((error) => {
+                ErrorNotifier.notifyWithCustomMessage(error.response.data);
+            });
         });
+
+
     },
 
     async downloadFile({state}, payload) {

@@ -7,8 +7,7 @@
         <one-from-many-field :field="field"/>
         <many-from-many-field :field="field"/>
         <doc-field
-                :field="field"
-                @attachFilePath="attachFilePath"
+            :field="field"
         />
     </div>
 </template>
@@ -23,15 +22,12 @@
     import OneFromManyField from '@/components/constructor/fields/OneFromManyField.vue';
     import ManyFromManyField from '@/components/constructor/fields/ManyFromManyField.vue';
     import DocField from '@/components/constructor/fields/DocField.vue';
+    import {IFile} from '@/store/modules/components/utils/fileuploader/types';
 
     @Component({
         components: {ManyFromManyField, OneFromManyField, TextField, LongTextField, NumberField, DateField, DocField},
     })
     export default class ResolvedField extends Vue {
         @Prop() private field: any;
-
-        private attachFilePath(filePath: string) {
-            this.field.value = filePath;
-        }
     }
 </script>

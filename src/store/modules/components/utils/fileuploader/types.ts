@@ -1,9 +1,10 @@
 export default interface FileUploaderState {
-    path: File;
+    path: IFile;
     file: any;
 }
 
-interface File {
+export interface IFile {
     path: string;
     name: string;
+    ind?: any;
 }
