@@ -29,8 +29,6 @@
     export default class DocField extends Vue {
         @Prop() private field: any;
 
-        @Provide() private totalQuantityValue: number = 3;
-
         @Provide() private file = '';
         @Provide() private fileName = '';
 
@@ -92,10 +90,11 @@
 
         get totalQuantity() {
             if (this.field.value) {
-                return this.totalQuantityValue - this.field.value.length;
+
+                return this.field.options.quantity - this.field.value.length;
             }
 
-            return this.totalQuantityValue;
+            return this.field.options.quantity;
         }
     }
 </script>

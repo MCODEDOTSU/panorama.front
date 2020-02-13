@@ -51,7 +51,7 @@
                         </select>
                     </div>
                     <div class="col-2 col col-type">
-                        <select class="form-control" v-model="tableField.type" :disabled="tableField.id">
+                        <select class="form-control" @change="changeFieldType(tableField)" v-model="tableField.type" :disabled="tableField.id">
                             <option value="text_field">Текстовое поле</option>
                             <option value="long_text_field">Длинное текстовое поле</option>
                             <option value="number_field">Числовое поле</option>
@@ -111,6 +111,18 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-12 col col-enums" v-if="tableField.type === 'doc_field'">
+                        <div class="row no-gutters">
+                            <div class="col-4 col">
+                                <div class="alert alert-info">Макс. кол-во</div>
+                            </div>
+                            <div class="col-4 col">
+                                <input type="number" class="form-control" min="1"
+                                       placeholder="Кол-во" v-model="tableField.options.quantity">
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <hr>
@@ -153,6 +165,7 @@
                     enums: undefined,
                     group: 'Новая группа',
                     is_deleted: false,
+                    options: {}
                 }],
             });
         }
@@ -172,6 +185,18 @@
             }
         }
 
+        /**
+         * Изменить опции поля на основе его типа
+         */
+        private changeFieldType(tableField: TableField) {
+            if (tableField.type === 'doc_field') {
+                console.log('activating');
+                tableField.options.quantity = 1;
+            } else {
+                tableField.options = {};
+            }
+        }
+
         /***
          * Добавить поле
          */
@@ -184,6 +209,7 @@
                 enums: undefined,
                 group: groupName,
                 is_deleted: false,
+                options: null
             });
         }
 
