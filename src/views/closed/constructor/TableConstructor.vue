@@ -101,28 +101,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col col-enums" v-if="tableField.type === 'doc_field'">
-                        <div class="row no-gutters">
-                            <div class="col-4 col">
-                                <div class="alert alert-info">Перечислите типы файлов, разделяя их пробелом</div>
-                            </div>
-                            <div class="col-8 col">
-                                <tag-selector  v-model="tableField.enums" name="enums"/>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="col-12 col col-enums" v-if="tableField.type === 'doc_field'">
-                        <div class="row no-gutters">
-                            <div class="col-4 col">
-                                <div class="alert alert-info">Макс. кол-во</div>
-                            </div>
-                            <div class="col-4 col">
-                                <input type="number" class="form-control" min="1"
-                                       placeholder="Кол-во" v-model="tableField.options.quantity">
-                            </div>
-                        </div>
-                    </div>
+                    <builder-doc-field
+                        :tableField="tableField"
+                    ></builder-doc-field>
                 </div>
 
                 <hr>
@@ -141,9 +123,10 @@
     import ConstructorState from '@/store/modules/constructor/types';
     import {Action, State} from 'vuex-class';
     import TagSelector from 'vue-tag-selector';
+    import BuilderDocField from '@/components/constructor/builder/BuilderDocField.vue';
 
     @Component({
-        components: { TagSelector },
+        components: { TagSelector, BuilderDocField },
     })
     export default class TableConstructor extends Vue {
 
@@ -165,7 +148,7 @@
                     enums: undefined,
                     group: 'Новая группа',
                     is_deleted: false,
-                    options: {}
+                    options: {},
                 }],
             });
         }
@@ -190,7 +173,6 @@
          */
         private changeFieldType(tableField: TableField) {
             if (tableField.type === 'doc_field') {
-                console.log('activating');
                 tableField.options.quantity = 1;
             } else {
                 tableField.options = {};
@@ -209,7 +191,7 @@
                 enums: undefined,
                 group: groupName,
                 is_deleted: false,
-                options: null
+                options: null,
             });
         }
 
