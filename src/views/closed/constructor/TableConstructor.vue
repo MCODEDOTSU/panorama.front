@@ -177,10 +177,18 @@
          * Изменить опции поля на основе его типа
          */
         private changeFieldType(tableField: TableField) {
-            if (tableField.type === 'doc_field') {
-                tableField.options.quantity = 1;
-            } else {
-                tableField.options = {};
+            switch (tableField.type) {
+                case 'many_from_many_field':
+                    tableField.options.min = 1;
+                    tableField.options.max = 1;
+                    tableField.options.default = [];
+                    break;
+                case 'doc_field':
+                    tableField.options.quantity = 1;
+                    break;
+                default:
+                    tableField.options = {};
+                    break;
             }
         }
 
@@ -196,7 +204,7 @@
                 enums: undefined,
                 group: groupName,
                 is_deleted: false,
-                options: null,
+                options: {},
             });
         }
 
