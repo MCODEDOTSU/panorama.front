@@ -14,4 +14,7 @@ export default interface TableField {
 
 interface IOptions {
     quantity?: number; // Кол-во возможно загружаемых документов
+    min?: number; // Минимальное кол-во для выбора опций многие из многих
+    max?: number; // Максимальное кол-во для выбора опций многие из многих
+    defaultVals?: any; // Опции выбранные изначально по умолчанию для многие из многих
 }

@@ -91,7 +91,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="col-12 col col-enums" v-if="tableField.type === 'one_from_many_field' || tableField.type === 'many_from_many_field'">
+                    <div class="col-12 col col-enums" v-if="tableField.type === 'one_from_many_field'">
                         <div class="row no-gutters">
                             <div class="col-4 col">
                                 <div class="alert alert-info">Перечислите значения, разделяя их пробелом</div>
@@ -101,6 +101,10 @@
                             </div>
                         </div>
                     </div>
+
+                    <builder-many-from-many-field
+                        :tableField="tableField"
+                    ></builder-many-from-many-field>
 
                     <builder-doc-field
                         :tableField="tableField"
@@ -124,9 +128,10 @@
     import {Action, State} from 'vuex-class';
     import TagSelector from 'vue-tag-selector';
     import BuilderDocField from '@/components/constructor/builder/BuilderDocField.vue';
+    import BuilderManyFromManyField from '@/components/constructor/builder/BuilderManyFromManyField.vue';
 
     @Component({
-        components: { TagSelector, BuilderDocField },
+        components: { TagSelector, BuilderDocField, BuilderManyFromManyField },
     })
     export default class TableConstructor extends Vue {
 
