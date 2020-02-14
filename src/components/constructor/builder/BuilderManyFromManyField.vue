@@ -24,7 +24,7 @@
                 </div>
                 <div class="col-1 col">
                     <input type="number" class="form-control" min="1"
-                           placeholder="Кол-во" v-model="tableField.options.max">
+                           placeholder="Кол-во" v-model="maxCount">
                 </div>
 
                 <div class="col-2 col">
@@ -50,6 +50,18 @@
     })
     export default class BuilderManyFromManyField extends Vue {
         @Prop() private tableField: TableField;
+
+        get maxCount() {
+            if (this.tableField.options.max >= this.tableField.enums.length) {
+                return this.tableField.enums.length;
+            }
+
+            return this.tableField.options.max;
+        }
+
+        set maxCount(value) {
+            this.tableField.options.max = value;
+        }
 
     }
 </script>
