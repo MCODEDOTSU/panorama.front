@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Prop, Provide} from 'vue-property-decorator';
+    import {Component, Vue, Prop} from 'vue-property-decorator';
     import TagSelector from 'vue-tag-selector';
     import TableField from '@/domain/entities/constructor/TableField';
 
