@@ -5,7 +5,7 @@ export default interface TableField {
     tech_title: string;
     enums?: [];   // Значения для типов столбцов - один ко многим и многие ко многим
     required: boolean;
-    value?: any;
+    value?: any; // Для "один ко многим" и "многие ко многим" - это перечисление
     group?: string;
     is_deleted: boolean;
     table_identifier?: string;
