@@ -107,6 +107,10 @@
                     <builder-date-field
                         :tableField="tableField"
                     ></builder-date-field>
+
+                    <builder-text-field
+                        :tableField="tableField"
+                    ></builder-text-field>
                 </div>
 
                 <hr>
@@ -129,9 +133,17 @@
     import BuilderManyFromManyField from '@/components/constructor/builder/BuilderManyFromManyField.vue';
     import BuilderOneFromManyField from '@/components/constructor/builder/BuilderOneFromManyField.vue';
     import BuilderDateField from '@/components/constructor/builder/BuilderDateField.vue';
+    import BuilderTextField from '@/components/constructor/builder/BuilderTextField.vue';
 
     @Component({
-        components: {BuilderDateField, BuilderOneFromManyField, TagSelector, BuilderDocField, BuilderManyFromManyField },
+        components: {
+            BuilderTextField,
+            BuilderDateField,
+            BuilderOneFromManyField,
+            BuilderManyFromManyField,
+            BuilderDocField,
+            TagSelector,
+        },
     })
     export default class TableConstructor extends Vue {
 
@@ -192,6 +204,10 @@
                 case 'date_field':
                     tableField.options.minDate = '2020-01-01';
                     tableField.options.maxDate = '2021-01-01';
+                    break;
+                case 'text_field':
+                    tableField.options.min = 1;
+                    tableField.options.max = 255;
                     break;
                 default:
                     tableField.options = {};
