@@ -190,8 +190,8 @@
                     tableField.options.quantity = 1;
                     break;
                 case 'date_field':
-                    tableField.options.minDate = '1970-01-01';
-                    tableField.options.maxDate = '2099-12-31';
+                    tableField.options.minDate = '2020-01-01';
+                    tableField.options.maxDate = '2021-01-01';
                     break;
                 default:
                     tableField.options = {};

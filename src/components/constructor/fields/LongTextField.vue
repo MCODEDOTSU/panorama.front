@@ -22,14 +22,14 @@
     import {VueEditor} from 'vue2-editor';
 
     @Component({
-        components: { VueEditor }
+        components: { VueEditor },
     })
     export default class LongTextField extends Vue {
         @Prop() private field: any;
         @Inject('validator') private $validator: any;
 
         @Provide()
-        public toolbar: any = [
+        private toolbar: any = [
             [{header: [1, 2, 3, 4, 5, 6, false]}],
             ['bold', 'italic', 'underline', 'strike'],
             [{align: []}],
