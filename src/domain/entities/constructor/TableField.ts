@@ -5,7 +5,7 @@ export default interface TableField {
     tech_title: string;
     enums?: [];   // Значения для типов столбцов - один ко многим и многие ко многим
     required: boolean;
-    value?: string;
+    value?: any;
     group?: string;
     is_deleted: boolean;
     table_identifier?: string;

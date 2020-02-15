@@ -19,10 +19,9 @@
         get resolvedValue() {
             if (this.field.value) {
                 return this.field.value;
-            } else {
-                this.field.value = this.field.enums[0];
-                return this.field.enums[0];
             }
+
+            return this.field.options.default;
         }
 
         set resolvedValue(value) {

@@ -10,24 +10,23 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
+    import TableField from '@/domain/entities/constructor/TableField';
 
     @Component
-    export default class OneFromManyField extends Vue {
+    export default class ManyFromManyField extends Vue {
 
-        @Prop() private field: any;
+        @Prop() private field: TableField;
 
         get resolvedValue() {
-            if (this.field.value && this.field.value !== null) {
+            if (this.field.value) {
                 return this.field.value;
-            } else {
-                this.field.value = [];
-                return [];
             }
+
+            return this.field.options.default;
         }
 
-        set resolvedValue(value) {
+        set resolvedValue(value: []) {
             this.field.value = value;
         }
-
     }
 </script>

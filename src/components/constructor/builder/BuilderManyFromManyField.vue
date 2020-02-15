@@ -52,6 +52,10 @@
         @Prop() private tableField: TableField;
 
         get maxCount() {
+            if (!this.tableField.enums) {
+                return this.tableField.options.max;
+            }
+
             if (this.tableField.options.max >= this.tableField.enums.length) {
                 return this.tableField.enums.length;
             }

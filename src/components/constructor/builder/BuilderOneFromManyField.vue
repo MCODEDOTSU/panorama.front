@@ -25,12 +25,12 @@
 </template>
 
 <script lang="ts">
-    import {Vue, Component, Prop} from "vue-property-decorator";
+    import {Vue, Component, Prop} from 'vue-property-decorator';
     import TableField from '@/domain/entities/constructor/TableField';
     import TagSelector from 'vue-tag-selector';
 
     @Component({
-        components: { TagSelector }
+        components: { TagSelector },
     })
     export default class BuilderOneFromManyField extends Vue {
         @Prop() private tableField: TableField;
