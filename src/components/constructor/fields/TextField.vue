@@ -1,55 +1,45 @@
 <template>
     <div>
         <div v-if="field.type === 'text_field' && field.required === false">
-            <input type="text" :id="field.tech_title" class="form-control" v-model="validateNonRequired"
-                   :placeholder="field.title">
-            <span class="value-length">{{ valueLength }}</span>
+            <input type="text" :id="field.tech_title" class="form-control" v-model="field.value"
+                   data-vv-validate-on="change|blur"
+                   :placeholder="field.title" v-validate="`max:${field.options.max}`">
+            <span class="value-length">{{ valueMaxLength }}</span>
+            <span class="validation-error">{{ errors.first(field.title) }}</span>
         </div>
-        <input type="text" :id="field.tech_title" v-if="field.type === 'text_field' && field.required"
-               data-vv-validate-on="change|blur" v-validate="'required'" :name="field.title"
-               class="form-control" v-model="validateRequired" :placeholder="field.title">
-        <span class="validation-error">{{ errors.first(field.title) }}</span>
+        <div v-if="field.type === 'text_field' && field.required">
+            <input type="text" :id="field.tech_title" data-vv-validate-on="change|blur" :name="field.title"
+                   v-validate="`required|max:${field.options.max}|min:${field.options.min}`"
+                   class="form-control" v-model="field.value" :placeholder="field.title">
+            <span class="value-length">Мин: {{ valueMinLength }} &nbsp</span>
+            <span class="value-length">Макс: {{ valueMaxLength }}</span>
+            <span class="validation-error">{{ errors.first(field.title) }}</span>
+        </div>
     </div>
 </template>
 
 <script lang="ts">
-    import {Component, Inject, Prop, Vue} from 'vue-property-decorator';
+    import {Component, Inject, Prop, Vue} from "vue-property-decorator";
 
     @Component
     export default class TextField extends Vue {
         @Prop() private field: any;
         @Inject('validator') private $validator: any;
 
-        get validateRequired() {
-            if (this.field.value && this.field.value.length >= this.field.options.max) {
-                return this.field.value.substring(0, this.field.options.max - 1);
-            }
-
-            return this.field.value;
-        }
-
-        set validateRequired(value) {
-            this.field.value = value;
-        }
-
-        get validateNonRequired() {
-            if (this.field.value && this.field.value.length >= this.field.options.max) {
-                return this.field.value.substring(0, this.field.options.max - 1);
-            }
-
-            return this.field.value;
-        }
-
-        set validateNonRequired(value) {
-            this.field.value = value;
-        }
-
-        get valueLength() {
+        get valueMaxLength() {
             if (!this.field.value) {
                 this.field.value = '';
             }
             return this.field.options.max - this.field.value.length;
         }
+
+        get valueMinLength() {
+            if (!this.field.value) {
+                this.field.value = '';
+            }
+            return this.field.value.length - this.field.options.min;
+        }
+
     }
 </script>
 
