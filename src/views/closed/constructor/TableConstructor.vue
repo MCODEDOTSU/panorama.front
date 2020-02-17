@@ -111,6 +111,11 @@
                     <builder-text-field
                         :tableField="tableField"
                     ></builder-text-field>
+
+                    <builder-link-field
+                        :tableField="tableField"
+                    ></builder-link-field>
+
                 </div>
 
                 <hr>
@@ -134,6 +139,7 @@
     import BuilderOneFromManyField from '@/components/constructor/builder/BuilderOneFromManyField.vue';
     import BuilderDateField from '@/components/constructor/builder/BuilderDateField.vue';
     import BuilderTextField from '@/components/constructor/builder/BuilderTextField.vue';
+    import BuilderLinkField from '@/components/constructor/builder/BuilderLinkField.vue';
 
     @Component({
         components: {
@@ -142,6 +148,7 @@
             BuilderOneFromManyField,
             BuilderManyFromManyField,
             BuilderDocField,
+            BuilderLinkField,
             TagSelector,
         },
     })
@@ -156,14 +163,14 @@
          */
         private addGroup() {
             this.constructorState.tableFields.push({
-                group: 'Новая группа',
+                group: 'Группа',
                 columns: [{
                     type: 'text_field',
                     title: '',
                     tech_title: 'name1',
                     required: false,
                     enums: undefined,
-                    group: 'Новая группа',
+                    group: 'Группа',
                     is_deleted: false,
                     options: {},
                 }],
@@ -208,6 +215,9 @@
                 case 'text_field':
                     tableField.options.min = 1;
                     tableField.options.max = 255;
+                    break;
+                case 'link_field':
+                    tableField.options.layers = [];
                     break;
                 default:
                     tableField.options = {};
