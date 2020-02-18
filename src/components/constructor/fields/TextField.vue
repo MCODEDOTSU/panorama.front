@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-    import {Component, Inject, Prop, Vue} from "vue-property-decorator";
+    import {Component, Inject, Prop, Vue} from 'vue-property-decorator';
 
     @Component
     export default class TextField extends Vue {

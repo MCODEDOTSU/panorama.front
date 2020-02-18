@@ -37,7 +37,7 @@
         @Prop() private tableField: TableField;
 
         @Provide()
-        public selectLayer = '';
+        private selectLayer = '';
 
         public async created() {
             await this.managerGetLayers();
@@ -45,18 +45,18 @@
 
         public allLayers() {
             return this.layerState.layers.filter( (item: any) => {
-                return !this.tableField.options.layers.some(a => a.id === item.id);
+                return !this.tableField.options.layers.some((a) => a.id === item.id);
             });
         }
 
         public addLayer() {
-            let options = Object.assign({}, this.tableField.options);
+            const options = Object.assign({}, this.tableField.options);
             options.layers.push(Object.assign({}, this.selectLayer));
             this.tableField.options = Object.assign({}, options);
         }
 
         public deleteLayer(i) {
-            let options = Object.assign({}, this.tableField.options);
+            const options = Object.assign({}, this.tableField.options);
             options.layers.splice(i, 1);
             this.tableField.options = Object.assign({}, options);
         }
