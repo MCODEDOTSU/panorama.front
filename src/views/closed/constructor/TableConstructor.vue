@@ -116,6 +116,10 @@
                         :tableField="tableField"
                     ></builder-link-field>
 
+                    <builder-long-text-field
+                        :tableField="tableField"
+                    ></builder-long-text-field>
+
                 </div>
 
                 <hr>
@@ -140,9 +144,11 @@
     import BuilderDateField from '@/components/constructor/builder/BuilderDateField.vue';
     import BuilderTextField from '@/components/constructor/builder/BuilderTextField.vue';
     import BuilderLinkField from '@/components/constructor/builder/BuilderLinkField.vue';
+    import BuilderLongTextField from '@/components/constructor/builder/BuilderLongTextField.vue';
 
     @Component({
         components: {
+            BuilderLongTextField,
             BuilderTextField,
             BuilderDateField,
             BuilderOneFromManyField,
@@ -215,6 +221,10 @@
                 case 'text_field':
                     tableField.options.min = 1;
                     tableField.options.max = 255;
+                    break;
+                case 'long_text_field':
+                    tableField.options.min = 1;
+                    tableField.options.max = 1000;
                     break;
                 case 'link_field':
                     tableField.options.layers = [];
