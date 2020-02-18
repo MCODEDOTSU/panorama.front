@@ -2,7 +2,7 @@
     <div>
         <div v-if="field.type === 'text_field' && field.required === false">
             <input type="text" :id="field.tech_title" class="form-control" v-model="field.value"
-                   data-vv-validate-on="change|blur"
+                   data-vv-validate-on="change|blur" :name="field.title"
                    :placeholder="field.title" v-validate="`max:${field.options.max}`">
             <span class="value-length">{{ valueMaxLength }}</span>
             <span class="validation-error">{{ errors.first(field.title) }}</span>

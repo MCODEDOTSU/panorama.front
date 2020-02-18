@@ -120,6 +120,9 @@
                         :tableField="tableField"
                     ></builder-long-text-field>
 
+                    <builder-number-field
+                        :tableField="tableField"
+                    ></builder-number-field>
                 </div>
 
                 <hr>
@@ -145,9 +148,11 @@
     import BuilderTextField from '@/components/constructor/builder/BuilderTextField.vue';
     import BuilderLinkField from '@/components/constructor/builder/BuilderLinkField.vue';
     import BuilderLongTextField from '@/components/constructor/builder/BuilderLongTextField.vue';
+    import BuilderNumberField from '@/components/constructor/builder/BuilderNumberField.vue';
 
     @Component({
         components: {
+            BuilderNumberField,
             BuilderLongTextField,
             BuilderTextField,
             BuilderDateField,
@@ -228,6 +233,10 @@
                     break;
                 case 'link_field':
                     tableField.options.layers = [];
+                    break;
+                case 'number_field ':
+                    tableField.options.min = 1;
+                    tableField.options.max = 2147483646;
                     break;
                 default:
                     tableField.options = {};
