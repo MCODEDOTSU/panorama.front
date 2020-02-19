@@ -36,6 +36,18 @@ export const actions: ActionTree<LayerState, RootState> = {
     },
 
     /**
+     * Получить несколько доступных для чтения слоёв
+     */
+    async gisGetFewLayers({}, payload) {
+        try {
+            const res = await axios.post(`${baseUrlAPI}gis/layer/few`, {layers: payload.layers});
+            state.layers = res.data;
+        } catch {
+            ErrorNotifier.notify();
+        }
+    },
+
+    /**
      * Получить все доступные для редактирования слои
      */
     async gisGetLayersToContractor() {

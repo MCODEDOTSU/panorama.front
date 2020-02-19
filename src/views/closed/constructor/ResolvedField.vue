@@ -6,9 +6,8 @@
         <date-field :field="field"/>
         <one-from-many-field :field="field"/>
         <many-from-many-field :field="field"/>
-        <doc-field
-            :field="field"
-        />
+        <doc-field :field="field"/>
+        <link-field :field="field"/>
     </div>
 </template>
 
@@ -22,10 +21,11 @@
     import OneFromManyField from '@/components/constructor/fields/OneFromManyField.vue';
     import ManyFromManyField from '@/components/constructor/fields/ManyFromManyField.vue';
     import DocField from '@/components/constructor/fields/DocField.vue';
+    import LinkField from '@/components/constructor/fields/LinkField.vue';
     import {IFile} from '@/store/modules/components/utils/fileuploader/types';
 
     @Component({
-        components: {ManyFromManyField, OneFromManyField, TextField, LongTextField, NumberField, DateField, DocField},
+        components: {ManyFromManyField, OneFromManyField, TextField, LongTextField, NumberField, DateField, DocField, LinkField},
     })
     export default class ResolvedField extends Vue {
         @Prop() private field: any;

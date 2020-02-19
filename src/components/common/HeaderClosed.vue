@@ -12,22 +12,28 @@
                         </router-link>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuManagerLink"
+                        <a class="nav-link dropdown-toggle" href="#"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Управление
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuManagerLink" v-if="userState.role === 'superadmin'">
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuManagerLink">
+                            <router-link class="nav-link dropdown-item" to="/manager/contractors/modules" tag="a">Доступные модули
+                            </router-link>
+                            <router-link class="nav-link dropdown-item" to="/manager/gis" tag="a">Картография
+                            </router-link>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuManagerLink"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-if="userState.role === 'superadmin'" >
+                            Администрирование
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuManagerLink">
                             <router-link class="nav-link dropdown-item" to="/manager/contractors" tag="a">Контрагенты
                             </router-link>
                             <router-link class="nav-link dropdown-item" to="/manager/modules" tag="a">Модули
                             </router-link>
                             <router-link class="nav-link dropdown-item" to="/manager/layers" tag="a">Слои</router-link>
-                            <router-link class="nav-link dropdown-item" to="/manager/gis" tag="a">Картография
-                            </router-link>
-                        </div>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuManagerLink" v-else>
-                            <router-link class="nav-link dropdown-item" to="/manager/contractors/modules" tag="a">Модули
-                            </router-link>
                             <router-link class="nav-link dropdown-item" to="/manager/gis" tag="a">Картография
                             </router-link>
                         </div>

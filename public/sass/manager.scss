@@ -442,3 +442,27 @@
     }
 }
 
+.layer-items {
+    max-height: 400px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    white-space: nowrap;
+    margin: 10px 0 0 0;
+
+    .layer-item {
+        border-bottom: 1px solid #ced4da;
+        padding-bottom: 10px;
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    h4 {
+        margin: 10px 0;
+    }
+}
+
+#layerSelectModal___BV_modal_outer_ {
+    z-index: 9999 !important;
+}
+
