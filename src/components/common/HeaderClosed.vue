@@ -34,8 +34,6 @@
                             <router-link class="nav-link dropdown-item" to="/manager/modules" tag="a">Модули
                             </router-link>
                             <router-link class="nav-link dropdown-item" to="/manager/layers" tag="a">Слои</router-link>
-                            <router-link class="nav-link dropdown-item" to="/manager/gis" tag="a">Картография
-                            </router-link>
                         </div>
                     </li>
                     <li class="nav-item">

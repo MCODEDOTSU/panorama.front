@@ -52,7 +52,8 @@ export const actions: ActionTree<UserState, RootState> = {
             state.role = response.data.role;
             commit('getUser', payload);
         }, () => {
-            ErrorNotifier.notify();
+            state.token = '';
+            // ErrorNotifier.notify();
         });
     },
 
@@ -70,6 +71,7 @@ export const actions: ActionTree<UserState, RootState> = {
         try {
             const url = `${baseUrlAPI}logout`;
             const result = await axios.get(url);
+            state.token = '';
             Router.push({name: 'home'});
         } catch {
             ErrorNotifier.notify();

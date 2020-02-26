@@ -1,7 +1,7 @@
 <template>
     <div class="style-editor">
         <div class="style-editor-fields" v-if="styleEditorState.geometryType !== ''">
-            <vue-scrollbar class="scrollbar scrollbar-min" ref="scrollbar">
+            <vue-scrollbar class="scrollbar scrollbar-min" ref="Scrollbar">
                 <point-fields v-if="styleEditorState.geometryType === 'point'"></point-fields>
                 <linestring-fields v-if="styleEditorState.geometryType === 'linestring'"></linestring-fields>
                 <polygon-fields v-if="styleEditorState.geometryType === 'polygon'"></polygon-fields>
@@ -98,6 +98,11 @@
             });
 
             this.setMapCenterDefault();
+
+            // Прокручиваем скролл
+            if (this.$refs.Scrollbar) {
+                this.$refs.Scrollbar.scrollToY(0);
+            }
 
         }
 
