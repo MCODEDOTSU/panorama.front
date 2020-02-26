@@ -1,24 +1,19 @@
 <template>
-    <div class="col-12 col col-enums">
-        <div class="row no-gutters" v-if="tableField.type === 'one_from_many_field'">
-            <div class="col-4 col">
-                <div class="alert alert-info">Перечислите значения, разделяя их пробелом</div>
+    <div class="col-12 col col-enums last-in-row">
+        <div class="row no-gutters addition-setting-fields" v-if="tableField.type === 'one_from_many_field'">
+            <div class="col-12 col last-in-row">
+                <div class="alert alert-info">Дополнительные настройки поля: необходимо перечислить значения, из которых пользовать может выбрать один вариант. Значения необходимо разделять пробелом</div>
             </div>
-            <div class="col-8 col">
+            <div class="col-12 col last-in-row">
                 <tag-selector  v-model="tableField.enums" name="enums"/>
             </div>
-        </div>
-
-        <div class="col-12 col col-enums" v-if="tableField.type === 'one_from_many_field'">
-            <div class="row no-gutters">
-                <div class="col-2 col">
-                    <div class="alert alert-info">По умолчанию:</div>
-                </div>
-                <div class="col-4 col">
-                    <select class="form-control" id="cars" v-model="tableField.options.default">
-                        <option v-for="enumOpt in tableField.enums" :value="enumOpt">{{ enumOpt }}</option>
-                    </select>
-                </div>
+            <div class="col-12 col last-in-row">
+                <label class="label-form-control">Значение, выбранное по умолчанию:</label>
+            </div>
+            <div class="col-12 col last-in-row">
+                <select class="form-control" id="cars" v-model="tableField.options.default">
+                    <option v-for="enumOpt in tableField.enums" :value="enumOpt">{{ enumOpt }}</option>
+                </select>
             </div>
         </div>
     </div>

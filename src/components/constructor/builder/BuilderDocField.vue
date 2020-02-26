@@ -1,22 +1,23 @@
 <template>
     <div>
-        <div class="col-12 col col-enums" v-if="tableField.type === 'doc_field'">
-            <div class="row no-gutters">
-                <div class="col-4 col">
-                    <div class="alert alert-info">Перечислите типы файлов, разделяя их пробелом</div>
+        <div class="col-12 col col-enums last-in-row" v-if="tableField.type === 'doc_field'">
+            <div class="row no-gutters addition-setting-fields">
+                <div class="col-12 col last-in-row">
+                    <div class="alert alert-info">
+                        Дополнительные ограничения по типу поля: при необходимости укажите формат файлов, которые может загрузить пользователь и максимальное количество файлов.
+                        Форматы файлов необходимо разделять пробелами, например: "pdf doc docx"
+                    </div>
                 </div>
-                <div class="col-8 col">
+                <div class="col-12 col last-in-row">
+                    <label class="label-form-control">Типы файлов (через пробел):</label>
+                </div>
+                <div class="col-12 col last-in-row">
                     <tag-selector v-model="tableField.enums" name="enums"/>
                 </div>
-            </div>
-        </div>
-
-        <div class="col-12 col col-enums" v-if="tableField.type === 'doc_field'">
-            <div class="row no-gutters">
-                <div class="col-4 col">
-                    <div class="alert alert-info">Макс. кол-во</div>
+                <div class="col-12 col last-in-row">
+                    <label class="label-form-control">Максимальное количество файлов:</label>
                 </div>
-                <div class="col-4 col">
+                <div class="col-12 col last-in-row">
                     <input type="number" class="form-control" min="1"
                            placeholder="Кол-во" v-model="tableField.options.quantity">
                 </div>

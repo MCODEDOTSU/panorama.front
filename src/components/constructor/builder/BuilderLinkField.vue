@@ -1,21 +1,28 @@
 <template>
-    <div class="col-12 col col-enums" v-if="tableField.type === 'link_field'">
-        <div class="row no-gutters">
-            <div class="col-2 col">
-                Элементы слоёв:
-            </div>
-            <div class="col-10 col">
-                <label v-for="(layer, i) in tableField.options.layers" class="alert alert-info alert-layer">{{ layer.title }}
-                    <button class="btn btn-link btn-sm btn-cross" @click="deleteLayer(i)">x</button>
-                </label>
-            </div>
-            <div class="col-10 col">
-                <select class="form-control" v-model="selectLayer">
-                    <option v-for="layer in allLayers()" :value="layer">{{ layer.title }}</option>
-                </select>
-            </div>
-            <div class="col-2 col action">
-                <button class="btn btn-link btn-sm" @click="addLayer">Добавить слой</button>
+    <div>
+        <div class="col-12 col col-enums last-in-row" v-if="tableField.type === 'link_field'">
+            <div class="row no-gutters addition-setting-fields">
+                <div class="col-12 col last-in-row">
+                    <div class="alert alert-info">
+                        Дополнительные ограничения по типу поля: слои, элементы которых можно выбрать в качестве ссылки
+                    </div>
+                </div>
+                <div class="col-2 col">
+                    Элементы слоёв:
+                </div>
+                <div class="col-10 col last-in-row">
+                    <label v-for="(layer, i) in tableField.options.layers" class="alert alert-info alert-layer">{{ layer.title }}
+                        <button class="btn btn-link btn-sm btn-cross" @click="deleteLayer(i)">x</button>
+                    </label>
+                </div>
+                <div class="col-10 col">
+                    <select class="form-control" v-model="selectLayer">
+                        <option v-for="layer in allLayers()" :value="layer">{{ layer.title }}</option>
+                    </select>
+                </div>
+                <div class="col-2 col action last-in-row">
+                    <button class="btn btn-link btn-sm" @click="addLayer">Добавить слой</button>
+                </div>
             </div>
         </div>
     </div>
