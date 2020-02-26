@@ -23,6 +23,7 @@
                                 v-model="elementState.element.description"
                                 :editorToolbar="toolbar"></vue-editor>
                 </div>
+
                 <!-- Next Elemets -->
                 <div class="form-group" v-if="style.list && style.list.hasList">
                     <label for="nextElementId">Следующий элемент</label>
@@ -34,25 +35,32 @@
                         </option>
                     </select>
                 </div>
+
                 <!-- Prev Elements -->
                 <div class="form-group" v-if="style.list && style.list.hasList && getPrevElement()">
                     <label for="prevElementId">Предыдущий элемент</label>
                     <input type="text" id="prevElementId" readonly class="form-control" :value="getPrevElement().title">
                 </div>
+
             </form>
         </div>
+
         <div v-if="constructorState.isTableExists" v-for="group in constructorState.tableFields" class="tab-pane addition-information-tab fade" role="tabpanel"
              :aria-labelledby="group.groupTechName + '-tab'" :id="group.groupTechName" >
             <div class="form-group" v-for="field in group.columns">
-                <label :for="field.tech_title">{{ field.title }}
-                    <span v-if="field.required">*</span>
-                    <span></span>
-                </label>
-                <resolved-field
-                    :field="field"
-                />
+                <div class="row no-gutters">
+                    <div class="col-3 col">
+                        <label :for="field.tech_title">{{ field.title }}
+                            <span v-if="field.required">*</span>
+                        </label>
+                    </div>
+                    <div class="col-9 col last-in-row">
+                        <resolved-field :field="field" />
+                    </div>
+                </div>
             </div>
         </div>
+
     </div>
 </template>
 

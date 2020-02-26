@@ -1,20 +1,14 @@
 <template>
     <div>
-        <div v-if="field.type === 'text_field' && field.required === false">
-            <input type="text" :id="field.tech_title" class="form-control" v-model="field.value"
-                   data-vv-validate-on="change|blur" :name="field.title"
-                   :placeholder="field.title" v-validate="`max:${field.options.max}`">
-            <span class="value-length">{{ valueMaxLength }}</span>
-            <span class="validation-error">{{ errors.first(field.title) }}</span>
-        </div>
-        <div v-if="field.type === 'text_field' && field.required">
-            <input type="text" :id="field.tech_title" data-vv-validate-on="change|blur" :name="field.title"
-                   v-validate="`required|max:${field.options.max}|min:${field.options.min}`"
-                   class="form-control" v-model="field.value" :placeholder="field.title">
-            <span class="value-length">Мин: {{ valueMinLength }} &nbsp</span>
-            <span class="value-length">Макс: {{ valueMaxLength }}</span>
-            <span class="validation-error">{{ errors.first(field.title) }}</span>
-        </div>
+        <input type="text" :id="field.tech_title" class="form-control" v-model="field.value"
+               data-vv-validate-on="change|blur"  v-validate="getValidateRules"
+               :placeholder="field.title" :name="field.tech_title">
+        <span class="value-length">
+                <label v-if="valueMinLength > 0 && valueMaxLength > 0">Осталось ввести от {{ valueMinLength }} до {{ valueMaxLength }} симв.</label>
+                <label v-else-if="valueMinLength > 0">Осталось ввести {{ valueMinLength }} симв.</label>
+                <label v-else-if="valueMaxLength > 0">Можно ввести ещё {{ valueMaxLength }} симв.</label>
+            </span>
+        <span class="validation-error">{{ errors.first(field.tech_title) }}</span>
     </div>
 </template>
 
@@ -26,18 +20,32 @@
         @Prop() private field: any;
         @Inject('validator') private $validator: any;
 
+        get getValidateRules() {
+            let rules = [];
+            if (this.field.required !== false) {
+                rules.push('required');
+            }
+            if (this.field.options.max !== undefined) {
+                rules.push(`max:${this.field.options.max}`);
+            }
+            if (this.field.options.min !== undefined) {
+                rules.push(`min:${this.field.options.max}`);
+            }
+            return rules.join('|');
+        }
+
         get valueMaxLength() {
             if (!this.field.value) {
                 this.field.value = '';
             }
-            return this.field.options.max - this.field.value.length;
+            return this.field.options.max !== undefined ? (this.field.options.max - this.field.value.length) : -1;
         }
 
         get valueMinLength() {
             if (!this.field.value) {
                 this.field.value = '';
             }
-            return this.field.value.length - this.field.options.min;
+            return this.field.options.min !== undefined ? (this.field.options.min - this.field.value.length) : -1;
         }
 
     }
