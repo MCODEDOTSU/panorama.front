@@ -61,12 +61,12 @@ export const actions: ActionTree<LayerState, RootState> = {
                 const res = await axios.put(`${baseUrlAPI}manager/layer/${state.layer.id}`,
                     Object.assign({}, state.layer, { style: JSON.stringify(state.layer.style)}));
                 SuccessNotifier.notify('Данные сохранены', `Слой "${state.layer.title}" изменен`);
-                state.layers = editUpdatedItem(state.layers, Object.assign({}, res.data, { style: JSON.parse(res.data) }));
+                state.layers = editUpdatedItem(state.layers, Object.assign({}, res.data, { style: JSON.parse(res.data.style) }));
             } else {
                 const res = await axios.post(`${baseUrlAPI}manager/layer`,
                     Object.assign({}, state.layer, { style: JSON.stringify(state.layer.style)}));
                 SuccessNotifier.notify('Данные сохранены', `Слой "${state.layer.title}" создан`);
-                state.layer = Object.assign({}, res.data, { style: JSON.parse(res.data) });
+                state.layer = Object.assign({}, res.data, { style: JSON.parse(res.data.style) });
                 state.layers.push(state.layer);
             }
         } catch {
