@@ -1,8 +1,8 @@
 <template>
     <div>
-        <text-field :field="field"/>
-        <number-field :field="field"/>
-        <long-text-field :field="field"/>
+        <text-field :field="field" v-if="field.type === 'text_field'"/>
+        <number-field :field="field" />
+        <long-text-field :field="field" v-if="field.type === 'long_text_field'"/>
         <date-field :field="field"/>
         <one-from-many-field :field="field"/>
         <many-from-many-field :field="field"/>

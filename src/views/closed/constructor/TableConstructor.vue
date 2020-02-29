@@ -136,7 +136,7 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Component, Vue, Watch} from 'vue-property-decorator';
     import TableField from '@/domain/entities/constructor/TableField';
     import ConstructorState from '@/store/modules/constructor/types';
     import {Action, State} from 'vuex-class';
@@ -224,19 +224,19 @@
                     tableField.options.maxDate = '';
                     break;
                 case 'text_field':
-                    tableField.options.min = 1;
-                    tableField.options.max = 255;
+                    tableField.options.min = '';
+                    tableField.options.max = '';
                     break;
                 case 'long_text_field':
-                    tableField.options.min = 1;
-                    tableField.options.max = 1000;
+                    tableField.options.min = '';
+                    tableField.options.max = '';
                     break;
                 case 'link_field':
                     tableField.options.layers = [];
                     break;
                 case 'number_field ':
-                    tableField.options.min = 1;
-                    tableField.options.max = 2147483646;
+                    tableField.options.min = '';
+                    tableField.options.max = '';
                     break;
                 default:
                     tableField.options = {};

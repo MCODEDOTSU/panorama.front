@@ -31,6 +31,12 @@
     export default class BuilderTextField extends Vue {
         @Prop() private tableField: TableField;
 
+        mounted() {
+            if(this.tableField.options.length === 0) {
+                this.tableField.options = {};
+            }
+        }
+
         private validate() {
             if (this.tableField.options.max > 255) {
                 this.tableField.options.max = 255;

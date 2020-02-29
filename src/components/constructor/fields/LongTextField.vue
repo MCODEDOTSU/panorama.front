@@ -1,37 +1,22 @@
 <template>
     <div>
-        <div v-if="field.type ==='long_text_field' && field.required === false">
-            <vue-editor :id="field.tech_title"
-                        ref="wysiwygContents"
-                        v-model="field.value"
-                        :name="field.title + ' '"
-                        :editorToolbar="toolbar"></vue-editor>
 
-            <input type="text" :id="field.tech_title" class="form-control" v-model="field.value"
-                   data-vv-validate-on="change|blur" :placeholder="field.title" v-validate="`max:${field.options.max}`">
+        <vue-editor :id="field.tech_title" ref="wysiwygContents" v-model="field.value" :editorToolbar="toolbar"></vue-editor>
+        <input type="hidden" v-model="cleanText" :name="field.tech_title"
+               data-vv-validate-on="change|blur"  v-validate="getValidateRules" :data-vv-as="'\'' + field.title + '\''">
 
-            <span class="value-length">{{ valueMaxLength }}</span>
-            <span class="validation-error">{{ errors.first(field.title) }}</span>
-        </div>
+        <span class="value-length">
+            <label v-if="valueMinLength > 0 && valueMaxLength > 0">Осталось ввести от {{ valueMinLength }} до {{ valueMaxLength }} симв.</label>
+            <label v-else-if="valueMinLength > 0">Осталось ввести ещё минимум {{ valueMinLength }} симв.</label>
+            <label v-else-if="valueMaxLength > 0">Можно ввести ещё максимум {{ valueMaxLength }} симв.</label>
+        </span>
+        <span class="validation-error">{{ errors.first(field.tech_title) }}</span>
 
-        <div v-if="field.type ==='long_text_field' && field.required">
-            <vue-editor :id="field.tech_title"
-                        ref="wysiwygContents"
-                        v-model="field.value"
-                        :editorToolbar="toolbar"></vue-editor>
-
-            <input type="hidden" v-if="field.type === 'long_text_field' && field.required"
-                   data-vv-validate-on="change|blur"  :name="field.title + ' '" v-model="field.value"
-                   v-validate="`required|max:${field.options.max}|min:${field.options.min}`">
-
-            <span class="value-length">Мин: {{ valueMinLength }} &nbsp</span>
-            <span class="value-length">Макс: {{ valueMaxLength }}</span>
-            <span class="validation-error">{{ errors.first(field.title + ' ') }}</span>
-        </div>
     </div>
 </template>
 
 <script lang="ts">
+
     import {Component, Inject, Prop, Provide, Vue} from 'vue-property-decorator';
     import {VueEditor} from 'vue2-editor';
 
@@ -39,6 +24,7 @@
         components: { VueEditor },
     })
     export default class LongTextField extends Vue {
+
         @Prop() private field: any;
         @Inject('validator') private $validator: any;
 
@@ -54,18 +40,51 @@
             ['clean'],
         ];
 
+        /**
+         * Правила валидации
+         */
+        get getValidateRules() {
+            let rules = [];
+            if (this.field.required !== false) {
+                rules.push('required');
+            }
+            if (this.field.options.max) {
+                rules.push(`max:${this.field.options.max}`);
+            }
+            if (this.field.options.min) {
+                rules.push(`min:${this.field.options.min}`);
+            }
+            return rules.join('|');
+        }
+
+        get cleanText() {
+            if (!this.field.value) {
+                this.field.value = '';
+            }
+            const regex = /<[^<>]+>/g;
+            return this.field.value.replace(regex, '');
+        }
+
+        /**
+         * Осталось ввести
+         */
         get valueMaxLength() {
             if (!this.field.value) {
                 this.field.value = '';
             }
-            return this.field.options.max - this.field.value.length;
+            const regex = /<[^<>]+>/g;
+            return this.field.options.max ? (this.field.options.max - this.field.value.replace(regex, '').length) : -1;
         }
 
+        /**
+         * Необходимо ввести минимум
+         */
         get valueMinLength() {
             if (!this.field.value) {
                 this.field.value = '';
             }
-            return this.field.value.length - this.field.options.min;
+            const regex = /<[^<>]+>/g;
+            return this.field.options.min ? (this.field.options.min - this.field.value.replace(regex, '').length) : -1;
         }
     }
 </script>
