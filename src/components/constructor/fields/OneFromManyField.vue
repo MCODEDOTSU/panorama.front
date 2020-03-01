@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-for="enumValue in field.enums" class="one-from-many-div" v-if="field.type === 'one_from_many_field'">
+        <div v-for="enumValue in field.enums" class="one-from-many-div">
             <label :for="enumValue">{{ enumValue }}</label>
             <input class="form-control" type="radio" :id="enumValue" :value="enumValue"
                    v-model="resolvedValue">
@@ -20,7 +20,6 @@
             if (this.field.value) {
                 return this.field.value;
             }
-
             return this.field.options.default;
         }
 

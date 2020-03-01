@@ -30,6 +30,12 @@
     export default class BuilderNumberField extends Vue {
         @Prop() private tableField: TableField;
 
+        public mounted() {
+            if (this.tableField.options.length === 0) {
+                this.tableField.options = { min: 1, max: 100 };
+            }
+        }
+
         private validate() {
             if (this.tableField.options.max > 2147483646) {
                 this.tableField.options.max = 2147483646;

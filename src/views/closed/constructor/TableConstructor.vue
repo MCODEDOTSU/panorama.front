@@ -92,35 +92,35 @@
                         </div>
                     </div>
 
-                    <builder-many-from-many-field
+                    <builder-many-from-many-field v-if="tableField.type === 'many_from_many_field'"
                         :tableField="tableField"
                     ></builder-many-from-many-field>
 
-                    <builder-one-from-many-field
+                    <builder-one-from-many-field v-if="tableField.type === 'one_from_many_field'"
                         :table-field="tableField"
                     ></builder-one-from-many-field>
 
-                    <builder-doc-field
+                    <builder-doc-field v-if="tableField.type === 'doc_field'"
                         :tableField="tableField"
                     ></builder-doc-field>
 
-                    <builder-date-field
+                    <builder-date-field v-if="tableField.type === 'date_field'"
                         :tableField="tableField"
                     ></builder-date-field>
 
-                    <builder-text-field
+                    <builder-text-field v-if="tableField.type === 'text_field'"
                         :tableField="tableField"
                     ></builder-text-field>
 
-                    <builder-link-field
+                    <builder-link-field v-if="tableField.type === 'link_field'"
                         :tableField="tableField"
                     ></builder-link-field>
 
-                    <builder-long-text-field
+                    <builder-long-text-field v-if="tableField.type === 'long_text_field'"
                         :tableField="tableField"
                     ></builder-long-text-field>
 
-                    <builder-number-field
+                    <builder-number-field v-if="tableField.type === 'number_field'"
                         :tableField="tableField"
                     ></builder-number-field>
                 </div>
@@ -224,19 +224,19 @@
                     tableField.options.maxDate = '';
                     break;
                 case 'text_field':
-                    tableField.options.min = '';
-                    tableField.options.max = '';
+                    tableField.options.min = 1;
+                    tableField.options.max = 100;
                     break;
                 case 'long_text_field':
-                    tableField.options.min = '';
-                    tableField.options.max = '';
+                    tableField.options.min = 1;
+                    tableField.options.max = 1000;
                     break;
                 case 'link_field':
                     tableField.options.layers = [];
                     break;
-                case 'number_field ':
-                    tableField.options.min = '';
-                    tableField.options.max = '';
+                case 'number_field':
+                    tableField.options.min = 1;
+                    tableField.options.max = 100;
                     break;
                 default:
                     tableField.options = {};

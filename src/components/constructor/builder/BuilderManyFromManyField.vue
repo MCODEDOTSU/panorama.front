@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Prop} from 'vue-property-decorator';
+    import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
     import TagSelector from 'vue-tag-selector';
     import TableField from '@/domain/entities/constructor/TableField';
 
@@ -46,6 +46,35 @@
     })
     export default class BuilderManyFromManyField extends Vue {
         @Prop() private tableField: TableField;
+
+        @Watch('tableField.enums', {deep: true})
+        public onChangeEnums() {
+            this.autoSelectDefaultValue();
+        }
+
+        @Watch('tableField.required')
+        public onChangeRequired() {
+            this.autoSelectDefaultValue();
+        }
+
+        public mounted() {
+            if (this.tableField.options.length === 0) {
+                this.tableField.options = { min: 1, max: 1, default: [] };
+            }
+            if (!Array.isArray(this.tableField.options.default)) {
+                this.tableField.options.default = [];
+            }
+        }
+
+        public autoSelectDefaultValue() {
+            if (this.tableField.required === "true" &&
+                this.tableField.enums.length !== 0 &&
+                this.tableField.options.default.length === 0) {
+                let options = { default: [ this.tableField.enums[0] ] };
+                this.tableField.options = Object.assign({}, options);
+                console.log(this.tableField.options);
+            }
+        }
 
         get maxCount() {
             if (!this.tableField.enums) {

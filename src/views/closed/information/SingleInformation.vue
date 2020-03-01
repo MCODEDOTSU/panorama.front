@@ -45,6 +45,7 @@
 
         // TODO: this error is ignored. check if there is another possibility to get rid of this
         @Provide('validator') public $validator = this.$validator;
+        // @Provide('validator') public $validator;
 
         @Action public managerUpdateElement: any;
 

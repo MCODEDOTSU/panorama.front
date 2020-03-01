@@ -1,7 +1,7 @@
 <template>
     <div>
         
-        <div v-if="field.type === 'link_field' && field.required === false">
+        <div v-if="field.required === false">
             <input type="text" :id="field.tech_title" class="form-control" v-model="selectedElementTitle"
                    :placeholder="field.title" :name="field.title" readonly
                    v-b-modal.layerSelectModal>

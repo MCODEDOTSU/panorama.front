@@ -1,7 +1,7 @@
 <template>
     <div>
-        <datepicker v-if="field.type === 'date_field'" placeholder="Выбрать дату" :language="ru"
-                    :input-class="'form-control'" :disabled-dates="disabledDates" v-model="resolvedDate"></datepicker>
+        <datepicker :id="field.tech_title" :input-class="'form-control'" v-model="resolvedDate"
+                    placeholder="Выбрать дату" :language="ru" :disabled-dates="disabledDates" ></datepicker>
     </div>
 </template>
 
@@ -18,21 +18,31 @@
         @Provide() private ru: any = ru;
 
         @Provide() private disabledDates = {
-            ranges: [{
-                from: new Date(-99999, 0, 0),
-                to: new Date(this.field.options.minDate),
-            }, {
-                from: new Date(this.field.options.maxDate),
-                to: new Date(99999, 0, 0),
-            }],
+            ranges: this.getDisabledDates(),
         };
+
+        public getDisabledDates() {
+            const ranges = [];
+            if (this.field.options.minDate) {
+                ranges.push({
+                    from: new Date(-99999, 0, 0),
+                    to: new Date(this.field.options.minDate),
+                });
+            }
+            if (this.field.options.maxDate) {
+                ranges.push({
+                    from: new Date(this.field.options.maxDate),
+                    to: new Date(99999, 0, 0),
+                });
+            }
+            return ranges;
+        }
 
         get resolvedDate() {
             if (this.field.value) {
                 return this.field.value;
             } else {
-                this.field.value = new Date();
-                return new Date();
+                return '';
             }
         }
 

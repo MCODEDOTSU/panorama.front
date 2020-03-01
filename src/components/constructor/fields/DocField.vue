@@ -1,5 +1,5 @@
 <template>
-    <div v-if="field.type === 'doc_field'">
+    <div>
         <div class="file-type">
             <span >Тип документа: </span>
             <label v-for="enumValue in field.enums">"{{ enumValue }}" &nbsp</label>

@@ -46,6 +46,12 @@
         @Provide()
         private selectLayer = '';
 
+        public mounted() {
+            if (this.tableField.options.length === 0) {
+                this.tableField.options = { layers: [] };
+            }
+        }
+
         public async created() {
             await this.managerGetLayers();
         }

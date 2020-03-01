@@ -20,7 +20,8 @@
 </template>
 
 <script lang="ts">
-    import {Vue, Component, Prop} from 'vue-property-decorator';
+
+    import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
     import TableField from '@/domain/entities/constructor/TableField';
     import TagSelector from 'vue-tag-selector';
 
@@ -28,8 +29,37 @@
         components: { TagSelector },
     })
     export default class BuilderOneFromManyField extends Vue {
+
         @Prop() private tableField: TableField;
 
+        public mounted() {
+            if (this.tableField.options.length === 0) {
+                this.tableField.options = { default: '' };
+            }
+        }
 
+        @Watch('tableField.enums', {deep: true})
+        public onChangeEnums() {
+            this.autoSelectDefaultValue();
+        }
+
+        @Watch('tableField.required')
+        public onChangeRequired() {
+            this.autoSelectDefaultValue();
+        }
+
+        public autoSelectDefaultValue() {
+            if (this.tableField.required === "true" &&
+                this.tableField.enums.length !== 0 &&
+                this.tableField.enums.indexOf(this.tableField.options.default) === -1) {
+                let options = { default: this.tableField.enums[0] };
+                this.tableField.options = Object.assign({}, options);
+            } else if(this.tableField.enums.length !== 0 &&
+                this.tableField.options.default !== '' &&
+                this.tableField.enums.indexOf(this.tableField.options.default) === -1) {
+                let options = { default: this.tableField.enums[0] };
+                this.tableField.options = Object.assign({}, options);
+            }
+        }
     }
 </script>

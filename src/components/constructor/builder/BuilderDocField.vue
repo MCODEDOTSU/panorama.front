@@ -27,6 +27,7 @@
 </template>
 
 <script lang="ts">
+
     import {Component, Vue, Prop} from 'vue-property-decorator';
     import TagSelector from 'vue-tag-selector';
     import TableField from '@/domain/entities/constructor/TableField';
@@ -36,5 +37,11 @@
     })
     export default class BuilderDocField extends Vue {
         @Prop() private tableField: TableField;
+
+        public mounted() {
+            if (this.tableField.options.length === 0) {
+                this.tableField.options = { quantity: 1 };
+            }
+        }
     }
 </script>

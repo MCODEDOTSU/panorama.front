@@ -1,13 +1,13 @@
 <template>
     <div>
         <text-field :field="field" v-if="field.type === 'text_field'"/>
-        <number-field :field="field" />
+        <number-field :field="field" v-if="field.type === 'number_field'"/>
         <long-text-field :field="field" v-if="field.type === 'long_text_field'"/>
-        <date-field :field="field"/>
-        <one-from-many-field :field="field"/>
-        <many-from-many-field :field="field"/>
-        <doc-field :field="field"/>
-        <link-field :field="field"/>
+        <date-field :field="field" v-if="field.type === 'date_field'"/>
+        <one-from-many-field :field="field" v-if="field.type === 'one_from_many_field'"/>
+        <many-from-many-field :field="field" v-if="field.type === 'many_from_many_field'"/>
+        <doc-field :field="field" v-if="field.type === 'doc_field'"/>
+        <link-field :field="field" v-if="field.type === 'link_field'"/>
     </div>
 </template>
 

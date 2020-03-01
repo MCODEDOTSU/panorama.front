@@ -33,7 +33,15 @@
         components: { Datepicker },
     })
     export default class BuilderDateField extends Vue {
+
         @Prop() private tableField: TableField;
         @Provide() private ru: any = ru;
+
+        public mounted() {
+            if (this.tableField.options.length === 0) {
+                this.tableField.options = { minDate: '', maxDate: '' };
+            }
+        }
+
     }
 </script>

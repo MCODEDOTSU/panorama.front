@@ -40,7 +40,7 @@ class TableType {
     }
 
     setting(path, value){
-        if(value === undefined){
+        if (value === undefined){
             return this.settings.get(path);
         }
 

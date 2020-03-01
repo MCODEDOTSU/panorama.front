@@ -1,7 +1,7 @@
 <template>
     <div>
         <input type="text" :id="field.tech_title" class="form-control" v-model="field.value"
-               data-vv-validate-on="change|blur" v-validate="getValidateRules" :data-vv-as="field.title"
+               data-vv-validate-on="change|blur" v-validate="getValidateRules" :data-vv-as="'\'' + field.title + '\''"
                :placeholder="field.title" :name="field.tech_title">
         <span class="value-length">
             <label v-if="valueMinLength > 0 && valueMaxLength > 0">Осталось ввести от {{ valueMinLength }} до {{ valueMaxLength }} симв.</label>
@@ -28,7 +28,7 @@
         get getValidateRules() {
             let rules = [];
             if (this.field.required !== false) {
-                rules.push("required");
+                rules.push('required');
             }
             if (this.field.options.max) {
                 rules.push(`max:${this.field.options.max}`);
@@ -36,7 +36,7 @@
             if (this.field.options.min) {
                 rules.push(`min:${this.field.options.min}`);
             }
-            return rules.join("|");
+            return rules.join('|');
         }
 
         /**
@@ -44,7 +44,7 @@
          */
         get valueMaxLength() {
             if (!this.field.value) {
-                this.field.value = "";
+                this.field.value = '';
             }
             return this.field.options.max ? (this.field.options.max - this.field.value.length) : -1;
         }
@@ -54,20 +54,10 @@
          */
         get valueMinLength() {
             if (!this.field.value) {
-                this.field.value = "";
+                this.field.value = '';
             }
             return this.field.options.min ? (this.field.options.min - this.field.value.length) : -1;
         }
 
     }
 </script>
-
-<style>
-    .value-length {
-        font-size: 14px;
-        line-height: 1;
-        display: inline-block;
-        padding: 4px 0;
-        color: red;
-    }
-</style>

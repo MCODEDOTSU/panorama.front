@@ -31,9 +31,9 @@
     export default class BuilderTextField extends Vue {
         @Prop() private tableField: TableField;
 
-        mounted() {
-            if(this.tableField.options.length === 0) {
-                this.tableField.options = {};
+        public mounted() {
+            if (this.tableField.options.length === 0) {
+                this.tableField.options = { min: 1, max: 100 };
             }
         }
 
