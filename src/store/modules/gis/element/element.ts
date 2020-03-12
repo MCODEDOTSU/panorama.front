@@ -5,6 +5,8 @@ import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
 import RootState from '@/store/types';
 import {baseUrlAPI} from '@/globals';
 import axios from 'axios';
+import {plainizeFields} from '@/domain/services/common/AdditionalFieldsService';
+import {editUpdatedItem} from '@/domain/services/common/UpdateItemService';
 
 export const state: ElementState = {
     element: {
@@ -26,12 +28,19 @@ export const actions: ActionTree<ElementState, RootState> = {
      */
     async updateElement({rootState}) {
         try {
+            // Дополнительные данные для элемента - с использованием конструктора
+            state.element.additionalData = plainizeFields(rootState.konstructor.tableFields);
             if (state.element.id !== 0) {
-                const res = await axios.put(`${baseUrlAPI}gis/element/${state.element.id}`, {
-                    title: state.element.title,
-                    description: state.element.description,
-                });
+                // const res = await axios.put(`${baseUrlAPI}gis/element/${state.element.id}`, {
+                //     title: state.element.title,
+                //     description: state.element.description,
+                // });
+                const res = await axios.put(`${baseUrlAPI}manager/element/${state.element.id}`, state.element);
                 SuccessNotifier.notify('Данные сохранены', `Элемент "${state.element.title}" изменен`);
+                if (rootState.gisLayer.currentLayerIndex !== undefined && rootState.gisLayer.currentElementIndex !== undefined) {
+                    rootState.gisLayer.layers[rootState.gisLayer.currentLayerIndex].elements.splice(
+                        rootState.gisLayer.currentElementIndex, 1, state.element);
+                }
             } else {
                 const res = await axios.post(`${baseUrlAPI}gis/element`, {
                     title: state.element.title,

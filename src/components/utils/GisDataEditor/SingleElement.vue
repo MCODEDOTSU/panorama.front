@@ -1,70 +1,68 @@
 <template>
-    <div class="single-element">
-
-        <!-- Название элемента -->
-        <input type="text" class="element-title-field"
-               placeholder="Наименование элемента"
-               v-on:blur="updateSingleElement()"
-               v-model="elementState.element.title">
-
-        <div class="actions">
-            <button class="btn-edit-save btn-danger"
-                    @click="closeSingleElement"
-                    title="Свернуть редактор">
-                <label>Закрыть</label>
-            </button>
+    <!-- Modal -->
+    <div class="modal fade" id="singleElement" tabindex="-1" role="dialog"
+         aria-labelledby="singleElementLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="singleElementLabel">
+                        <span v-if="elementState.element.id === 0">Создание нового элемента</span>
+                        <span v-else>Изменение элемента "{{ elementState.element.title }}"</span>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <additional-group-tabs></additional-group-tabs>
+                    <additional-information></additional-information>
+                </div>
+                <div class="modal-footer">
+                    <span class="validation-error" v-if="fieldsNonCompleteness" style="color: #ff0000; font-size: 10pt">Проверьте заполненность полей во всех вкладках</span>
+                    <button type="button" class="btn btn-primary" @click="validateAndUpdateElement">
+                        Сохранить
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
         </div>
-
     </div>
 </template>
 
 <script lang="ts">
 
-    import {Component, Provide, Vue, Prop, Watch} from 'vue-property-decorator';
+    import {Component, Vue, Provide} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import ILayer from '@/domain/entities/interfaces/ILayer';
-    import LayerState from '@/store/modules/gis/layer/types';
     import ElementState from '@/store/modules/gis/element/types';
-    import {arrayIndexOf} from '@/domain/services/common/ArrayActions';
+    import {VueEditor} from 'vue2-editor';
+    import AdditionalInformation from './AdditionalInformation.vue';
+    import AdditionalGroupTabs from './AdditonalGroupTabs.vue';
 
-    @Component({})
-    export default class SingleElement extends Vue {
+    @Component({
+        components: {AdditionalInformation, AdditionalGroupTabs, VueEditor},
+    })
+    export default class SingleInformation extends Vue {
 
-        @State('gisLayer') public layerState!: LayerState;
-        @State('gisElement') public elementState!: ElementState;
+        // TODO: this error is ignored. check if there is another possibility to get rid of this
+        @Provide('validator') public $validator = this.$validator;
+        // @Provide('validator') public $validator;
 
         @Action public updateElement: any;
-        @Action public unsetSingleElement: any;
-        @Action public setMapElements: any;
-        @Action public unsetCurrentIndex: any;
-        @Action public removeFeatureFromMap: any;
-        @Action public addFeatureToMap: any;
-        @Action public focusOfFeature: any;
 
-        @Provide('ILayer[]') public layers!: ILayer[];
-        @Provide('ILayer') public layer!: ILayer;
+        @State('gisElement') public elementState!: ElementState;
 
-        /**
-         * Обновить данные элемента
-         */
-        public async updateSingleElement() {
-            // Сохранить изменения в базу
-            this.updateElement();
-            // Находим элемент в списке и меняем его данные
-            const i = this.layerState.currentLayerIndex;
-            const j = this.layerState.currentElementIndex;
-            this.layerState.layers[i].elements[j] =
-                Object.assign({}, this.layerState.layers[i].elements[j], this.elementState.element);
-        }
+        @Provide() private fieldsNonCompleteness = false;
 
-        /**
-         * Закрыть редактор элемента
-         */
-        public closeSingleElement() {
-            // Очищаем singleElement (присваиваем значения по-умолчанию)
-            this.unsetSingleElement({ layerId: 0 });
-            // Сбросить индекс текущего выбранного слоя и элемента
-            this.unsetCurrentIndex();
+        private validateAndUpdateElement() {
+            this.$validator.validateAll().then((validationSuccessed) => {
+                if (validationSuccessed) {
+                    this.fieldsNonCompleteness = false;
+                    this.updateElement();
+                    $('#singleElement').modal('hide');
+                } else {
+                    this.fieldsNonCompleteness = true;
+                }
+            });
         }
 
     }

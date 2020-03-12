@@ -56,7 +56,7 @@
                     </div>
                     <input type="number" id="styleEditorPointStrokeRotation" class="form-control"
                            step="5" min="-180" max="180"
-                           v-model="styleEditorState.style.shape.rotation"/>
+                           v-model="resolvedRotation"/>
                 </div>
             </div>
             <div class="form-group" v-if="styleEditorState.style.shape">
@@ -181,7 +181,7 @@
                     <option value="false">Скрывать</option>
                 </select>
             </div>
-            <div class="form-group" v-if="styleEditorState.style.list.visibility">
+            <div class="form-group list-color-style" v-if="styleEditorState.style.list.visibility">
                 <label>Цвет линии связи</label>
                 <color-picker v-model="styleEditorState.style.list.color"
                               v-on:change="onChangeListColor"></color-picker>
@@ -264,6 +264,18 @@
             }
             const file = $fileInput.files[0];
             this.uploadIconByStyleEditor({file});
+        }
+
+        /**
+         * Пересчитываем градусы в радианы
+         */
+        get resolvedRotation() {
+            return Math.round((this.styleEditorState.style.shape.rotation * 180) / Math.PI);
+        }
+
+        set resolvedRotation(value) {
+            const shape = Object.assign({}, this.styleEditorState.style.shape, { rotation: (value * Math.PI) / 180 });
+            this.styleEditorState.style.shape = Object.assign({}, shape);
         }
 
     }

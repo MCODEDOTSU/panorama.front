@@ -354,7 +354,6 @@ footer {
                 span {
                     display: block;
                     width: 100%;
-                    min-height: 42px;
                     padding: 10px 20px;
                     white-space: nowrap;
                     @include transition(background 0.5s ease-out);
@@ -402,13 +401,14 @@ footer {
                     .btn {
                         position: absolute;
                         top: 0;
-                        width: 45px;
+                        width: 30px;
                         height: 45px;
                         background: none;
                         border: none;
                         cursor: pointer;
-                        padding: 15px;
+                        padding: 15px 0;
                         text-align: center;
+                        margin: 0;
                         i {
                             margin: 0;
                             font-size: 15px;
@@ -417,10 +417,13 @@ footer {
                             text-align: center;
                             line-height: 1;
                         }
+                        &.btn-add-element {
+                            right: 30px;
+                        }
                     }
                     .layer-item-hidden {
                         right: 0;
-                        padding: 12px;
+                        padding: 12px 0;
                     }
                 }
             }
@@ -481,7 +484,7 @@ footer {
         .elements-list {
             li {
                 span {
-                    padding: 10px 20px 10px 48px;
+                    padding: 4px 20px 3px 40px;
                 }
             }
             .element-item {
@@ -578,21 +581,21 @@ footer {
                 right: 0;
                 font-size: 12px;
                 line-height: 1;
-                height: 42px;
-                width: 42px;
+                height: 30px;
+                width: 30px;
                 background: $white;
                 border: none;
                 color: $gray-200;
                 cursor: pointer;
-                &.btn-edit {
-                    right: 42px;
+                &.btn-show-link {
+                    right: 60px;
                 }
-                &.btn-edit-save {
-                    right: 20px;
+                &.btn-edit {
+                    right: 30px;
                 }
                 &.btn-add-element {
                     font-size: 16px;
-                    margin: 0 45px 0 0;
+                    margin: 0 30px 0 0;
                     &.empty {
                         margin: 0;
                     }

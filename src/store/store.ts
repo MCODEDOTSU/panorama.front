@@ -40,7 +40,9 @@ export default new Vuex.Store<RootState>({
     actions: {
 
     },
+    getters: {
 
+    },
     modules: {
         infomodule,
         infoelement,

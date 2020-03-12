@@ -21,7 +21,7 @@
                     </select>
                 </div>
                 <div class="col-2 col action last-in-row">
-                    <button class="btn btn-link btn-sm" @click="addLayer">Добавить слой</button>
+                    <button class="btn btn-link btn-sm" @click="addLayer">Добавить</button>
                 </div>
             </div>
         </div>

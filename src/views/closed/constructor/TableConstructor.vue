@@ -73,7 +73,7 @@
                                data-vv-validate-on="change|blur" v-validate="'required'"
                                :name="'тех_наименование группы' + tableGroup.group + ' под номером ' + key"
                                placeholder="техническое наименование поля">
-                        <span class="validation-error">{{ errors.first('тех_наименование группы' + tableGroup.group + ' под номером ' + key) }}</span>
+                        <span class="validation-error" v-if="!tableField.id">{{ validColumn(tableField.tech_title) }}</span>
                     </div>
                     <div class="col-2 col col-required col-action">
                         <div class="input-container">
@@ -141,6 +141,8 @@
     import ConstructorState from '@/store/modules/constructor/types';
     import {Action, State} from 'vuex-class';
     import TagSelector from 'vue-tag-selector';
+    import axios from 'axios';
+    import {baseUrlAPI} from '@/globals';
     import BuilderDocField from '@/components/constructor/builder/BuilderDocField.vue';
     import BuilderManyFromManyField from '@/components/constructor/builder/BuilderManyFromManyField.vue';
     import BuilderOneFromManyField from '@/components/constructor/builder/BuilderOneFromManyField.vue';
@@ -282,6 +284,29 @@
             const group = Object.assign({}, this.constructorState.tableFields[groupKey]);
             group.columns[key].is_deleted = false;
             this.constructorState.tableFields[groupKey] = Object.assign({}, group);
+        }
+
+        private validColumn(column: string) {
+
+            if (column === '') {
+                return 'Поле "Тех. Наименование" обязательно для заполнения';
+            }
+
+            // const regexp = /^\w+/g;
+            // const a = regexp.test(column);
+            // if (!regexp.test(column)) {
+            //     return 'Поле "Тех. Наименование" содержит недопустимые символы';
+            // }
+
+            let count = 0;
+            for (const i in this.constructorState.tableFields) {
+                for (const j in this.constructorState.tableFields[i].columns) {
+                    if (this.constructorState.tableFields[i].columns[j].tech_title === column) {
+                        count++;
+                    }
+                }
+            }
+            return (count > 1) ? 'Поле "Тех. Наименование" должно быть уникальным' : '';
         }
 
     }

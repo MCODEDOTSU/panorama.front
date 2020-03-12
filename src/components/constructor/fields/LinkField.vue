@@ -1,16 +1,11 @@
 <template>
     <div>
-        
-        <div v-if="field.required === false">
+        <div>
             <input type="text" :id="field.tech_title" class="form-control" v-model="selectedElementTitle"
                    :placeholder="field.title" :name="field.title" readonly
+                   data-vv-validate-on="change|blur" v-validate="getValidateRules" :data-vv-as="'\'' + field.title + '\''"
                    v-b-modal.layerSelectModal>
-        </div>
-        <div v-if="field.type === 'link_field' && field.required">
-            <input type="text" :id="field.tech_title" class="form-control" v-model="selectedElementTitle"
-                   :placeholder="field.title" :name="field.title" readonly
-                   data-vv-validate-on="change|blur" v-validate="`required`"
-                   v-b-modal.layerSelectModal>
+            <span class="value-length"></span>
             <span class="validation-error">{{ errors.first(field.title) }}</span>
         </div>
 
@@ -18,7 +13,7 @@
             <input type="text" class="form-control" placeholder="Начните ввод для поиска" v-model="search"/>
             <div class="layer-items">
                 <!-- Layers -->
-                <div v-for="layer in layerState.layers" v-if="elementsFilter(layer.elements).length !== 0" class="layer-item">
+                <div v-for="layer in layers" v-if="elementsFilter(layer.elements).length !== 0" class="layer-item">
                     <h4>{{ layer.title }}</h4>
                     <!-- Elements -->
                     <div class="row" v-for="element in elementsFilter(layer.elements)">
@@ -40,16 +35,15 @@
 
     import {Component, Inject, Prop, Vue, Provide, Watch} from "vue-property-decorator";
     import {Action, State} from 'vuex-class';
-    import LayerState from '@/store/modules/gis/layer/types';
     import ElementState from '@/store/modules/manager/element/types';
+    import {baseUrlAPI} from '@/globals';
+    import axios from 'axios';
 
     @Component
     export default class LinkField extends Vue {
 
-        @Action public gisGetFewLayers: any;
         @Action public managerGetElementById: any;
 
-        @State('gisLayer') public layerState!: LayerState;
         @State('managerElement') public elementState!: ElementState;
 
         @Prop() private field: any;
@@ -57,6 +51,7 @@
 
         @Provide() public search = '';
         @Provide() public selectedElementTitle = '';
+        @Provide() public layers = [];
 
         @Watch('field.value', {deep: true})
         public onChangeFieldValue() {
@@ -64,10 +59,27 @@
         }
 
         public async created() {
+
+            // Заголовок выбраного элемента
+            this.selectedElementTitle = this.field.value !== null ? this.field.value.title : '';
+
+            // Получаем список слоев и их элементов
             let layers = this.field.options.layers.map(function(item) {
                 return item.id;
             });
-            await this.gisGetFewLayers({ layers });
+            const res = await axios.post(`${baseUrlAPI}gis/layer/few`, { layers });
+            this.layers = res.data;
+        }
+
+        /**
+         * Правила валидации
+         */
+        get getValidateRules() {
+            let rules = [];
+            if (this.field.required !== false) {
+                rules.push('required');
+            }
+            return rules.join('|');
         }
 
         public elementsFilter(elements) {
@@ -78,7 +90,7 @@
 
         public isEmptyList() {
             let result = true;
-            this.layerState.layers.forEach((layer) => {
+            this.layers.forEach((layer) => {
                 if (this.elementsFilter(layer.elements).length !== 0) {
                     result = false;
                 }

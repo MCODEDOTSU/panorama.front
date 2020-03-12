@@ -44,30 +44,41 @@
                     <ul class='elements-list' v-show='!layer.hidden'>
                         <li class='element-item' v-for='(element, j) in layer.elements' :key='element.id'>
 
-                            <span v-bind:class='{editor: elementState.element.id === element.id}'>
+                            <span>
 
                                 <div v-if='element.geometry'
                                      @click='selectElement(i, j)'
                                      class='btn-checked element-item-select'
                                      v-bind:class='{checked: element.checked}'>
                                 </div>
-                                <i v-else class='fas fa-exclamation-triangle' title='Геометрия элемента не задана'></i>
-
-                                <!-- Редактор элемента -->
-                                <single-element v-if='elementState.element.id === element.id'></single-element>
+                                <i v-else class='fas fa-exclamation-triangle' title='Геометрия элемента не задана'
+                                    @click="addGeomery(i, j)"></i>
 
                                 <!-- Отображение элемента в списке -->
-                                <label v-else v-bind:class='{warning: !element.geometry}'>
+                                <label v-bind:class='{warning: !element.geometry}'>
                                     {{ element.title }}
+
+                                    <!-- Кнопка "Отобразить связанные элементы" -->
+                                    <button class='btn-action btn-show-link' title='Отобразить связанные элементы'
+                                            v-if="element.checked === true"
+                                            @click='showLinkElements(i ,j)'>
+                                        <i class='fa fa-link'></i>
+                                    </button>
+
+                                    <!-- Кнопка "Редактировать" -->
                                     <button class='btn-action btn-edit' title='Редактировать элемент'
-                                            @click='changeElement(i, j)'>
+                                            data-toggle="modal" data-target="#singleElement"
+                                            @click='changeElement(i ,j)'>
                                         <i class='fa fa-pen'></i>
                                     </button>
+
+                                    <!-- Кнопка "Удалить" -->
                                     <button class='btn-action btn-delete' title='Удалить элемент'
                                             data-toggle='modal' data-target='#sureModal'
                                             @click='setSureModalContent(i, j)'>
                                         <i class='fas fa-trash'></i>
                                     </button>
+
                                 </label>
                                 <!-- конец Отображение элемента в списке -->
 
@@ -84,6 +95,8 @@
 
         <sure-modal></sure-modal>
 
+        <single-element></single-element>
+
     </div>
 </template>
 
@@ -93,11 +106,14 @@
     import {Action, State} from 'vuex-class';
     import LayerState from '@/store/modules/gis/layer/types';
     import ElementState from '@/store/modules/gis/element/types';
+    import ConstructorState from '@/store/modules/constructor/types';
     import OlMap from '@/components/utils/Map/Map.vue';
     import SingleElement from './SingleElement.vue';
     import SureModal from '@/components/common/SureModal.vue';
     import {getGeometryTypeByGeom} from '@/domain/services/ol/FeatureService';
     import {editUpdatedItem} from '@/domain/services/common/UpdateItemService';
+    import {baseUrlAPI} from '@/globals';
+    import axios from 'axios';
 
     @Component({
         components: {OlMap, SingleElement, SureModal},
@@ -106,6 +122,7 @@
 
         @State('gisLayer') public layerState!: LayerState;
         @State('gisElement') public elementState!: ElementState;
+        @State('konstructor') public constructorState: ConstructorState;
 
         // Слои
         @Action public gisGetLayersToContractor: any;
@@ -121,6 +138,7 @@
         @Action public setSingleElement: any;
         @Action public unsetSingleElement: any;
         @Action public selectedElement: any;
+        @Action public getAdditionalData: any;
 
         // Интерфейсы
         @Action public setSureModal: any;
@@ -134,6 +152,7 @@
         @Action public focusOfFeatures: any;
 
         @Provide('pointList') public pointList = [];
+        @Provide('linksList') public linksList = {};
 
         public async created() {
             await this.gisGetLayersToContractor();
@@ -165,8 +184,17 @@
                 });
                 this.focusOfFeature({id: elements[j].id});
             } else { // Если галочку сняли
+
                 // Стираем элемент с карты
                 this.removeFeatureFromMap({id: elements[j].id});
+
+                // Стираем старые линии
+                if (this.linksList[elements[j].id]) {
+                    this.linksList[elements[j].id].forEach((id) => {
+                        this.removeFeatureFromMap({ id });
+                    });
+                    this.linksList[elements[j].id] = [];
+                }
             }
 
             // Связь между точками
@@ -232,7 +260,7 @@
         }
 
         /**
-         * Отобразить связанный элементов на карте
+         * Отобразить связанный список на карте
          */
         public drawElementsList() {
 
@@ -292,6 +320,71 @@
         }
 
         /**
+         * Отобразить связанные элементы (через доп. поля карточки)
+         */
+        public async showLinkElements(i, j) {
+
+            let element = this.layerState.layers[i].elements[j];
+            const result = await axios.get(`${baseUrlAPI}gis/element/link/${element.id}`);
+
+            // Стираем старые линии
+            if (this.linksList[element.id]) {
+                this.linksList[element.id].forEach((id) => {
+                    this.removeFeatureFromMap({ id });
+                });
+            }
+            this.linksList[element.id] = [];
+
+            for (const i in result.data) {
+
+                // Отображение дочернего элемента
+                this.addFeatureToMap({
+                    id: result.data[i].element_id,
+                    layer_id: result.data[i].data.layer_id,
+                    geom: result.data[i].data.geometry,
+                    property: {
+                        id: result.data[i].element_id,
+                        parent_id: result.data[i].parent.id,
+                        title: result.data[i].data.title,
+                    },
+                    style: JSON.parse(result.data[i].data.style)
+                });
+
+                // Запоминаем связанные элементы
+                this.linksList[element.id].push(result.data[i].element_id);
+
+                // Отображение связи между элементами
+                let x = '';
+                let y = '';
+                let geometry = /^POINT\((.+)\)$/.exec(result.data[i].parent.geometry);
+                if (geometry.length === 2) {
+                    x = geometry[1];
+                }
+                geometry = /^POINT\((.+)\)$/.exec(result.data[i].data.geometry);
+                if (geometry.length === 2) {
+                    y = geometry[1];
+                }
+                if (x !== '' && y !== '') {
+
+                    // Рисуем на карте элемент
+                    this.addFeatureToMap({
+                        id: `${result.data[i].parent.id}-${result.data[i].element_id}`,
+                        geom: `LINESTRING(${x}, ${y})`,
+                        property: { id: element.id },
+                        style: {
+                            id: result.data[i].data.layer_id,
+                            stroke: { color: "#000000", width: 1, },
+                        },
+                    });
+
+                    // Запоминаем линии
+                    this.linksList[element.id].push(`${result.data[i].parent.id}-${result.data[i].element_id}`);
+
+                }
+            }
+        }
+
+        /**
          * Режим создания нового элемента
          * @param i
          */
@@ -321,19 +414,34 @@
                 await this.selectElement(i, j);
             }
 
+            this.constructorState.element = this.layerState.layers[i].elements[j];
+            this.getAdditionalData({layerId: this.layerState.layers[i].id});
+
             // Запоминаем для дальнейших изменений
             this.setSingleElement({ element: this.layerState.layers[i].elements[j] });
+
             // Запоминаем индексы элемента в списке
             this.setCurrentIndex({
                 layerIndex: i,
                 elementIndex: j,
             });
 
+        }
+
+        /**
+         * Переключаем режим на рисование нового элемента
+         */
+        public addGeomery(i, j) {
+            this.setSingleElement({ element: this.layerState.layers[i].elements[j] });
             if (!this.layerState.layers[i].elements[j].geometry) {
                 // Меняем режим работы карты на 'рисование'
                 this.setMapInteraction({ mode: this.layerState.layers[i].geometry_type });
             }
-
+            // Запоминаем индексы элемента в списке
+            this.setCurrentIndex({
+                layerIndex: i,
+                elementIndex: j,
+            });
         }
 
         /**
@@ -397,6 +505,13 @@
                 geom: this.elementState.element.geometry,
                 property: this.getPropertiesElement(this.elementState.element),
             });
+
+            // Меняем в списке
+            if (this.layerState.currentLayerIndex !== undefined && this.layerState.currentElementIndex !== undefined) {
+                this.layerState.layers[this.layerState.currentLayerIndex].elements.splice(
+                    this.layerState.currentElementIndex, 1,
+                    Object.assign({}, this.elementState.element, { checked: true }));
+            }
 
         }
 

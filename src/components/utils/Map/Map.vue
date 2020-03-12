@@ -45,7 +45,9 @@
             const features = e.features.getArray();
             for (const feature of features) {
                 /* Совсем не поняла, как это работает, но таким образом можно вычислить, какая именно геометрия была изменена */
+                // TODO есть какой-то баг, не верно вычиялется измененная геометрия
                 const revision = feature.getRevision();
+                debugger;
                 if (revision > 3) {
                     return {
                         properties: feature.getProperties(),

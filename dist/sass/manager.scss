@@ -241,7 +241,7 @@
             .col {
                 padding: 0 8px 0 0;
                 &.last-in-row {
-                    padding: 0;
+                    padding: 0 26px 0 0;
                 }
                 &.col-action {
                     padding: 0;
@@ -404,6 +404,19 @@
         .scrollbar {
             height: 400px;
             padding: 0 10px 0 0;
+
+            form {
+                padding: 0 0 1px 0;
+
+                .list-color-style {
+                    .color-picker {
+                        .color-picker-modal {
+                            bottom: -20px;
+                            top: auto;
+                        }
+                    }
+                }
+            }
         }
         .style-editor-fields {
             display: inline-block;
