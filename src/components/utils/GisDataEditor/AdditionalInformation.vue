@@ -24,23 +24,23 @@
                                 :editorToolbar="toolbar"></vue-editor>
                 </div>
 
-                <!-- Next Elemets -->
-                <div class="form-group" v-if="style.list && style.list.hasList">
-                    <label for="nextElementId">Следующий элемент</label>
-                    <select id="nextElementId" class="form-control" v-model="elementState.element.element_next_id">
-                        <option value="">-</option>
-                        <option v-for="next in elementState.elements" v-if="elementState.element.id !== next.id"
-                                :value="next.id" :title="next.description">
-                            {{ next.title }}
-                        </option>
-                    </select>
-                </div>
+                <!--&lt;!&ndash; Next Elemets &ndash;&gt;-->
+                <!--<div class="form-group" v-if="style.list && style.list.hasList">-->
+                    <!--<label for="nextElementId">Следующий элемент</label>-->
+                    <!--<select id="nextElementId" class="form-control" v-model="elementState.element.element_next_id">-->
+                        <!--<option value="">-</option>-->
+                        <!--<option v-for="next in managerElementState.elements" v-if="managerElementState.element.id !== next.id"-->
+                                <!--:value="next.id" :title="next.description">-->
+                            <!--{{ next.title }}-->
+                        <!--</option>-->
+                    <!--</select>-->
+                <!--</div>-->
 
-                <!-- Prev Elements -->
-                <div class="form-group" v-if="style.list && style.list.hasList && getPrevElement()">
-                    <label for="prevElementId">Предыдущий элемент</label>
-                    <input type="text" id="prevElementId" readonly class="form-control" :value="getPrevElement().title">
-                </div>
+                <!--&lt;!&ndash; Prev Elements &ndash;&gt;-->
+                <!--<div class="form-group" v-if="style.list && style.list.hasList && getPrevElement()">-->
+                    <!--<label for="prevElementId">Предыдущий элемент</label>-->
+                    <!--<input type="text" id="prevElementId" readonly class="form-control" :value="getPrevElement().title">-->
+                <!--</div>-->
 
             </form>
         </div>
@@ -66,11 +66,12 @@
 
 <script lang="ts">
 
-    import {Component, Inject, Provide, Vue} from 'vue-property-decorator';
+    import {Component, Inject, Provide, Vue, Watch} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import ConstructorState from '@/store/modules/constructor/types';
     import ElementState from '@/store/modules/gis/element/types';
-    // import LayerState from '@/store/modules/gis/layer/types';
+    // import LayerState from '@/store/modules/manager/layer/types';
+    // import ManagerElementState from '@/store/modules/manager/element/types';
     import ResolvedField from '@/views/closed/constructor/ResolvedField.vue';
     import {VueEditor} from 'vue2-editor';
 
@@ -82,8 +83,9 @@
         @Action public getLayerById: any;
 
         @State('konstructor') public constructorState: ConstructorState;
-        // @State('gisLayer') public layerState!: LayerState;
         @State('gisElement') public elementState!: ElementState;
+        // @State('managerLayer') public layerState!: LayerState;
+        // @State('managerElement') public managerElementState: ManagerElementState;
 
         @Provide('style') public style = {};
         @Provide()
@@ -100,25 +102,19 @@
 
         @Inject('validator') private $validator: any;
 
-        // public async created() {
-        //     await this.getLayerById({ id: this.$route.params.id });
+        // @Watch('elementState.element.layer_id', {deep: true})
+        // public async onChangeLayerId() {
+        //     if (this.elementState.element.layer_id === 0) {
+        //         return;
+        //     }
+        //     await this.getLayerById({ id: this.elementState.element.layer_id });
         //     this.style = Object.assign({}, this.layerState.layer.style);
         // }
 
-        private getPrevElement() {
-            return this.elementState.elements.find((a) => {
-                return a.element_next_id === this.elementState.element.id;
-            });
-        }
+        // private getPrevElement() {
+        //     return this.managerElementState.elements.find((a) => {
+        //         return a.element_next_id === this.elementState.element.id;
+        //     });
+        // }
     }
 </script>
-
-<style>
-    .validation-error {
-        font-size: 10px;
-        line-height: 1;
-        display: inline-block;
-        padding: 4px 0;
-        color: red;
-    }
-</style>

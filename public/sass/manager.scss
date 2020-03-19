@@ -1,3 +1,37 @@
+.actions {
+    text-align: right;
+    line-height: 1;
+    button, .btn {
+        background: none;
+        border: none;
+        color: $black;
+        cursor: pointer;
+        margin: 0 0 0 8px;
+        padding: 0 8px 0 0;
+        border-right: 1px solid $gray-200;
+        font-size: 12px;
+        text-transform: lowercase;
+        &:hover {
+            text-decoration: underline;
+        }
+        &.btn-info {
+            color: $first;
+            &:hover {
+                color: $first-hover;
+            }
+        }
+        &.btn-danger {
+            color: $red;
+            &:hover {
+                color: $red-hover;
+            }
+        }
+        &:last-child {
+            border-right: none;
+        }
+    }
+}
+
 .manager {
 
     h1 {
@@ -104,6 +138,7 @@
             margin: 0 8px 0 0;
         }
     }
+
     .scrollbar {
         height: 100vh;
         &.scrollbar-min {
@@ -216,9 +251,7 @@
             color: $white !important;
         }
     }
-    .nav-tabs {
-        margin-bottom: 16px;
-    }
+
     .table-constructor {
         .group-header {
             margin: 0 -16px 16px -16px;
@@ -482,6 +515,10 @@
             display: none;
         }
     }
+}
+
+.nav-tabs {
+    margin-bottom: 32px !important;
 }
 
 .layer-items {

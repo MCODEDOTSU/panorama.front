@@ -1,32 +1,16 @@
 <template>
     <!-- Modal -->
-    <div class="modal fade" id="singleElement" tabindex="-1" role="dialog"
-         aria-labelledby="singleElementLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="singleElementLabel">
-                        <span v-if="elementState.element.id === 0">Создание нового элемента</span>
-                        <span v-else>Изменение элемента "{{ elementState.element.title }}"</span>
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <additional-group-tabs></additional-group-tabs>
-                    <additional-information></additional-information>
-                </div>
-                <div class="modal-footer">
-                    <span class="validation-error" v-if="fieldsNonCompleteness" style="color: #ff0000; font-size: 10pt">Проверьте заполненность полей во всех вкладках</span>
-                    <button type="button" class="btn btn-primary" @click="validateAndUpdateElement">
-                        Сохранить
-                    </button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                </div>
-            </div>
+    <b-modal id="singleElement" title="Карточка Элемента" size="xl" hide-footer>
+        <additional-group-tabs></additional-group-tabs>
+        <additional-information></additional-information>
+        <div class="modal-footer">
+            <span class="validation-error" v-if="fieldsNonCompleteness" style="color: #ff0000; font-size: 10pt">Проверьте заполненность полей во всех вкладках</span>
+            <button type="button" class="btn btn-primary" @click="validateAndUpdateElement">
+                Сохранить
+            </button>
+            <button type="button" class="btn btn-secondary" @click="$bvModal.hide('singleElement')">Закрыть</button>
         </div>
-    </div>
+    </b-modal>
 </template>
 
 <script lang="ts">
@@ -58,7 +42,7 @@
                 if (validationSuccessed) {
                     this.fieldsNonCompleteness = false;
                     this.updateElement();
-                    $('#singleElement').modal('hide');
+                    this.$bvModal.hide('singleElement')
                 } else {
                     this.fieldsNonCompleteness = true;
                 }

@@ -44,11 +44,11 @@
         @Emit() public modifyend(e: any) {
             const features = e.features.getArray();
             for (const feature of features) {
-                /* Совсем не поняла, как это работает, но таким образом можно вычислить, какая именно геометрия была изменена */
-                // TODO есть какой-то баг, не верно вычиялется измененная геометрия
+                /* Revision - номер версии объекта. Если номер изменился, значит объект обновился */
                 const revision = feature.getRevision();
-                debugger;
-                if (revision > 3) {
+                let lastRevision = feature.get('revision');
+                if (lastRevision !== undefined && revision > lastRevision) {
+                    feature.set('revision', revision, true);
                     return {
                         properties: feature.getProperties(),
                         geom: (new WKT()).writeFeature(feature, {

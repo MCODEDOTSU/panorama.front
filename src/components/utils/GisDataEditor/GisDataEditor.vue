@@ -34,7 +34,6 @@
                         <div class='btn btn-action btn-add-element'
                              v-bind:class='{empty: (layer.elements.length === 0)}'
                              title='Создать элемент'
-                             v-show='!layer.hidden'
                              @click='createElement(i)'>
                             <i class='fas fa-plus-circle'></i>
                         </div>
@@ -67,7 +66,7 @@
 
                                     <!-- Кнопка "Редактировать" -->
                                     <button class='btn-action btn-edit' title='Редактировать элемент'
-                                            data-toggle="modal" data-target="#singleElement"
+                                            v-b-modal="'singleElement'"
                                             @click='changeElement(i ,j)'>
                                         <i class='fa fa-pen'></i>
                                     </button>
@@ -300,6 +299,7 @@
                                 property: {
                                     id: element.id,
                                     element_next_id: next.id,
+                                    revision: 3,
                                 },
                                 style: {
                                     id: layer.id,
@@ -346,6 +346,7 @@
                         id: result.data[i].element_id,
                         parent_id: result.data[i].parent.id,
                         title: result.data[i].data.title,
+                        revision: 3,
                     },
                     style: JSON.parse(result.data[i].data.style)
                 });
@@ -527,6 +528,7 @@
                 lenght: element.lenght,
                 area: element.area,
                 perimeter: element.perimeter,
+                revision: 3,
             };
         }
 

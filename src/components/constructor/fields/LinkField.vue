@@ -4,12 +4,13 @@
             <input type="text" :id="field.tech_title" class="form-control" v-model="selectedElementTitle"
                    :placeholder="field.title" :name="field.title" readonly
                    data-vv-validate-on="change|blur" v-validate="getValidateRules" :data-vv-as="'\'' + field.title + '\''"
-                   v-b-modal.layerSelectModal>
+                   v-b-modal="`layerSelectModal-${field.tech_title}`">
+            <div class="actions"><button class="btn btn-link btn-danger" @click="clean">Очистить</button></div>
             <span class="value-length"></span>
             <span class="validation-error">{{ errors.first(field.title) }}</span>
         </div>
 
-        <b-modal id="layerSelectModal" title="Выбор ссылки на элемент" hide-footer>
+        <b-modal modal-class="my-modal" :id="`layerSelectModal-${field.tech_title}`" title="Выбор ссылки на элемент" hide-footer>
             <input type="text" class="form-control" placeholder="Начните ввод для поиска" v-model="search"/>
             <div class="layer-items">
                 <!-- Layers -->
@@ -99,9 +100,16 @@
         }
 
         public selectElement(element) {
-            this.$bvModal.hide('layerSelectModal');
+            this.$bvModal.hide(`layerSelectModal-${this.field.tech_title}`);
             this.field.value = element;
             this.selectedElementTitle = element.title;
+        }
+
+        /**
+         * Очистить поле с ссылкой
+         */
+        public clean() {
+            this.field.value = null;
         }
 
     }
