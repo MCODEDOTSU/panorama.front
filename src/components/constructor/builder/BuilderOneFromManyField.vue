@@ -51,13 +51,17 @@
         public autoSelectDefaultValue() {
             if (this.tableField.required === true &&
                 this.tableField.enums.length !== 0 &&
+                    // @ts-ignore
                 this.tableField.enums.indexOf(this.tableField.options.default) === -1) {
-                let options = { default: this.tableField.enums[0] };
+                    // @ts-ignore
+                const options = { default: this.tableField.enums[0] };
                 this.tableField.options = Object.assign({}, options);
-            } else if(this.tableField.enums.length !== 0 &&
+            } else if (this.tableField.enums.length !== 0 &&
                 this.tableField.options.default !== '' &&
+                    // @ts-ignore
                 this.tableField.enums.indexOf(this.tableField.options.default) === -1) {
-                let options = { default: this.tableField.enums[0] };
+                    // @ts-ignore
+                const options = { default: this.tableField.enums[0] };
                 this.tableField.options = Object.assign({}, options);
             }
         }

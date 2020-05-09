@@ -14,18 +14,19 @@
 </template>
 <script lang="ts">
 
-    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import {Component, Watch} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import StyleEditorState from '@/store/modules/components/utils/styleEditor/types';
     import OlMap from '@/components/utils/Map/Map.vue';
     import PointFields from './PointFields.vue';
     import LinestringFields from './LinestringFields.vue';
     import PolygonFields from './PolygonFields.vue';
+    import VueExtended from '@/components/VueExtended.vue';
 
     @Component({
         components: {LinestringFields, PointFields, PolygonFields, OlMap},
     })
-    export default class LayerStyleEditor extends Vue {
+    export default class LayerStyleEditor extends VueExtended {
 
         @State('styleEditor') public styleEditorState: StyleEditorState;
 
@@ -101,6 +102,7 @@
 
             // Прокручиваем скролл
             if (this.$refs.Scrollbar) {
+                // @ts-ignore
                 this.$refs.Scrollbar.scrollToY(0);
             }
 

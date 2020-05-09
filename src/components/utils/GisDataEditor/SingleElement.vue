@@ -27,12 +27,6 @@
         components: {AdditionalInformation, AdditionalGroupTabs, VueEditor},
     })
     export default class SingleInformation extends VueExtended {
-        public $bvModal = {
-            hide: (param: String) => {
-
-            }
-        };
-
         // TODO: this error is ignored. check if there is another possibility to get rid of this
         // @ts-ignore
         @Provide('validator') public $validator = this.$validator;
@@ -48,7 +42,7 @@
                 if (validationSuccessed) {
                     this.fieldsNonCompleteness = false;
                     this.updateElement();
-                    this.$bvModal.hide('singleElement')
+                    this.$bvModal.hide('singleElement');
                 } else {
                     this.fieldsNonCompleteness = true;
                 }

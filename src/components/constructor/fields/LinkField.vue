@@ -48,12 +48,13 @@
 
         @State('managerElement') public elementState!: ElementState;
 
-        @Prop() private field: any;
-        @Inject('validator') private $validator: any;
-
         @Provide() public search = '';
         @Provide() public selectedElementTitle = '';
         @Provide() public layers = [];
+
+        @Prop() private field: any;
+        @Inject('validator') private $validator: any;
+
 
         @Watch('field.value', {deep: true})
         public onChangeFieldValue() {
@@ -66,7 +67,7 @@
             this.selectedElementTitle = this.field.value !== null ? this.field.value.title : '';
 
             // Получаем список слоев и их элементов
-            let layers = this.field.options.layers.map(function(item) {
+            const layers = this.field.options.layers.map((item) => {
                 return item.id;
             });
             const res = await axios.post(`${baseUrlAPI}gis/layer/few`, { layers });
@@ -77,7 +78,7 @@
          * Правила валидации
          */
         get getValidateRules() {
-            let rules = [];
+            const rules = [];
             if (this.field.required !== false) {
                 rules.push('required');
             }

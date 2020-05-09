@@ -3,9 +3,9 @@
 
     export default class VueExtended extends Vue {
         public $bvModal = {
-            hide: (param: String) => {
-
-            }
+            hide: (param: string) => {
+                //
+            },
         };
     }
 </script>
