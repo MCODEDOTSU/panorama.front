@@ -34,7 +34,7 @@
 
         public mounted() {
             if (this.tableField.options.length === 0) {
-                this.tableField.options = { default: '' };
+                this.tableField.options.default = '';
             }
         }
 
@@ -49,7 +49,7 @@
         }
 
         public autoSelectDefaultValue() {
-            if (this.tableField.required === "true" &&
+            if (this.tableField.required === true &&
                 this.tableField.enums.length !== 0 &&
                 this.tableField.enums.indexOf(this.tableField.options.default) === -1) {
                 let options = { default: this.tableField.enums[0] };

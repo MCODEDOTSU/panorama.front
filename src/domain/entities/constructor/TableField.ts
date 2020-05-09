@@ -13,6 +13,7 @@ export default interface TableField {
 }
 
 interface IOptions {
+    length?: number;
     quantity?: number; // Кол-во возможно загружаемых документов
     min?: number; // Минимальное кол-во для выбора опций многие из многих
     max?: number; // Максимальное кол-во для выбора опций многие из многих

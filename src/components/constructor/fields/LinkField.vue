@@ -34,14 +34,15 @@
 
 <script lang="ts">
 
-    import {Component, Inject, Prop, Vue, Provide, Watch} from "vue-property-decorator";
+    import {Component, Inject, Prop, Provide, Watch} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import ElementState from '@/store/modules/manager/element/types';
     import {baseUrlAPI} from '@/globals';
     import axios from 'axios';
+    import VueExtended from '@/components/VueExtended.vue';
 
     @Component
-    export default class LinkField extends Vue {
+    export default class LinkField extends VueExtended {
 
         @Action public managerGetElementById: any;
 

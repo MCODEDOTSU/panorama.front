@@ -15,21 +15,27 @@
 
 <script lang="ts">
 
-    import {Component, Vue, Provide} from 'vue-property-decorator';
+    import {Component, Provide} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import ElementState from '@/store/modules/gis/element/types';
     import {VueEditor} from 'vue2-editor';
     import AdditionalInformation from './AdditionalInformation.vue';
     import AdditionalGroupTabs from './AdditonalGroupTabs.vue';
+    import VueExtended from '@/components/VueExtended.vue';
 
     @Component({
         components: {AdditionalInformation, AdditionalGroupTabs, VueEditor},
     })
-    export default class SingleInformation extends Vue {
+    export default class SingleInformation extends VueExtended {
+        public $bvModal = {
+            hide: (param: String) => {
+
+            }
+        };
 
         // TODO: this error is ignored. check if there is another possibility to get rid of this
+        // @ts-ignore
         @Provide('validator') public $validator = this.$validator;
-        // @Provide('validator') public $validator;
 
         @Action public updateElement: any;
 
