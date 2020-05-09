@@ -15,18 +15,17 @@
 
 <script lang="ts">
 
-    import {Component, Provide} from 'vue-property-decorator';
+    import {Component, Provide, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import ElementState from '@/store/modules/gis/element/types';
     import {VueEditor} from 'vue2-editor';
     import AdditionalInformation from './AdditionalInformation.vue';
     import AdditionalGroupTabs from './AdditonalGroupTabs.vue';
-    import VueExtended from '@/components/VueExtended.vue';
 
     @Component({
         components: {AdditionalInformation, AdditionalGroupTabs, VueEditor},
     })
-    export default class SingleInformation extends VueExtended {
+    export default class SingleInformation extends Vue {
         // TODO: this error is ignored. check if there is another possibility to get rid of this
         // @ts-ignore
         @Provide('validator') public $validator = this.$validator;
@@ -42,6 +41,7 @@
                 if (validationSuccessed) {
                     this.fieldsNonCompleteness = false;
                     this.updateElement();
+                    // @ts-ignore
                     this.$bvModal.hide('singleElement');
                 } else {
                     this.fieldsNonCompleteness = true;

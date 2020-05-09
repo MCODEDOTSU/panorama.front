@@ -7,5 +7,10 @@
                 //
             },
         };
+
+
+        set $bvModalSetter(value: { hide: (param: string) => void }) {
+            this.$bvModal = value;
+        }
     }
 </script>

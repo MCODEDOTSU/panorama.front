@@ -21,6 +21,8 @@
                             </router-link>
                             <router-link class="nav-link dropdown-item" to="/manager/gis" tag="a">Картография
                             </router-link>
+                            <router-link class="nav-link dropdown-item" to="/manager/parse_kmz" tag="a">Парсинг KMZ
+                            </router-link>
                         </div>
                     </li>
                     <li class="nav-item dropdown">

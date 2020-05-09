@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Home from './views/Home.vue';
-// import Login from './views/closed/Login.vue';
 import Desktop from './views/closed/Desktop.vue';
 import Gis from './views/gis/Gis.vue';
 import Modules from './views/closed/Modules.vue';
@@ -11,6 +10,7 @@ import ClosedGis from './views/closed/gis/Gis.vue';
 import ClosedContractors from './views/closed/contractors/Contractors.vue';
 import ClosedUsers from './views/closed/users/Users.vue';
 import ClosedLayers from './views/closed/layers/Layers.vue';
+import KMZParser from './views/closed/parser/KMZParser.vue';
 
 Vue.use(Router);
 
@@ -21,9 +21,6 @@ export default new Router({
       {
           path: '/', name: 'home', component: Home,
       },
-      // {
-      //     path: '/login', name: 'login', component: Login,
-      // },
       {
           path: '/gis', name: 'gis', component: Gis,
       },
@@ -53,6 +50,9 @@ export default new Router({
               {
                   // Функционал конструктора находится здесь
                   path: '/manager/layers', name: 'manager-layers', component: ClosedLayers,
+              },
+              {
+                  path: '/manager/parse_kmz', name: 'parse-kmz', component: KMZParser,
               },
           ],
       },
