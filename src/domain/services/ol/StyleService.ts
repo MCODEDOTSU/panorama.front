@@ -93,7 +93,7 @@ export const createOLStyle = (style: IStyle, title?: string) => {
     }
 
     // Если есть подпись к фигуре
-    if (title) {
+    if (style.showTitle === true && title) {
 
         let fontProperties = {
             text: title,

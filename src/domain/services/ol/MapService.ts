@@ -70,6 +70,20 @@ export const updateOLFeaturesStyle = (layer: any, styles: any) => {
     });
 };
 
+/**
+ * Обновить стиль элемента карты
+ * @param layer
+ * @param styles
+ */
+export const updateOLElementStyle = (layer: any, styles: any) => {
+    layer.getSource().forEachFeature((feature) => {
+        const i = arrayIndexOf(styles, feature.get('layer_id'));
+        if (i !== -1) {
+            updateOLFeatureStyle(feature, styles[i]);
+        }
+    });
+};
+
 export const createOLDraw = (mode: any, layer: any, action: any) => {
     if (mode === '') {
         return;

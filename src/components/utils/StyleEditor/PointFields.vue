@@ -3,6 +3,15 @@
     <form>
 
         <div class="form-group" v-if="styleEditorState.style.pointType">
+            <label for="styleEditorShowTitle">Отображать наименование?</label>
+            <select id="styleEditorShowTitle" class="form-control"
+                    v-model="styleEditorState.style.showTitle">
+                <option value="true">Да</option>
+                <option value="false">Нет</option>
+            </select>
+        </div>
+
+        <div class="form-group" v-if="styleEditorState.style.pointType">
             <label for="styleEditorPointType">Фигура или иконка</label>
             <select id="styleEditorPointType" class="form-control"
                     v-model="styleEditorState.style.pointType">

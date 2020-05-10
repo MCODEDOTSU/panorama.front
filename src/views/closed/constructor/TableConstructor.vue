@@ -69,7 +69,7 @@
                         <span class="validation-error">{{ errors.first('наименование группы ' + tableGroup.group + ' под номером ' + key) }}</span>
                     </div>
                     <div class="col-3 col col-tech">
-                        <input type="text" class="form-control" v-model="tableField.tech_title"
+                        <input type="text" class="form-control" v-model="tableField.tech_title" :disabled="tableField.id"
                                data-vv-validate-on="change|blur" v-validate="'required'"
                                :name="'тех_наименование группы' + tableGroup.group + ' под номером ' + key"
                                placeholder="техническое наименование поля">
