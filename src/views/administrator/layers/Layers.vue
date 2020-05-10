@@ -55,7 +55,7 @@
     import {Component, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import LayerState from '@/store/modules/manager/layer/types';
-    import SingleLayer from '@/views/closed/layers/SingleLayer.vue';
+    import SingleLayer from '@/views/administrator/layers/SingleLayer.vue';
     import SureModal from '@/components/common/SureModal.vue';
 
     @Component({

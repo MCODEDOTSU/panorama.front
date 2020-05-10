@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {ActionTree, Module} from 'vuex';
-import {baseUrlAPI} from '@/globals';
+import {baseUrl, baseUrlAPI} from '@/globals';
 import UserState from '@/store/modules/manager/user/types';
 import RootState from '@/store/types';
 import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
@@ -12,6 +12,12 @@ export const state: UserState = {
     user: {
         id: 0,
         email: '',
+        firstname: '',
+        lastname: '',
+        middlename: '',
+        post: '',
+        photo: '',
+        role: 'admin',
         password: '',
     },
     users: [],
@@ -77,7 +83,39 @@ export const actions: ActionTree<UserState, RootState> = {
      * Отменить выделение пользователя
      */
     unsetSingleUser({}, payload) {
-        state.user = { id: 0, email: '', password: '', contractor_id: payload.contractorId };
+        state.user = {
+            id: 0,
+            email: '',
+            firstname: '',
+            lastname: '',
+            middlename: '',
+            post: '',
+            photo: '',
+            password: '',
+            role: 'admin',
+            contractor_id: payload.contractorId
+        };
+    },
+
+    /**
+     * Загрузка фотографии
+     * @param payload
+     */
+    async uploadUserPhoto({}, payload) {
+
+        const formData = new FormData();
+        formData.append('file', payload.file);
+
+        try {
+            const res = await axios.post(`${baseUrlAPI}manager/user/upload`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            state.user.photo = `${baseUrl}${res.data.filename}`;
+            SuccessNotifier.notify('Загрузка завершена', `Изображение "${payload.file.name}" загружено на сервер`);
+        } catch {
+            ErrorNotifier.notify();
+        }
+
     },
 
 };

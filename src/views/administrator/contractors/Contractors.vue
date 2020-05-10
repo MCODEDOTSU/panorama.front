@@ -60,8 +60,8 @@
     import {Component, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import ContractorState from '@/store/modules/manager/contractor/types';
-    import SingleContractor from '@/views/closed/contractors/SingleContractor.vue';
-    import ContractorModule from '@/views/closed/contractors/ContractorModules.vue';
+    import SingleContractor from '@/views/administrator/contractors/SingleContractor.vue';
+    import ContractorModule from '@/views/administrator/contractors/ContractorModules.vue';
     import SureModal from '@/components/common/SureModal.vue';
 
     @Component({

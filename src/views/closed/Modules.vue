@@ -38,12 +38,11 @@
 <script lang="ts">
     import {Component, Provide, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import InfoModuleState from '../../store/modules/info/infomodule/types';
-    import ILayer from '../../domain/entities/interfaces/ILayer';
-    import {tableComponentResolver} from '../../domain/entities/info/layers/TableComponentResolver';
+    import InfoModuleState from '@/store/modules/info/infomodule/types';
+    import ILayer from '@/domain/entities/interfaces/ILayer';
 
     @Component
-    export default class Desktop extends Vue {
+    export default class Modules extends Vue {
 
         @Action('getModules') public getModules: any;
 

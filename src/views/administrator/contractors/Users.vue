@@ -44,7 +44,7 @@
     import {Action, State} from 'vuex-class';
     import ContractorState from '@/store/modules/manager/contractor/types';
     import UserState from '@/store/modules/manager/user/types';
-    import SingleUser from '@/views/closed/users/SingleUser.vue';
+    import SingleUser from '@/views/administrator/contractors/SingleUser.vue';
     import SureModal from '@/components/common/SureModal.vue';
 
     @Component({

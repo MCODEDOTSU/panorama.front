@@ -547,6 +547,39 @@
     }
 }
 
+.modal-dialog-user {
+    .file-upload {
+        display: inline-block;
+        vertical-align: top;
+        width: 172px;
+        height: 172px;
+        margin: 0 -177px 0 0;
+        position: relative;
+        z-index: 1;
+        border: 1px solid #ced4da;
+        padding: 3px;
+        @include border-radius(3px);
+        @include box-sizing(border-box);
+
+        img {
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+    }
+    .right-group {
+        display: inline-block;
+        vertical-align: top;
+        width: 100%;
+        padding: 0 0 0 204px;
+        @include box-sizing(border-box);
+    }
+}
+
 .nav-tabs {
     margin-bottom: 32px !important;
 }

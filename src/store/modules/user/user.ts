@@ -28,7 +28,7 @@ export const mutations: MutationTree<UserState> = {
         state.user = payload;
         if (Router.currentRoute.name.indexOf('manager') === -1) {
             if (state.role === 'superadmin') {
-                Router.push({name: 'manager-contractors'});
+                Router.push({name: 'administrator-contractors'});
             } else {
                 Router.push({name: 'manager-contractors-modules'});
             }

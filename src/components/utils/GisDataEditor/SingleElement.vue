@@ -70,7 +70,7 @@
                             id: this.layerState.layers[i].elements[j].id,
                             title: this.layerState.layers[i].elements[j].title,
                             description: this.layerState.layers[i].elements[j].description,
-                            lenght: this.layerState.layers[i].elements[j].lenght,
+                            length: this.layerState.layers[i].elements[j].length,
                             area: this.layerState.layers[i].elements[j].area,
                             perimeter: this.layerState.layers[i].elements[j].perimeter,
                             revision: 3,

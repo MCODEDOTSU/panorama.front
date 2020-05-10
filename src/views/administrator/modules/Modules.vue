@@ -45,7 +45,7 @@
     import {Component, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import ModuleState from '@/store/modules/manager/module/types';
-    import SingleModule from '@/views/closed/modules/SingleModule.vue';
+    import SingleModule from '@/views/administrator/modules/SingleModule.vue';
     import SureModal from '@/components/common/SureModal.vue';
 
     @Component({
