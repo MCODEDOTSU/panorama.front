@@ -292,12 +292,6 @@
                 return 'Поле "Тех. Наименование" обязательно для заполнения';
             }
 
-            // const regexp = /^\w+/g;
-            // const a = regexp.test(column);
-            // if (!regexp.test(column)) {
-            //     return 'Поле "Тех. Наименование" содержит недопустимые символы';
-            // }
-
             let count = 0;
             for (const i in this.constructorState.tableFields) {
                 for (const j in this.constructorState.tableFields[i].columns) {

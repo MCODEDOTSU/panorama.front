@@ -14,19 +14,19 @@
 
 <script lang="ts">
 
-    import {Component, Inject, Prop, Vue} from "vue-property-decorator";
+    import {Component, Inject, Prop, Vue} from 'vue-property-decorator';
 
     @Component
     export default class TextField extends Vue {
 
         @Prop() private field: any;
-        @Inject("validator") private $validator: any;
+        @Inject('validator') private $validator: any;
 
         /**
          * Правила валидации
          */
         get getValidateRules() {
-            let rules = [];
+            const rules = [];
             if (this.field.required !== false) {
                 rules.push('required');
             }

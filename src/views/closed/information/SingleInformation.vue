@@ -44,6 +44,7 @@
     export default class SingleInformation extends Vue {
 
         // TODO: this error is ignored. check if there is another possibility to get rid of this
+        // @ts-ignore
         @Provide('validator') public $validator = this.$validator;
         // @Provide('validator') public $validator;
 

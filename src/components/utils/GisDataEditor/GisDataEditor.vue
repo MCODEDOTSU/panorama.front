@@ -324,7 +324,7 @@
          */
         public async showLinkElements(i, j) {
 
-            let element = this.layerState.layers[i].elements[j];
+            const element = this.layerState.layers[i].elements[j];
             const result = await axios.get(`${baseUrlAPI}gis/element/link/${element.id}`);
 
             // Стираем старые линии
@@ -348,7 +348,7 @@
                         title: result.data[i].data.title,
                         revision: 3,
                     },
-                    style: JSON.parse(result.data[i].data.style)
+                    style: JSON.parse(result.data[i].data.style),
                 });
 
                 // Запоминаем связанные элементы
@@ -374,7 +374,7 @@
                         property: { id: element.id },
                         style: {
                             id: result.data[i].data.layer_id,
-                            stroke: { color: "#000000", width: 1, },
+                            stroke: { color: '#000000', width: 1 },
                         },
                     });
 

@@ -26,7 +26,7 @@
          * Правила валидации
          */
         get getValidateRules() {
-            let rules = [];
+            const rules = [];
             if (this.field.required !== false) {
                 rules.push('required');
             }

@@ -15,7 +15,7 @@
 
 <script lang="ts">
 
-    import {Component, Vue, Provide} from 'vue-property-decorator';
+    import {Component, Provide, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import ElementState from '@/store/modules/gis/element/types';
     import LayerState from '@/store/modules/gis/layer/types';
@@ -27,10 +27,9 @@
         components: {AdditionalInformation, AdditionalGroupTabs, VueEditor},
     })
     export default class SingleInformation extends Vue {
-
         // TODO: this error is ignored. check if there is another possibility to get rid of this
+        // @ts-ignore
         @Provide('validator') public $validator = this.$validator;
-        // @Provide('validator') public $validator;
 
         @Action public updateElement: any;
         @Action public removeFeatureFromMap: any;
@@ -46,6 +45,8 @@
                 if (validationSuccessed) {
                     this.fieldsNonCompleteness = false;
                     this.updateElement();
+
+                    // @ts-ignore
                     this.$bvModal.hide('singleElement');
 
                     // TODO: один метод на переименования элемента на карте

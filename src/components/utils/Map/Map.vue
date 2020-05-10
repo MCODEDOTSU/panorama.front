@@ -46,7 +46,7 @@
             for (const feature of features) {
                 /* Revision - номер версии объекта. Если номер изменился, значит объект обновился */
                 const revision = feature.getRevision();
-                let lastRevision = feature.get('revision');
+                const lastRevision = feature.get('revision');
                 if (lastRevision !== undefined && revision > lastRevision) {
                     feature.set('revision', revision, true);
                     return {

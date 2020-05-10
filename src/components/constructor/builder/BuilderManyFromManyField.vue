@@ -67,12 +67,12 @@
         }
 
         public autoSelectDefaultValue() {
-            if (this.tableField.required === "true" &&
+            if (this.tableField.required === true &&
                 this.tableField.enums.length !== 0 &&
                 this.tableField.options.default.length === 0) {
-                let options = { default: [ this.tableField.enums[0] ] };
+                // @ts-ignore
+                const options = { default: [ this.tableField.enums[0] ] };
                 this.tableField.options = Object.assign({}, options);
-                console.log(this.tableField.options);
             }
         }
 

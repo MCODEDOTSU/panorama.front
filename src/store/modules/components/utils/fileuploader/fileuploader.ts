@@ -63,6 +63,24 @@ export const actions: ActionTree<FileUploaderState, RootState> = {
             });
         });
     },
+
+    uploadKmlFile({state}, payload) {
+        const formData = new FormData();
+        formData.append('kmz', payload.fileres.files[0]);
+
+        return new Promise((resolve) => {
+            axios.post(`${baseUrlAPI}kmz/parse`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }).then(() => {
+                SuccessNotifier.notify('', 'Файл загружен');
+                resolve();
+            }).catch((error) => {
+                ErrorNotifier.notifyWithCustomMessage(error.response.data);
+            });
+        });
+    },
 };
 
 export const fileuploader: Module<FileUploaderState, RootState> = {

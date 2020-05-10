@@ -34,25 +34,27 @@
 
 <script lang="ts">
 
-    import {Component, Inject, Prop, Vue, Provide, Watch} from "vue-property-decorator";
+    import {Component, Inject, Prop, Provide, Watch} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import ElementState from '@/store/modules/manager/element/types';
     import {baseUrlAPI} from '@/globals';
     import axios from 'axios';
+    import VueExtended from '@/components/VueExtended.vue';
 
     @Component
-    export default class LinkField extends Vue {
+    export default class LinkField extends VueExtended {
 
         @Action public managerGetElementById: any;
 
         @State('managerElement') public elementState!: ElementState;
 
-        @Prop() private field: any;
-        @Inject('validator') private $validator: any;
-
         @Provide() public search = '';
         @Provide() public selectedElementTitle = '';
         @Provide() public layers = [];
+
+        @Prop() private field: any;
+        @Inject('validator') private $validator: any;
+
 
         @Watch('field.value', {deep: true})
         public onChangeFieldValue() {
@@ -65,7 +67,7 @@
             this.selectedElementTitle = this.field.value !== null ? this.field.value.title : '';
 
             // Получаем список слоев и их элементов
-            let layers = this.field.options.layers.map(function(item) {
+            const layers = this.field.options.layers.map((item) => {
                 return item.id;
             });
             const res = await axios.post(`${baseUrlAPI}gis/layer/few`, { layers });
@@ -76,7 +78,7 @@
          * Правила валидации
          */
         get getValidateRules() {
-            let rules = [];
+            const rules = [];
             if (this.field.required !== false) {
                 rules.push('required');
             }
