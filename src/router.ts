@@ -7,8 +7,10 @@ import ClosedInformation from './views/closed/information/Information.vue';
 import ClosedGis from './views/closed/gis/Gis.vue';
 import KMZParser from './views/closed/parser/KMZParser.vue';
 
-import Desktop from './views/Desktop.vue';
+import Manager from './views/Manager.vue';
 // Manager
+import Cabinet from './views/manager/Cabinet.vue';
+// Administrator
 import AdministratorContractors from './views/administrator/contractors/Contractors.vue';
 import AdministratorUsers from './views/administrator/contractors/Users.vue';
 import AdministratorModules from './views/administrator/modules/Modules.vue';
@@ -21,41 +23,44 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
       {
-          path: '/', name: 'home', component: Home,
+          path: '/', name: 'home', component: Home, meta: { roles: [] },
       },
       {
-          path: '/gis', name: 'gis', component: Gis,
+          path: '/gis', name: 'gis', component: Gis, meta: { roles: [] },
       },
       {
           path: '/manager',
           name: 'manager',
-          component: Desktop,
+          component: Manager,
           children: [
-              // Role: Administrator
+              //  Administrator
               {
-                  path: '/manager/contractors' , name: 'administrator-contractors', component: AdministratorContractors,
+                  path: '/manager/contractors' , name: 'administrator-contractors', component: AdministratorContractors, meta: { roles: ['superadmin'] },
               },
               {
-                  path: '/manager/contractors/users/:id' , name: 'administrator-users', component: AdministratorUsers,
+                  path: '/manager/contractors/users/:id' , name: 'administrator-users', component: AdministratorUsers, meta: { roles: ['superadmin'] },
               },
               {
-                  path: '/manager/modules', name: 'administrator-modules', component: AdministratorModules,
+                  path: '/manager/modules', name: 'administrator-modules', component: AdministratorModules, meta: { roles: ['superadmin'] },
               },
               {
-                  path: '/manager/layers', name: 'administrator-layers', component: AdministratorLayers,
+                  path: '/manager/layers', name: 'administrator-layers', component: AdministratorLayers, meta: { roles: ['superadmin'] },
               },
-
+              // Manager
               {
-                  path: '/manager/contractors/modules', name: 'manager-contractors-modules', component: Modules,
-              },
-              {
-                  path: '/manager/information/:id', name: 'manager-data', component: ClosedInformation,
+                  path: '/manager/cabinet', name: 'manager-cabinet', component: Cabinet, meta: { roles: ['superadmin', 'admin'] },
               },
               {
-                  path: '/manager/gis' , name: 'manager-gis', component: ClosedGis,
+                  path: '/manager/contractors/modules', name: 'manager-contractors-modules', component: Modules, meta: { roles: ['superadmin', 'admin'] },
               },
               {
-                  path: '/manager/parse_kmz', name: 'parse-kmz', component: KMZParser,
+                  path: '/manager/information/:id', name: 'manager-data', component: ClosedInformation, meta: { roles: ['superadmin', 'admin'] },
+              },
+              {
+                  path: '/manager/gis' , name: 'manager-gis', component: ClosedGis, meta: { roles: ['superadmin', 'admin'] },
+              },
+              {
+                  path: '/manager/parse_kmz', name: 'parse-kmz', component: KMZParser, meta: { roles: ['superadmin', 'admin'] },
               },
           ],
       },

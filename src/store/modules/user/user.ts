@@ -32,12 +32,13 @@ export const mutations: MutationTree<UserState> = {
      */
     getUser(state, payload) {
         state.user = payload;
-        if (Router.currentRoute.name.indexOf('manager') === -1) {
-            if (state.role === 'superadmin') {
-                Router.push({name: 'administrator-contractors'});
-            } else {
-                Router.push({name: 'manager-contractors-modules'});
-            }
+        if (Router.currentRoute.name === 'home') {
+            Router.push({name: 'manager-cabinet'});
+            // if (state.role === 'superadmin') {
+            //     Router.push({name: 'administrator-contractors'});
+            // } else {
+            //     Router.push({name: 'manager-cabinet'});
+            // }
         }
     },
 
@@ -75,9 +76,21 @@ export const actions: ActionTree<UserState, RootState> = {
 
     async logout({}, payload) {
         try {
-            const url = `${baseUrlAPI}logout`;
-            const result = await axios.get(url);
+            const res = await axios.get(`${baseUrlAPI}logout`);
+            state.user = {
+                id: 0,
+                email: '',
+                firstname: '',
+                lastname: '',
+                middlename: '',
+                post: '',
+                photo: '',
+                role: 'admin',
+                password: '',
+            };
+            state.users = [];
             state.token = '';
+            state.role = '';
             Router.push({name: 'home'});
         } catch {
             ErrorNotifier.notify();
