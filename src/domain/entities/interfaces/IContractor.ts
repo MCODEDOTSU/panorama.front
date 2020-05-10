@@ -8,6 +8,7 @@ export default interface IContractor {
     inn: string;
     kpp: string;
     address: IAddress;
+    logo: string;
     modules?: IModule[];
     edited?: boolean;
     childElsVisibility?: boolean;

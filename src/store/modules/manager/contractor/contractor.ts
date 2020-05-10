@@ -1,7 +1,7 @@
 import axios from 'axios';
 import InfoModuleState from './types';
 import {ActionTree, Module} from 'vuex';
-import {baseUrlAPI} from '@/globals';
+import {baseUrl, baseUrlAPI} from '@/globals';
 import ContractorState from '@/store/modules/manager/contractor/types';
 import RootState from '@/store/types';
 import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
@@ -24,6 +24,7 @@ export const state: ContractorState = {
             region: '',
             street: '',
         },
+        logo: '',
     },
     contractors: [],
 };
@@ -114,6 +115,7 @@ export const actions: ActionTree<InfoModuleState, RootState> = {
                 region: '',
                 street: '',
             },
+            logo: '',
         };
     },
 
@@ -143,6 +145,27 @@ export const actions: ActionTree<InfoModuleState, RootState> = {
         } catch {
             ErrorNotifier.notify();
         }
+    },
+
+    /**
+     * Загрузка логотипа
+     * @param payload
+     */
+    async uploadContractorLogo({}, payload) {
+
+        const formData = new FormData();
+        formData.append('file', payload.file);
+
+        try {
+            const res = await axios.post(`${baseUrlAPI}manager/contractor/upload`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            state.contractor.logo = `${baseUrl}${res.data.filename}`;
+            SuccessNotifier.notify('Загрузка завершена', `Изображение "${payload.file.name}" загружено на сервер`);
+        } catch {
+            ErrorNotifier.notify();
+        }
+
     },
 
 };

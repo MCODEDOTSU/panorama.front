@@ -93,7 +93,7 @@ export const actions: ActionTree<UserState, RootState> = {
             photo: '',
             password: '',
             role: 'admin',
-            contractor_id: payload.contractorId
+            contractor_id: payload.contractorId,
         };
     },
 

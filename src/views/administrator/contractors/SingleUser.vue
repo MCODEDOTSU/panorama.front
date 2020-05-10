@@ -42,6 +42,9 @@
                             <img :src="getPhotoSrc()" class="photo" @click="$refs.photo.click()"/>
                             <input type="file" ref="photo" class="form-control-file" @change="uploadPhoto"
                                    accept="image/jpeg,image/png,image/gif"/>
+                            <button v-if="this.userState.user.photo !== '' && this.userState.user.photo !== null" @click="deletePhoto()">
+                                &times;
+                            </button>
                         </div>
 
                         <div class="form-group right-group">
@@ -103,9 +106,9 @@
 
 <script lang="ts">
 
-    import {Component, Vue, Watch} from "vue-property-decorator";
-    import {Action, State} from "vuex-class";
-    import UserState from "@/store/modules/manager/user/types";
+    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import {Action, State} from 'vuex-class';
+    import UserState from '@/store/modules/manager/user/types';
 
     @Component({})
     export default class SingleUser extends Vue {
@@ -113,10 +116,10 @@
         @Action public updateUser: any;
         @Action public uploadUserPhoto: any;
 
-        @State("managerUser") public userState: UserState;
+        @State('managerUser') public userState: UserState;
 
         public getPhotoSrc() {
-            return (this.userState.user.photo === "" || this.userState.user.photo === null) ? "/images/social.png" : this.userState.user.photo;
+            return (this.userState.user.photo === '' || this.userState.user.photo === null) ? '/images/social.png' : this.userState.user.photo;
         }
 
         public uploadPhoto() {
@@ -125,8 +128,11 @@
                 return;
             }
             const file = $fileInput.files[0];
-            console.log(file);
             this.uploadUserPhoto({file});
+        }
+
+        public deletePhoto() {
+            this.userState.user.photo = '';
         }
 
     }

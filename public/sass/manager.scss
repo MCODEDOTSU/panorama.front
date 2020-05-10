@@ -570,6 +570,17 @@
         input[type="file"] {
             display: none;
         }
+
+        button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 32px;
+            height: 32px;
+            background: none;
+            border: none;
+        }
+
     }
     .right-group {
         display: inline-block;
@@ -577,6 +588,38 @@
         width: 100%;
         padding: 0 0 0 204px;
         @include box-sizing(border-box);
+    }
+}
+
+.modal-dialog-contractor {
+
+    .file-upload {
+        position: relative;
+        border: 1px solid #ced4da;
+        padding: 3px;
+        @include border-radius(3px);
+        @include box-sizing(border-box);
+
+        img {
+            max-width: 100%;
+            height: auto;
+            cursor: pointer;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 32px;
+            height: 32px;
+            background: none;
+            border: none;
+        }
+
     }
 }
 

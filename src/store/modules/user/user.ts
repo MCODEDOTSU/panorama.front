@@ -10,6 +10,12 @@ export const state: UserState = {
     user: {
         id: 0,
         email: '',
+        firstname: '',
+        lastname: '',
+        middlename: '',
+        post: '',
+        photo: '',
+        role: 'admin',
         password: '',
     },
     users: [],
