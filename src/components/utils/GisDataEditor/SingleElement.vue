@@ -18,6 +18,7 @@
     import {Component, Provide, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import ElementState from '@/store/modules/gis/element/types';
+    import LayerState from '@/store/modules/gis/layer/types';
     import {VueEditor} from 'vue2-editor';
     import AdditionalInformation from './AdditionalInformation.vue';
     import AdditionalGroupTabs from './AdditonalGroupTabs.vue';
@@ -31,8 +32,11 @@
         @Provide('validator') public $validator = this.$validator;
 
         @Action public updateElement: any;
+        @Action public removeFeatureFromMap: any;
+        @Action public addFeatureToMap: any;
 
         @State('gisElement') public elementState!: ElementState;
+        @State('gisLayer') public layerState!: LayerState;
 
         @Provide() private fieldsNonCompleteness = false;
 
@@ -41,8 +45,38 @@
                 if (validationSuccessed) {
                     this.fieldsNonCompleteness = false;
                     this.updateElement();
+
                     // @ts-ignore
                     this.$bvModal.hide('singleElement');
+
+                    // TODO: один метод на переименования элемента на карте
+
+                    // Удаляем с карты
+                    const i = this.layerState.currentLayerIndex;
+                    const j = this.layerState.currentElementIndex;
+
+                    if (this.layerState.layers[i].elements[j].geometry) {
+                        this.removeFeatureFromMap({ id: this.layerState.layers[i].elements[j].id });
+                    }
+
+                    this.layerState.layers[i].elements[j].title = this.elementState.element.title;
+
+                    // Рисуем на карте элемент
+                    this.addFeatureToMap({
+                        id: this.layerState.layers[i].elements[j].id,
+                        layer_id: this.layerState.layers[i].id,
+                        geom: this.layerState.layers[i].elements[j].geometry,
+                        property: {
+                            id: this.layerState.layers[i].elements[j].id,
+                            title: this.layerState.layers[i].elements[j].title,
+                            description: this.layerState.layers[i].elements[j].description,
+                            lenght: this.layerState.layers[i].elements[j].lenght,
+                            area: this.layerState.layers[i].elements[j].area,
+                            perimeter: this.layerState.layers[i].elements[j].perimeter,
+                            revision: 3,
+                        },
+                    });
+
                 } else {
                     this.fieldsNonCompleteness = true;
                 }

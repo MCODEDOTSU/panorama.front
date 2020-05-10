@@ -1,11 +1,22 @@
 <template>
 
     <form>
+
+        <div class="form-group" v-if="styleEditorState.style.pointType">
+            <label for="styleEditorShowTitle">Отображать наименование?</label>
+            <select id="styleEditorShowTitle" class="form-control"
+                    v-model="styleEditorState.style.showTitle">
+                <option value="true">Да</option>
+                <option value="false">Нет</option>
+            </select>
+        </div>
+
         <div class="form-group" v-if="styleEditorState.style.stroke">
             <label>Цвет линии</label>
             <color-picker v-model="styleEditorState.style.stroke.color"
                           v-on:change="onChangeStrokeColor"></color-picker>
         </div>
+
         <div class="form-group" v-if="styleEditorState.style.stroke">
             <label for="styleEditorLinestringStrokeOpacity">Прозрачность линии</label>
             <div class="input-group">
@@ -17,6 +28,7 @@
                        v-model="styleEditorState.style.stroke.opacity"/>
             </div>
         </div>
+
         <div class="form-group" v-if="styleEditorState.style.stroke">
             <label for="styleEditorLinestringStrokeWidth">Толщина линии</label>
             <div class="input-group">
@@ -28,6 +40,7 @@
                        v-model="styleEditorState.style.stroke.width"/>
             </div>
         </div>
+
     </form>
 
 </template>

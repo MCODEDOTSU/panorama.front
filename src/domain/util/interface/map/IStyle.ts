@@ -1,5 +1,6 @@
 export default interface IStyle {
     id: number;
+    showTitle: boolean;
     shape?: {
         points: number;
         radius: number;

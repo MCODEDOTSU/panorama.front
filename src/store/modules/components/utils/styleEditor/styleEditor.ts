@@ -12,6 +12,7 @@ import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
 const defaultStyle = {
     point: {
         id: 1,
+        showTitle: true,
         shape: {
             points: 11,
             fill: { color: '#009fe3', opacity: 0 },
@@ -37,6 +38,7 @@ const defaultStyle = {
     },
     linestring: {
         id: 1,
+        showTitle: true,
         stroke: { color: '#164194', opacity: 20, width: 10 },
         font: {
             font: '16px Calibri, sans-serif', textBaseline: 'bottom', placement: 'line',
@@ -46,6 +48,7 @@ const defaultStyle = {
     },
     polygon: {
         id: 1,
+        showTitle: true,
         fill: { color: '#009fe3', opacity: 20 },
         stroke: { color: '#164194', width: 1, opacity: 0 },
         font: {

@@ -1,0 +1,71 @@
+// Bootstrap
+@import "variables";
+@import '../../node_modules/bootstrap/scss/bootstrap.scss';
+
+@mixin border-radius($radius) {
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+    border-radius: $radius;
+}
+
+@mixin box-sizing($option) {
+    -webkit-box-sizing: $option;
+    -moz-box-sizing: $option;
+    box-sizing: $option;
+}
+
+@mixin transition($transitions...) {
+    -webkit-transition: $transitions;
+    -moz-transition: $transitions;
+    -o-transition: $transitions;
+    transition: $transitions;
+}
+
+@mixin box-shadow($shadows...) {
+    -webkit-box-shadow: $shadows;
+    -moz-box-shadow: $shadows;
+    box-shadow: $shadows;
+}
+
+@mixin background-size($option) {
+    -background-size: $option;
+    -background-size: $option;
+    background-size: $option;
+}
+
+@-webkit-keyframes animation-opacity {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes animation-opacity {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@import "customer.scss";
+@import "manager.scss";
+@import "responsive.scss";
+
+html, body {
+    margin: 0;
+    padding: 0;
+    min-width: 320px;
+    height: 100%;
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+input, input:active, input:hover, input:focus {
+    -webkit-outline: 0 !important;
+    -moz-outline: 0 !important;
+    outline: 0 !important;
+    box-shadow: none;
+}

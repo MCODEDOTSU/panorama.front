@@ -1,6 +1,8 @@
 .actions {
+
     text-align: right;
     line-height: 1;
+
     button, .btn {
         background: none;
         border: none;
@@ -11,23 +13,69 @@
         border-right: 1px solid $gray-200;
         font-size: 12px;
         text-transform: lowercase;
+
         &:hover {
             text-decoration: underline;
         }
+
         &.btn-info {
             color: $first;
             &:hover {
                 color: $first-hover;
             }
         }
+
         &.btn-danger {
             color: $red;
             &:hover {
                 color: $red-hover;
             }
         }
+
         &:last-child {
             border-right: none;
+        }
+
+    }
+}
+
+.addition-information-tab {
+
+    .value-length {
+        text-align: left;
+        color: $green;
+        font-size: 12px;
+        display: inline-block;
+        width: 50%;
+        vertical-align: top;
+        margin: 0 -5px 0 0;
+    }
+
+    .validation-error {
+        text-align: right;
+        display: inline-block;
+        width: 50%;
+        font-size: 12px;
+        color: $red;
+        vertical-align: top;
+    }
+
+    .one-from-many-div,
+    .many-from-many-div {
+        margin: 0 16px 0 0;
+        display: inline-block;
+        vertical-align: top;
+        label {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 8px 0 0;
+        }
+        input {
+            display: inline-block;
+            vertical-align: middle;
+            width: 16px;
+            height: auto;
+            margin-top: 3px;
         }
     }
 }
@@ -66,9 +114,11 @@
     }
 
     .btn {
+
         @include border-radius(0);
         margin: 0 0 0 20px;
         vertical-align: middle;
+
         &.btn-default {
             background: $gray-200;
             border-color: $gray-300;
@@ -76,6 +126,7 @@
                 background: $gray-300;
             }
         }
+
         &.btn-info {
             background: $first;
             border-color: $first-hover;
@@ -83,6 +134,7 @@
                 background: $first-hover;
             }
         }
+
         &.btn-danger {
             background: $red;
             border-color: $red-hover;
@@ -90,6 +142,7 @@
                 background: $red-hover;
             }
         }
+
         &.btn-secondary {
             background: $gray-500;
             border-color: $gray-600;
@@ -97,9 +150,11 @@
                 background: $gray-600;
             }
         }
+
         &.btn-right {
             float: right;
         }
+
         &.btn-link {
             margin: 0 8px 0 0;
             background: none;
@@ -147,8 +202,11 @@
             }
         }
     }
+
     .grid-data {
+
         margin: 20px 0;
+
         .row-header, .row-footer {
             .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {
                 padding: 20px 10px;
@@ -162,6 +220,7 @@
                 }
             }
         }
+
         .actions {
             text-align: right;
             line-height: 1;
@@ -197,6 +256,7 @@
                 }
             }
         }
+
         .row-body {
             .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {
                 padding: 10px;
@@ -214,6 +274,7 @@
                 }
             }
         }
+
         label {
             display: block;
             line-height: 1;
@@ -225,13 +286,18 @@
                 font-style: italic;
             }
         }
+
         p {
             margin-bottom: 8px;
         }
+
     }
+
     .bg-dark {
+
         background-color: $black !important;
         color: $white;
+
         a {
             color: $white;
         }
@@ -396,43 +462,7 @@
             }
         }
     }
-    .addition-information-tab {
-        .value-length {
-            text-align: left;
-            color: $green;
-            font-size: 12px;
-            display: inline-block;
-            width: 50%;
-            vertical-align: top;
-            margin: 0 -5px 0 0;
-        }
-        .validation-error {
-            text-align: right;
-            display: inline-block;
-            width: 50%;
-            font-size: 12px;
-            color: $red;
-            vertical-align: top;
-        }
-        .one-from-many-div,
-        .many-from-many-div {
-            margin: 0 16px 0 0;
-            display: inline-block;
-            vertical-align: top;
-            label {
-                display: inline-block;
-                vertical-align: middle;
-                margin: 0 8px 0 0;
-            }
-            input {
-                display: inline-block;
-                vertical-align: middle;
-                width: 16px;
-                height: auto;
-                margin-top: 3px;
-            }
-        }
-    }
+
     .style-editor {
         .scrollbar {
             height: 400px;
