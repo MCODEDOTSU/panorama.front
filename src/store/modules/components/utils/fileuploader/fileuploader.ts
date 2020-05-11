@@ -66,7 +66,7 @@ export const actions: ActionTree<FileUploaderState, RootState> = {
 
     uploadParsedFile({state}, payload) {
         const formData = new FormData();
-        formData.append('kmz', payload.fileres.files[0]);
+        formData.append(`${payload.parseType}`, payload.fileres.files[0]);
         formData.append('layerId', payload.layerId);
 
         return new Promise((resolve) => {
