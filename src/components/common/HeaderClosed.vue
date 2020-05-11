@@ -20,6 +20,8 @@
                             </router-link>
                             <router-link class="nav-link dropdown-item" to="/manager/parse_kmz" tag="a">Парсинг KMZ
                             </router-link>
+                            <router-link class="nav-link dropdown-item" to="/manager/parse_xls" tag="a">Парсинг XLS
+                            </router-link>
                         </div>
                     </li>
                     <li class="nav-item dropdown">

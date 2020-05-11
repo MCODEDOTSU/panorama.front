@@ -6,6 +6,7 @@ import Modules from './views/closed/Modules.vue';
 import ClosedInformation from './views/closed/information/Information.vue';
 import ClosedGis from './views/closed/gis/Gis.vue';
 import KMZParser from './views/closed/parser/KMZParser.vue';
+import XLSParser from './views/closed/parser/XLSParser.vue';
 
 import Manager from './views/Manager.vue';
 // Manager
@@ -61,6 +62,9 @@ export default new Router({
               },
               {
                   path: '/manager/parse_kmz', name: 'parse-kmz', component: KMZParser, meta: { roles: ['superadmin', 'admin'] },
+              },
+              {
+                  path: '/manager/parse_xls', name: 'parse-xls', component: XLSParser, meta: { roles: ['superadmin', 'admin'] },
               },
           ],
       },

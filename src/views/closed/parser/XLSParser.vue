@@ -1,7 +1,7 @@
 <template>
     <div class="manager-geom-data-container">
         <h4>
-            Загрузить KMZ файл
+            Загрузить XLS файл
         </h4>
 
         <div class="row">
@@ -68,7 +68,7 @@
             this.uploadParsedFile({
                 fileres: this.$refs.file,
                 layerId: this.layer.id,
-                parseType: 'kmz',
+                parseType: 'xls',
             }).then(() => {
                 SuccessNotifier.notify('File has been uploaded', 'It is uploaded');
             });
