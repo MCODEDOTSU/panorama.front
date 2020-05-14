@@ -9,7 +9,7 @@
                 <p>Выбрать файл</p>
             </div>
             <div class="col-4">
-                <p>Выбрать слой</p>
+                <p>Cлой</p>
             </div>
         </div>
 
@@ -19,11 +19,12 @@
                 <span @click="attachFile">Прикрепить</span>
             </div>
             <div class="col-4">
-                <select id="layers" required class="form-control" v-model="layer">
-                    <option v-for="layer in layerState.layers" :value="layer" :title="layer.title">
-                        {{ layer.title }}
-                    </option>
-                </select>
+                <input class="form-control" id="layer" ref="text" type="text" v-model="layer.title" disabled/>
+<!--                <select id="layers" required class="form-control" v-model="layer">-->
+<!--                    <option v-for="layer in layerState.layers" :value="layer" :title="layer.title">-->
+<!--                        {{ layer.title }}-->
+<!--                    </option>-->
+<!--                </select>-->
             </div>
         </div>
 
@@ -39,7 +40,7 @@
     import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
 
     @Component
-    export default class KMZParser extends Vue {
+    export default class XLSParser extends Vue {
 
         @Action private uploadParsedFile: any;
         @Action private managerGetLayers: any;
@@ -48,7 +49,7 @@
 
         @Provide()
         private layer: ILayer = {
-            description: '', geometry_type: '', id: null, parent_id: 0, title: '', visibility: false,
+            alias: 'opory', description: '', geometry_type: 'point', id: 2, parent_id: 0, title: 'Опоры', visibility: true,
         };
 
         private async created() {
@@ -73,6 +74,5 @@
                 SuccessNotifier.notify('File has been uploaded', 'It is uploaded');
             });
         }
-
     }
 </script>
