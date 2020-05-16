@@ -53,7 +53,7 @@
 
 <script lang="ts">
 
-    import {Component, Provide, Vue, Prop, Watch} from 'vue-property-decorator';
+    import {Component, Provide, Vue, Prop} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import LayerState from '@/store/modules/gis/layer/types';
     import ElementState from '@/store/modules/gis/element/types';

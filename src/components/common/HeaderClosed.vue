@@ -13,7 +13,7 @@
                             Управление
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuManagerLink">
-                            <router-link class="nav-link dropdown-item" to="/manager/contractors/modules" tag="a">
+                            <router-link class="nav-link dropdown-item" to="/manager/layers" tag="a">
                                 Доступные модули
                             </router-link>
                             <router-link class="nav-link dropdown-item" to="/manager/gis" tag="a">Картография
@@ -29,11 +29,11 @@
                             Администрирование
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuManagerLink">
-                            <router-link class="nav-link dropdown-item" to="/manager/contractors" tag="a">Контрагенты
+                            <router-link class="nav-link dropdown-item" to="/administrator/contractors" tag="a">Контрагенты
                             </router-link>
-                            <router-link class="nav-link dropdown-item" to="/manager/modules" tag="a">Модули
+                            <router-link class="nav-link dropdown-item" to="/administrator/modules" tag="a">Модули
                             </router-link>
-                            <router-link class="nav-link dropdown-item" to="/manager/layers" tag="a">Слои</router-link>
+                            <router-link class="nav-link dropdown-item" to="/administrator/layers" tag="a">Слои</router-link>
                         </div>
                     </li>
                 </ul>
@@ -73,14 +73,14 @@
 </template>
 <script lang="ts">
 
-    import {Component, Vue} from "vue-property-decorator";
-    import {State, Action} from "vuex-class";
-    import UserState from "@/store/modules/user/types";
+    import {Component, Vue} from 'vue-property-decorator';
+    import {State, Action} from 'vuex-class';
+    import UserState from '@/store/modules/user/types';
 
     @Component({})
     export default class Header extends Vue {
 
-        @State("user") public userState!: UserState;
+        @State('user') public userState!: UserState;
 
         @Action public logout: any;
 

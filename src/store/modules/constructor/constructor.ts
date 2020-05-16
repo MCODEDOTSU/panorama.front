@@ -1,7 +1,7 @@
 import {ActionTree, Module, MutationTree} from 'vuex';
 import RootState from '@/store/types';
 import ConstructorState from '@/store/modules/constructor/types';
-import {baseUrlAPI} from '@/globals';
+import {baseUrl, baseUrlAPI} from '@/globals';
 import {plainizeFields} from '@/domain/services/common/AdditionalFieldsService';
 import axios from 'axios';
 import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
@@ -14,7 +14,15 @@ export const state: ConstructorState = {
     additionalData: {},
     element: {
         id: 0,
-        title: '',
+        layer_id: 0,
+        title: 'Новый элемент',
+        description: '',
+        address_id: 0,
+        geometry: '',
+        length: 0,
+        area: 0,
+        perimeter: 0,
+        element_next_id: 0,
     },
 };
 
@@ -22,7 +30,15 @@ export const mutations: MutationTree<ConstructorState> = {
     unsetAdditionalInfoValues() {
         state.element = {
             id: 0,
-            title: '',
+            layer_id: 0,
+            title: 'Новый элемент',
+            description: '',
+            address_id: 0,
+            geometry: '',
+            length: 0,
+            area: 0,
+            perimeter: 0,
+            element_next_id: 0,
         };
         for (const group of state.tableFields) {
             for (const column of group.columns) {
@@ -101,7 +117,7 @@ export const actions: ActionTree<ConstructorState, RootState> = {
     },
 };
 
-export const konstructor: Module<ConstructorState, RootState> = {
+export const managerConstructor: Module<ConstructorState, RootState> = {
     state, actions, mutations,
 };
 

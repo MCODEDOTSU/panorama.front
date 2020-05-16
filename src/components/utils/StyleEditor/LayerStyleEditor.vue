@@ -14,19 +14,18 @@
 </template>
 <script lang="ts">
 
-    import {Component, Watch} from 'vue-property-decorator';
+    import {Vue, Component, Watch} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import StyleEditorState from '@/store/modules/components/utils/styleEditor/types';
     import OlMap from '@/components/utils/Map/Map.vue';
     import PointFields from './PointFields.vue';
     import LinestringFields from './LinestringFields.vue';
     import PolygonFields from './PolygonFields.vue';
-    import VueExtended from '@/components/VueExtended.vue';
 
     @Component({
         components: {LinestringFields, PointFields, PolygonFields, OlMap},
     })
-    export default class LayerStyleEditor extends VueExtended {
+    export default class LayerStyleEditor extends Vue {
 
         @State('styleEditor') public styleEditorState: StyleEditorState;
 

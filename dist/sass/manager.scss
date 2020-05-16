@@ -1,3 +1,94 @@
+button, .btn {
+
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius: 0 !important;
+    margin: 0 0 0 20px;
+    vertical-align: middle;
+
+    &.btn-default {
+        background: $gray-200;
+        border-color: $gray-300;
+        &:hover {
+            background: $gray-300;
+        }
+    }
+
+    &.btn-primary {
+        background: $first;
+        border-color: $first-hover;
+        &:hover {
+            background: $first-hover;
+        }
+    }
+
+    &.btn-info {
+        background: $first;
+        border-color: $first-hover;
+        &:hover {
+            background: $first-hover;
+        }
+    }
+
+    &.btn-danger {
+        background: $red;
+        border-color: $red-hover;
+        &:hover {
+            background: $red-hover;
+        }
+    }
+
+    &.btn-secondary {
+        background: $gray-500;
+        border-color: $gray-600;
+        &:hover {
+            background: $gray-600;
+        }
+    }
+
+    &.btn-right {
+        float: right;
+    }
+
+    &.btn-link {
+        margin: 0 8px 0 0;
+        background: none;
+        border: none;
+        padding: 0;
+        &.btn-default {
+            color: $gray-200;
+            &:hover {
+                color: $gray-300;
+                background: none;
+            }
+        }
+        &.btn-info {
+            color: $first;
+            &:hover {
+                color: $first-hover;
+                background: none;
+            }
+        }
+        &.btn-danger {
+            color: $red;
+            &:hover {
+                color: $red-hover;
+                background: none;
+            }
+        }
+        &.btn-secondary {
+            color: $gray-500;
+            &:hover {
+                color: $gray-600;
+                background: none;
+            }
+        }
+    }
+    i {
+        margin: 0 8px 0 0;
+    }
+}
+
 .actions {
 
     text-align: right;
@@ -80,6 +171,60 @@
     }
 }
 
+header {
+
+    #navbarCollapse {
+        width: 30%;
+        max-width: 30%;
+        display: inline-block !important;
+        margin: 0 -5px 0 0;
+    }
+
+    #navbarContractor {
+
+        width: 70%;
+        max-width: 70%;
+        display: inline-block !important;
+
+        > ul {
+            text-align: right;
+            display: block;
+
+            li {
+                display: inline-block;
+                vertical-align: top;
+            }
+        }
+
+        img {
+            max-height: 45px;
+            width: auto;
+            margin: 0 8px 0 0;
+        }
+
+        .contractor-name {
+            display: block;
+            font-size: 10px;
+            text-align: left;
+            margin: 0 16px 0 0;
+        }
+
+        .person-name {
+            display: block;
+            font-size: 10px;
+            text-align: left;
+            margin: 0 16px 0 0;
+        }
+
+        .person-post {
+            display: block;
+            font-size: 10px;
+            text-align: left;
+            margin: 0 16px 0 0;
+        }
+    }
+}
+
 .manager {
 
     h1 {
@@ -110,87 +255,6 @@
             padding: 56px 0 0;
             height: 100%;
             min-height: 100vh;
-        }
-    }
-
-    .btn {
-
-        @include border-radius(0);
-        margin: 0 0 0 20px;
-        vertical-align: middle;
-
-        &.btn-default {
-            background: $gray-200;
-            border-color: $gray-300;
-            &:hover {
-                background: $gray-300;
-            }
-        }
-
-        &.btn-info {
-            background: $first;
-            border-color: $first-hover;
-            &:hover {
-                background: $first-hover;
-            }
-        }
-
-        &.btn-danger {
-            background: $red;
-            border-color: $red-hover;
-            &:hover {
-                background: $red-hover;
-            }
-        }
-
-        &.btn-secondary {
-            background: $gray-500;
-            border-color: $gray-600;
-            &:hover {
-                background: $gray-600;
-            }
-        }
-
-        &.btn-right {
-            float: right;
-        }
-
-        &.btn-link {
-            margin: 0 8px 0 0;
-            background: none;
-            border: none;
-            padding: 0;
-            &.btn-default {
-                color: $gray-200;
-                &:hover {
-                    color: $gray-300;
-                    background: none;
-                }
-            }
-            &.btn-info {
-                color: $first;
-                &:hover {
-                    color: $first-hover;
-                    background: none;
-                }
-            }
-            &.btn-danger {
-                color: $red;
-                &:hover {
-                    color: $red-hover;
-                    background: none;
-                }
-            }
-            &.btn-secondary {
-                color: $gray-500;
-                &:hover {
-                    color: $gray-600;
-                    background: none;
-                }
-            }
-        }
-        i {
-            margin: 0 8px 0 0;
         }
     }
 
@@ -547,6 +611,112 @@
     }
 }
 
+.modal-dialog-user {
+    .file-upload {
+        display: inline-block;
+        vertical-align: top;
+        width: 172px;
+        height: 172px;
+        margin: 0 -177px 0 0;
+        position: relative;
+        z-index: 1;
+        border: 1px solid #ced4da;
+        padding: 3px;
+        @include border-radius(3px);
+        @include box-sizing(border-box);
+
+        img {
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 32px;
+            height: 32px;
+            background: none;
+            border: none;
+        }
+
+    }
+    .right-group {
+        display: inline-block;
+        vertical-align: top;
+        width: 100%;
+        padding: 0 0 0 204px;
+        @include box-sizing(border-box);
+    }
+}
+
+.modal-dialog-contractor {
+
+    .file-upload {
+        position: relative;
+        border: 1px solid #ced4da;
+        padding: 3px;
+        @include border-radius(3px);
+        @include box-sizing(border-box);
+
+        img {
+            max-width: 100%;
+            height: auto;
+            cursor: pointer;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 32px;
+            height: 32px;
+            background: none;
+            border: none;
+        }
+
+    }
+}
+
+.manager-cabinet {
+
+    .content {
+        margin: 40px 0;
+    }
+
+    .row {
+        padding: 10px 0;
+
+        &.bg {
+            background: $gray-200;
+        }
+
+        &.cabinet-actions {
+            text-align: right;
+            margin: 40px 0 0;
+
+            button {
+                display: inline-block;
+                padding: 10px;
+            }
+        }
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
 .nav-tabs {
     margin-bottom: 32px !important;
 }
@@ -568,6 +738,74 @@
 
     h4 {
         margin: 10px 0;
+    }
+}
+
+.files-uploader {
+    width: 100%;
+    min-height: 200px;
+    background: $white;
+    border: 1px dashed $first;
+    position: relative;
+    padding: 15px 20px 80px;
+
+    input[type="file"] {
+        display: none;
+    }
+
+    &.drag {
+        background: $gray-200;
+    }
+
+    .add-file {
+        width: 200px;
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .add-file-info {
+        font-size: 14px;
+        color: $first;
+        font-style: italic;
+        margin: 50px;
+    }
+
+    .file-item {
+
+        padding: 5px 10px;
+        position: relative;
+
+        &:nth-child(2n) {
+            background: $gray-200;
+        }
+
+        label {
+            font-size: 14px;
+        }
+
+        &.deleted {
+            opacity: .5;
+
+            .file-title {
+                opacity: .5;
+            }
+        }
+
+        button {
+            color: $first;
+            line-height: 1;
+            vertical-align: middle;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            label {
+                line-height: 1;
+                font-size: 14px;
+                cursor: pointer;
+            }
+        }
     }
 }
 

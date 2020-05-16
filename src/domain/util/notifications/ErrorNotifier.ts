@@ -4,7 +4,7 @@ class ErrorNotifier {
 
     public static notify() {
         Vue.prototype.$notify({
-            classes: 'vue-notification-error',
+            type: 'error',
             title: 'Ошибка',
             text: 'При выполнении запроса произошла ошибка',
         });
@@ -12,7 +12,7 @@ class ErrorNotifier {
 
     public static notifyWithCustomMessage(message: string) {
         Vue.prototype.$notify({
-            classes: 'vue-notification-error',
+            type: 'error',
             title: 'Ошибка',
             text: message,
         });

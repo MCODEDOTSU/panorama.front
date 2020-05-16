@@ -94,7 +94,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" @click="updateUser" data-dismiss="modal">
+                    <button type="button" class="btn btn-primary" @click="administratorUserUpdate" data-dismiss="modal">
                         Сохранить
                     </button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
@@ -108,15 +108,15 @@
 
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import UserState from '@/store/modules/manager/user/types';
+    import UserState from '@/store/modules/administrator/user/types';
 
     @Component({})
     export default class SingleUser extends Vue {
 
-        @Action public updateUser: any;
-        @Action public uploadUserPhoto: any;
+        @Action public administratorUserUpdate: any;
+        @Action public administratorUserUploadPhoto: any;
 
-        @State('managerUser') public userState: UserState;
+        @State('administratorUser') public userState: UserState;
 
         public getPhotoSrc() {
             return (this.userState.user.photo === '' || this.userState.user.photo === null) ? '/images/social.png' : this.userState.user.photo;
@@ -128,7 +128,7 @@
                 return;
             }
             const file = $fileInput.files[0];
-            this.uploadUserPhoto({file});
+            this.administratorUserUploadPhoto({file});
         }
 
         public deletePhoto() {

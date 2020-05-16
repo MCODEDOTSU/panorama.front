@@ -84,7 +84,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary"
-                            @click="updateContractor"
+                            @click="administratorContractorUpdate"
                             data-dismiss="modal">
                         Сохранить
                     </button>
@@ -99,15 +99,16 @@
 
     import {Component, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import ContractorState from '@/store/modules/manager/contractor/types';
+
+    import ContractorState from '@/store/modules/administrator/contractor/types';
 
     @Component({})
     export default class SingleContractor extends Vue {
 
-        @Action public updateContractor: any;
-        @Action public uploadContractorLogo: any;
+        @Action public administratorContractorUpdate: any;
+        @Action public administratorContractorUploadLogo: any;
 
-        @State('managerContractor') public contractorState: ContractorState;
+        @State('administratorContractor') public contractorState: ContractorState;
 
         get resolvedCity() {
             if (this.contractorState.contractor.address  === null) {
@@ -117,9 +118,9 @@
                 '' : this.contractorState.contractor.address.city;
         }
 
-        set resolvedCity(city: '') {
+        set resolvedCity(city: string) {
             if (this.contractorState.contractor.address  === null) {
-                this.contractorState.contractor.address = { id: 0, city: '', street: '', build: ''};
+                this.contractorState.contractor.address = { id: 0, city: '', street: '', build: '', region: ''};
             }
             this.contractorState.contractor.address.city = city;
         }
@@ -132,9 +133,9 @@
                 '' : this.contractorState.contractor.address.street;
         }
 
-        set resolvedStreet(street: '') {
+        set resolvedStreet(street: string) {
             if (this.contractorState.contractor.address  === null) {
-                this.contractorState.contractor.address = { id: 0, city: '', street: '', build: ''};
+                this.contractorState.contractor.address = { id: 0, city: '', street: '', build: '', region: ''};
             }
             this.contractorState.contractor.address.street = street;
         }
@@ -147,9 +148,9 @@
                 '' : this.contractorState.contractor.address.build;
         }
 
-        set resolvedBuild(build: '') {
+        set resolvedBuild(build: string) {
             if (this.contractorState.contractor.address  === null) {
-                this.contractorState.contractor.address = { id: 0, city: '', street: '', build: ''};
+                this.contractorState.contractor.address = { id: 0, city: '', street: '', build: '', region: ''};
             }
             this.contractorState.contractor.address.build = build;
         }
@@ -165,7 +166,7 @@
                 return;
             }
             const file = $fileInput.files[0];
-            this.uploadContractorLogo({file});
+            this.administratorContractorUploadLogo({file});
         }
 
         public deleteLogo() {

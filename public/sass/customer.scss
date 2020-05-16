@@ -129,7 +129,7 @@ footer {
                 top: 10px;
                 right: -35px;
                 left: auto;
-                color:  $second-hover;
+                color: $second-hover;
             }
         }
     }
@@ -279,24 +279,6 @@ footer {
     overflow: hidden;
 
     .geom-data-list {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        height: 100vh;
-        width: 350px;
-        background: $white;
-        overflow: auto;
-        @include box-shadow(0px 0px 50px rgba(0, 0, 0, 0.25));
-
-        h2 {
-            font-size: 18px;
-            padding: 10px 20px;
-            box-sizing: border-box;
-            background: $second;
-            color: $white;
-            font-weight: 100;
-            margin: 0 0 1px;
-        }
 
         .btn-search-mode {
             position: absolute;
@@ -344,301 +326,39 @@ footer {
                 }
             }
         }
-        .layers-list {
-            overflow: hidden;
-            li {
-                /* min-height: 42px; */
-                font-size: 14px;
-                box-sizing: border-box;
-                position: relative;
-                span {
-                    display: block;
-                    width: 100%;
-                    padding: 10px 20px;
-                    white-space: nowrap;
-                    @include transition(background 0.5s ease-out);
-                    &.editor {
-                        background: $gray-200;
-                        padding: 20px 20px 20px 48px;
-                        .btn-checked {
-                            margin: 1px 10px 0 0;
-                        }
-                    }
-                    &:hover {
-                        background: $gray-200;
-                        .btn-geom-list {
-                            color: $gray-400;
-                            &:hover {
-                                color: $second;
-                            }
-                        }
-                    }
-                    &.selected {
-                        background: $gray-300;
-                        &:hover {
-                            background: $gray-400;
-                        }
-                    }
-                }
-                &.empty {
-                    span {
-                        &:hover {
-                            @include transition(all 0.5s ease-out);
-                            background: none;
-                        }
-                        & > label {
-                            opacity: .25;
-                        }
-                    }
-                    .btn-checked {
-                        opacity: .25;
-                    }
-                }
-                .layer-item-content {
-                    position: relative;
-                    height: 45px;
-                    display: block;
-                    .btn {
-                        position: absolute;
-                        top: 0;
-                        width: 30px;
-                        height: 45px;
-                        background: none;
-                        border: none;
-                        cursor: pointer;
-                        padding: 15px 0;
-                        text-align: center;
-                        margin: 0;
-                        i {
-                            margin: 0;
-                            font-size: 15px;
-                            width: 15px;
-                            height: 15px;
-                            text-align: center;
-                            line-height: 1;
-                        }
-                        &.btn-add-element {
-                            right: 30px;
-                        }
-                    }
-                    .layer-item-hidden {
-                        right: 0;
-                        padding: 12px 0;
-                    }
-                }
-            }
-            label {
-                font-weight: 100;
-                vertical-align: middle;
-                display: inline-block;
-                margin: 0;
-                &.warning {
-                    color: $red;
-                }
-            }
-            .btn-checked {
-                width: 16px;
-                height: 16px;
-                background: none;
-                border: 1px solid $second;
-                margin: 5px 10px 0 0;
-                vertical-align: top;
-                position: relative;
-                cursor: pointer;
-                display: inline-block;
-                &:hover {
-                    border: 1px solid $second-hover;
-                }
-                &[disabled="disabled"] {
-                    cursor: default;
-                    &:hover {
-                        border: 1px solid $second;
-                    }
-                }
-                &:after {
-                    content: "";
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    width: 6px;
-                    height: 6px;
-                    margin: -3px 0 0 -3px;
-                    background: $second;
-                    display: none;
-                }
-                &.checked:after {
-                    display: block;
-                }
-            }
-            .fa-exclamation-triangle {
-                margin: 4px 10px 0 0;
-                vertical-align: top;
-                position: relative;
-                cursor: pointer;
-                display: inline-block;
-                color: $red;
-                font-size: 14px;
-            }
-        }
 
-        .elements-list {
-            li {
-                span {
-                    padding: 4px 20px 3px 40px;
-                }
-            }
-            .element-item {
-                label {
-                    cursor: pointer;
-                }
-            }
-        }
-
-        .element-geometries-list {
-            margin: 0 0 0 -24px;
-            .element-geometry-item {
-                margin: 0 0 10px;
-                position: relative;
-
-            }
-            .geometry-geom {
-                display: inline-block;
-                vertical-align: top;
-                margin: 0 -24px 0 0;
-                width: 24px;
-                height: 24px;
-                background: none;
-                border: none;
-                cursor: pointer;
-                position: relative;
-                z-index: 1;
-                i {
-                    color: $first;
-                    cursor: pointer;
-                    vertical-align: top;
-                    line-height: 1.8;
-                }
-                &.empty {
-                    i {
-                        color: $red;
-                    }
-                }
-                &:hover {
-                    i {
-                        color: $first-hover;
-                    }
-                    &.empty {
-                        i {
-                            color: $red-hover;
-                        }
-                    }
-                }
-            }
-            .geometry-title {
-                display: inline-block;
-                vertical-align: top;
-                width: 100%;
-                padding: 0 24px;
-                &.empty {
-                    input {
-                        background: $light-red;
-                        border-color: $red;
-                    }
-                }
-            }
-            .btn-remove-geometry {
-                display: inline-block;
-                vertical-align: top;
-                background: none;
-                border: none;
-                margin: 0 0 0 -24px;
-                width: 24px;
-                height: 24px;
-                position: relative;
-                cursor: pointer;
-                z-index: 1;
-                i {
-                    position: relative;
-                    font-size: 10px;
-                    line-height: 2;
-                    top: auto;
-                    left: auto;
-                    vertical-align: top;
-                    color: $red;
-                }
-            }
-        }
     }
 
     &.manager {
-        .geom-data-list {
-            width: 400px;
-        }
-        span {
-            .btn-action {
-                position: absolute;
-                top: 0;
-                right: 0;
-                font-size: 12px;
-                line-height: 1;
-                height: 30px;
-                width: 30px;
-                background: $white;
-                border: none;
-                color: $gray-200;
-                cursor: pointer;
-                &.btn-show-link {
-                    right: 60px;
-                }
-                &.btn-edit {
-                    right: 30px;
-                }
-                &.btn-add-element {
-                    font-size: 16px;
-                    margin: 0 30px 0 0;
-                    &.empty {
-                        margin: 0;
-                    }
-                }
-            }
-            &:hover {
-                .btn-action {
-                    background: $gray-200;
-                    color: $gray-400;
-                    &:hover {
-                        color: $second;
-                    }
-                }
-            }
-        }
-        .single-element {
-            display: inline-block;
-            margin-top: -2px;
-            width: 295px;
-            text-align: right;
-            h3 {
-                font-size: 14px;
-                margin: 20px 0 10px;
-                padding: 0;
-                width: 100%;
-                text-align: left;
-                position: relative;
-            }
-            input {
-                border: 1px solid $gray-400;
-                width: 100%;
-                padding: 0 25px 1px 5px;
-            }
-            textarea {
-                display: block;
-                margin: 10px 0 0 0;
-                resize: none;
-                width: 100%;
-                height: 86px;
-                border: 1px solid #ced4da;
-                padding: 0 25px 0 5px;
-            }
-        }
+
+        //.single-element {
+        //    display: inline-block;
+        //    margin-top: -2px;
+        //    width: 295px;
+        //    text-align: right;
+        //    h3 {
+        //        font-size: 14px;
+        //        margin: 20px 0 10px;
+        //        padding: 0;
+        //        width: 100%;
+        //        text-align: left;
+        //        position: relative;
+        //    }
+        //    input {
+        //        border: 1px solid $gray-400;
+        //        width: 100%;
+        //        padding: 0 25px 1px 5px;
+        //    }
+        //    textarea {
+        //        display: block;
+        //        margin: 10px 0 0 0;
+        //        resize: none;
+        //        width: 100%;
+        //        height: 86px;
+        //        border: 1px solid #ced4da;
+        //        padding: 0 25px 0 5px;
+        //    }
+        //}
         .element-geometries-container {
             padding: 0 !important;
         }
@@ -686,17 +406,17 @@ footer {
 
     #mouse-position {
         position: absolute;
-        top: 10px;
-        right: 315px;
+        bottom: 10px;
+        left: 10px;
         font-size: 12px;
     }
 
     #current-zoom {
         position: absolute;
-        top: 140px;
+        top: 102px;
         left: 10px;
         font-size: 12px;
-        width: 32px;
+        width: 30px;
         text-align: center;
     }
 
@@ -724,19 +444,21 @@ footer {
             }
 
             &.ol-zoom {
-                top: 52px;
+                top: 16px;
                 left: 10px;
 
                 button, .btn {
                     background: $second;
                     color: $white;
-                    border: 1px solid $second-hover;
+                    border: none;
                     width: 32px;
                     height: 32px;
                     display: block;
                     margin: 0 0 10px;
                     cursor: pointer;
-                    @include border-radius(50%);
+                    -webkit-border-radius: 50% !important;
+                    -moz-border-radius: 50% !important;
+                    border-radius: 50% !important;
                     @include box-shadow(0 0 10px rgba(0, 0, 0, 0.1));
                     &:hover {
                         background: $second-hover;
@@ -878,92 +600,6 @@ footer {
     }
 }
 
-.manager-geom-data-container {
-    .geom-data {
-        height: calc(100vh - 56px);
-        .geom-data-list {
-            height: calc(100vh - 56px);
-        }
-        #map {
-            height: calc(100vh - 56px);
-        }
-    }
-}
-
-.open-data {
-    h1 {
-        margin: 20px 0;
-    }
-    h2 {
-        margin: 20px 0 20px;
-        font-size: 16px;
-        font-weight: 700;
-        color: $second;
-    }
-    .row {
-        &:hover {
-            & > .col {
-                background: $gray-200;
-            }
-        }
-        &.header {
-            .col {
-                background: $second;
-                color: $white;
-                vertical-align: middle;
-                padding: 20px 10px;
-            }
-            .col-sm {
-                background: $gray-300;
-                vertical-align: middle;
-                padding: 10px 5px;
-            }
-        }
-        .col {
-            @include transition(all 0.5s ease-out);
-            padding: 10px;
-            border: 1px solid $second;
-            margin: -1px 0 0 -1px;
-            position: relative;
-            p {
-                margin: 0;
-                line-height: 1.5;
-            }
-        }
-        .col-sm {
-            padding: 5px;
-            border: 1px solid $gray-300;
-            margin: -1px 0 0 -1px;
-            position: relative;
-            p {
-                margin: 0;
-                line-height: 1;
-            }
-        }
-        .col-data {
-            padding: 20px;
-        }
-    }
-    .btn-info {
-        background: none;
-        color: $second;
-        font-size: 14px;
-        text-decoration: underline;
-        border: none;
-        position: absolute;
-        bottom: 5px;
-        right: 5px;
-        cursor: pointer;
-    }
-    .element-data-container {
-        padding-bottom: 20px;
-    }
-    .alert {
-        margin: 40px 0;
-    }
-
-}
-
 .include-list {
     .checkbox {
         display: inline-block;
@@ -979,7 +615,7 @@ footer {
         margin: 0 16px 0 0;
         position: relative;
         cursor: pointer;
-        @include box-shadow(inset 2px 2px 10px 0px rgba(0,0,0,0.1));
+        @include box-shadow(inset 2px 2px 10px 0px rgba(0, 0, 0, 0.1));
         @include transition(background 0.5s ease-out);
         &:after {
             content: "";
@@ -990,7 +626,7 @@ footer {
             top: 2px;
             left: 2px;
             @include transition(left 0.5s ease-out);
-            @include box-shadow(2px 2px 4px 0px rgba(0,0,0,0.1));
+            @include box-shadow(2px 2px 4px 0px rgba(0, 0, 0, 0.1));
         }
         &:hover {
             background: $gray-200;
@@ -1007,5 +643,60 @@ footer {
                 background: $light-green;
             }
         }
+    }
+}
+
+.quillWrapper {
+    .ql-snow {
+        &.ql-toolbar {
+            padding: 0 !important;
+            border: 1px solid $gray-400 !important;
+            .ql-formats {
+                margin: 0 !important;
+            }
+
+            .ql-picker {
+                width: 26px !important;
+                height: 26px !important;
+                top: 0;
+            }
+
+            button {
+
+                width: 26px !important;
+                height: 26px !important;
+
+                svg {
+                    width: 22px !important;
+                    height: 22px !important;
+                    padding: 2px !important;
+                    right: auto !important;
+                }
+            }
+        }
+        &.ql-container {
+            border: 1px solid $gray-400 !important;
+        }
+        .ql-color-picker {
+            .ql-picker-label {
+                svg {
+                    width: 22px !important;
+                    height: 22px !important;
+                    padding: 2px !important;
+                    right: auto !important;
+                }
+            }
+            &.ql-expanded {
+                .ql-picker-options {
+                    right: 0 !important;
+                }
+            }
+        }
+    }
+    .ql-editor {
+        font-size: 14px;
+        padding: 8px;
+        line-height: 1.2;
+        background: $white;
     }
 }

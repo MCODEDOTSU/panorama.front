@@ -6,6 +6,6 @@ import LayerState from '@/store/modules/gis/layer/types';
 export default interface RootState {
     applicationName?: string;
     infomodule?: InfoModuleState | any;
-    konstructor?: ConstructorState | any;
+    managerConstructor?: ConstructorState | any;
     gisLayer?: LayerState | any;
 }

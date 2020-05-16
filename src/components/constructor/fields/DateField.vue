@@ -1,11 +1,12 @@
 <template>
     <div>
         <datepicker :id="field.tech_title" :input-class="'form-control'" v-model="resolvedDate"
-                    placeholder="Выбрать дату" :language="ru" :disabled-dates="disabledDates" ></datepicker>
+                    placeholder="Выбрать дату" :language="ru" :disabled-dates="disabledDates"></datepicker>
     </div>
 </template>
 
 <script lang="ts">
+
     import {Component, Prop, Provide, Vue} from 'vue-property-decorator';
     import Datepicker from 'vuejs-datepicker';
     import {ru} from 'vuejs-datepicker/dist/locale';

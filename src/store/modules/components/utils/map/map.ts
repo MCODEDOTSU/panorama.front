@@ -127,7 +127,7 @@ export const actions: ActionTree<MapState, RootState> = {
     },
 
     /**
-     * Удалить элемент с карты
+     * Удалить элемент с карты по ИД
      * @param payload
      */
     removeFeatureFromMap({}, payload) {

@@ -2,7 +2,7 @@
     <div class="manager-modules-container content">
 
         <h1>Справочник модулей</h1>
-        <button data-toggle="modal" data-target="#singleModuleModal" @click="unsetSingleModule" class="btn btn-info">
+        <button data-toggle="modal" data-target="#singleModuleModal" @click="administratorModuleUnsetSingle" class="btn btn-info">
             <i class="fas fa-plus-circle"></i>
             Создать новый
         </button>
@@ -18,7 +18,7 @@
                     <label class="title">{{ module.title }}</label>
                     <label class="description" v-html="module.description"></label>
                     <div class="actions">
-                        <button class="btn-info" data-toggle="modal" data-target="#singleModuleModal" @click="setSingleModule(module)">Изменить</button>
+                        <button class="btn-info" data-toggle="modal" data-target="#singleModuleModal" @click="administratorModuleSetSingle(module)">Изменить</button>
                         <button class="btn-danger"data-toggle="modal" data-target="#sureModal" @click="setSureModalContent(module)">Удалить</button>
                     </div>
                 </div>
@@ -44,7 +44,9 @@
 
     import {Component, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import ModuleState from '@/store/modules/manager/module/types';
+
+    import ModuleState from '@/store/modules/administrator/module/types';
+
     import SingleModule from '@/views/administrator/modules/SingleModule.vue';
     import SureModal from '@/components/common/SureModal.vue';
 
@@ -53,16 +55,16 @@
     })
     export default class Modules extends Vue {
 
-        @Action public managerGetModules: any;
+        @Action public administratorModuleGetAll: any;
         @Action public setSureModal: any;
-        @Action public deleteModule: any;
-        @Action public setSingleModule: any;
-        @Action public unsetSingleModule: any;
+        @Action public administratorModuleDelete: any;
+        @Action public administratorModuleSetSingle: any;
+        @Action public administratorModuleUnsetSingle: any;
 
-        @State('managerModule') public moduleState: ModuleState;
+        @State('administratorModule') public moduleState: ModuleState;
 
         public async created() {
-            await this.managerGetModules();
+            await this.administratorModuleGetAll();
         }
 
         /**
@@ -74,9 +76,9 @@
                 title: 'Удалить модуль?',
                 text: `Вы уверены, что хотите удалить модуль "${module.title}" из системы?`,
                 action: async () => {
-                    this.setSingleModule(module);
-                    await this.deleteModule();
-                    this.unsetSingleModule();
+                    this.administratorModuleSetSingle(module);
+                    await this.administratorModuleDelete();
+                    this.administratorModuleUnsetSingle();
                 },
             });
         }

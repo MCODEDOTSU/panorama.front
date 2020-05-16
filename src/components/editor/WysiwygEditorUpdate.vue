@@ -32,10 +32,8 @@
 
         @Provide()
         public toolbar: any = [
-            [{header: [1, 2, 3, 4, 5, 6, false]}],
             ['bold', 'italic', 'underline', 'strike'],
             [{align: []}],
-            ['blockquote', 'code-block'],
             [{list: 'ordered'}, {list: 'bullet'}, {list: 'check'}],
             [{indent: '-1'}, {indent: '+1'}],
             [{color: []}, {background: []}],

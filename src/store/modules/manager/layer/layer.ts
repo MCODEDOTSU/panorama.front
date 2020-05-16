@@ -52,68 +52,6 @@ export const actions: ActionTree<LayerState, RootState> = {
         }
     },
 
-    /**
-     * Создать или обновить слой
-     */
-    async updateLayer() {
-        try {
-            if (state.layer.id !== 0) {
-                const res = await axios.put(`${baseUrlAPI}manager/layer/${state.layer.id}`,
-                    Object.assign({}, state.layer, { style: JSON.stringify(state.layer.style)}));
-                SuccessNotifier.notify('Данные сохранены', `Слой "${state.layer.title}" изменен`);
-                state.layers = editUpdatedItem(state.layers, Object.assign({}, res.data, { style: JSON.parse(res.data.style) }));
-            } else {
-                const res = await axios.post(`${baseUrlAPI}manager/layer`,
-                    Object.assign({}, state.layer, { style: JSON.stringify(state.layer.style)}));
-                SuccessNotifier.notify('Данные сохранены', `Слой "${state.layer.title}" создан`);
-                state.layer = Object.assign({}, res.data, { style: JSON.parse(res.data.style) });
-                state.layers.push(state.layer);
-            }
-        } catch {
-            ErrorNotifier.notify();
-        }
-    },
-
-    /**
-     * Удалить слой
-     * @returns {Promise<void>}
-     */
-    async deleteLayer() {
-        try {
-            if (state.layer.id !== 0) {
-                const res = await axios.delete(`${baseUrlAPI}manager/layer/${state.layer.id}`);
-                SuccessNotifier.notify('Данные удалены', `Слой "${state.layer.title}" удален`);
-                state.layers = removeDeletedItem(state.layers, state.layer);
-            }
-        } catch {
-            ErrorNotifier.notify();
-        }
-    },
-
-    /**
-     * Выделить слой
-     * @param payload
-     */
-    setSingleLayer({}, payload) {
-        state.layer = Object.assign({}, state.layer, payload);
-    },
-
-    /**
-     * Отменить выделение слоя
-     */
-    unsetSingleLayer() {
-        state.layer = {
-            id: 0,
-            alias: '',
-            title: '',
-            description: '',
-            parent_id: 0,
-            module_id: 0,
-            visibility: false,
-            geometry_type: 'point',
-        };
-    },
-
 };
 
 export const managerLayer: Module<LayerState, RootState> = {

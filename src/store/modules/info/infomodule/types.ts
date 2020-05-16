@@ -1,4 +1,4 @@
-import IModule from '@/domain/entities/interfaces/IModule';
+import IModule from '@/domain/interfaces/IModule';
 
 export default interface InfoModuleState {
     infomodule: IModule;            // Модуль (например, безопаность)

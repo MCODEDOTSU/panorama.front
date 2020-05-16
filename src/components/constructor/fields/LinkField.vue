@@ -1,48 +1,64 @@
 <template>
     <div>
+
         <div>
             <input type="text" :id="field.tech_title" class="form-control" v-model="selectedElementTitle"
                    :placeholder="field.title" :name="field.title" readonly
-                   data-vv-validate-on="change|blur" v-validate="getValidateRules" :data-vv-as="'\'' + field.title + '\''"
-                   v-b-modal="`layerSelectModal-${field.tech_title}`">
-            <div class="actions"><button class="btn btn-link btn-danger" @click="clean">Очистить</button></div>
+                   data-vv-validate-on="change|blur" v-validate="getValidateRules"
+                   :data-vv-as="'\'' + field.title + '\''"
+                   data-toggle="modal" :data-target="`#layerSelectModal-${field.tech_title}`">
+            <div class="actions">
+                <button class="btn btn-link btn-danger" @click="clean">Очистить</button>
+            </div>
             <span class="value-length"></span>
             <span class="validation-error">{{ errors.first(field.title) }}</span>
         </div>
 
-        <b-modal modal-class="my-modal" :id="`layerSelectModal-${field.tech_title}`" title="Выбор ссылки на элемент" hide-footer>
-            <input type="text" class="form-control" placeholder="Начните ввод для поиска" v-model="search"/>
-            <div class="layer-items">
-                <!-- Layers -->
-                <div v-for="layer in layers" v-if="elementsFilter(layer.elements).length !== 0" class="layer-item">
-                    <h4>{{ layer.title }}</h4>
-                    <!-- Elements -->
-                    <div class="row" v-for="element in elementsFilter(layer.elements)">
-                        <div class="col-12">
-                            <button class="btn btn-link" @click="selectElement(element)">{{ element.title }}</button>
-                        </div>
+        <!-- Modal -->
+        <div class="modal fade" :id="`layerSelectModal-${field.tech_title}`" tabindex="-1" role="dialog"
+             aria-labelledby="linkFieldLayersListLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Поиск необходимого Элемента</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <!-- end Elements -->
+                    <div class="modal-body">
+                        <input type="text" class="form-control" placeholder="Начните ввод для поиска" v-model="search"/>
+                        <div class="layer-items">
+                            <!-- Layers -->
+                            <div v-for="layer in layers" v-if="elementsFilter(layer.elements).length !== 0" class="layer-item">
+                                <h4>{{ layer.title }}</h4>
+                                <!-- Elements -->
+                                <button class="btn btn-link" v-for="element in elementsFilter(layer.elements)"
+                                        @click="selectElement(element)" data-dismiss="modal">
+                                    {{ element.title }}
+                                </button>
+                                <!-- end Elements -->
+                            </div>
+                            <!-- end Layers -->
+                        </div>
+                        <div class="alert alert-info" v-if="isEmptyList">Список элементов пуст.</div>
+                    </div>
                 </div>
-                <!-- end Layers -->
             </div>
-            <div class="alert alert-info" v-if="isEmptyList() === true">Список элементов пуст.</div>
-        </b-modal>
-        
+        </div>
+
     </div>
 </template>
 
 <script lang="ts">
 
-    import {Component, Inject, Prop, Provide, Watch} from 'vue-property-decorator';
+    import {Component, Inject, Prop, Provide, Watch, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import ElementState from '@/store/modules/manager/element/types';
     import {baseUrlAPI} from '@/globals';
     import axios from 'axios';
-    import VueExtended from '@/components/VueExtended.vue';
 
     @Component
-    export default class LinkField extends VueExtended {
+    export default class LinkField extends Vue {
 
         @Action public managerGetElementById: any;
 
@@ -53,8 +69,6 @@
         @Provide() public layers = [];
 
         @Prop() private field: any;
-        @Inject('validator') private $validator: any;
-
 
         @Watch('field.value', {deep: true})
         public onChangeFieldValue() {
@@ -70,7 +84,7 @@
             const layers = this.field.options.layers.map((item) => {
                 return item.id;
             });
-            const res = await axios.post(`${baseUrlAPI}gis/layer/few`, { layers });
+            const res = await axios.post(`${baseUrlAPI}gis/layer/few`, {layers});
             this.layers = res.data;
         }
 
@@ -86,12 +100,12 @@
         }
 
         public elementsFilter(elements) {
-            return elements.filter( (item: any) => {
+            return elements.filter((item: any) => {
                 return (item.title.toLowerCase().indexOf(this.search.toLowerCase()) + 1);
             });
         }
 
-        public isEmptyList() {
+        get isEmptyList() {
             let result = true;
             this.layers.forEach((layer) => {
                 if (this.elementsFilter(layer.elements).length !== 0) {
@@ -102,7 +116,6 @@
         }
 
         public selectElement(element) {
-            this.$bvModal.hide(`layerSelectModal-${this.field.tech_title}`);
             this.field.value = element;
             this.selectedElementTitle = element.title;
         }

@@ -118,12 +118,14 @@
 
     import {Component, Vue, Watch, Provide} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import ModuleState from '@/store/modules/manager/module/types';
-    import LayerState from '@/store/modules/manager/layer/types';
-    import LayerStyleEditor from '@/components/utils/StyleEditor/LayerStyleEditor.vue';
-    import StyleEditorState from '@/store/modules/components/utils/styleEditor/types';
     import {VueEditor} from 'vue2-editor';
-    import TableConstructor from '@/views/closed/constructor/TableConstructor.vue';
+
+    import ModuleState from '@/store/modules/administrator/module/types';
+    import LayerState from '@/store/modules/administrator/layer/types';
+    import StyleEditorState from '@/store/modules/components/utils/styleEditor/types';
+
+    import LayerStyleEditor from '@/components/utils/StyleEditor/LayerStyleEditor.vue';
+    import TableConstructor from '@/views/manager/constructor/TableConstructor.vue';
 
     @Component({
         components: {LayerStyleEditor, VueEditor, TableConstructor},
@@ -131,26 +133,24 @@
     export default class SingleLayer extends Vue {
 
         @Provide() public toolbar: any = [
-            [{header: [1, 2, 3, 4, 5, 6, false]}],
             ['bold', 'italic', 'underline', 'strike'],
             [{align: []}],
-            ['blockquote', 'code-block'],
             [{list: 'ordered'}, {list: 'bullet'}, {list: 'check'}],
             [{indent: '-1'}, {indent: '+1'}],
             [{color: []}, {background: []}],
             ['clean'],
         ];
 
-        @Action public managerGetModules: any;
-        @Action public updateLayer: any;
+        @Action public administratorModuleGetAll: any;
+        @Action public administratorLayerUpdate: any;
         @Action public mapUpdateSize: any;
         @Action public setGeometryTypeByStyleEditor: any;
         @Action public setDefaultStyleByStyleEditor: any;
         @Action public getConstructorByLayer: any;
         @Action public updateConstructorTable: any;
 
-        @State('managerModule') public moduleState: ModuleState;
-        @State('managerLayer') public layerState: LayerState;
+        @State('administratorModule') public moduleState: ModuleState;
+        @State('administratorLayer') public layerState: LayerState;
         @State('styleEditor') public styleEditorState: StyleEditorState;
 
         @Watch('styleEditorState.style', {deep: true})
@@ -159,7 +159,7 @@
         }
 
         public async created() {
-            await this.managerGetModules();
+            await this.administratorModuleGetAll();
             await this.getConstructorByLayer({ layerId: this.layerState.layer.id });
         }
 
@@ -182,7 +182,7 @@
          * Обновить данные слоя
          */
         public async updateSingleLayer() {
-            await this.updateLayer();
+            await this.administratorLayerUpdate();
             this.updateConstructorTable({ layerId: this.layerState.layer.id });
         }
 

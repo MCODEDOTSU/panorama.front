@@ -1,3 +1,94 @@
+button, .btn {
+
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius: 0 !important;
+    margin: 0 0 0 20px;
+    vertical-align: middle;
+
+    &.btn-default {
+        background: $gray-200;
+        border-color: $gray-300;
+        &:hover {
+            background: $gray-300;
+        }
+    }
+
+    &.btn-primary {
+        background: $first;
+        border-color: $first-hover;
+        &:hover {
+            background: $first-hover;
+        }
+    }
+
+    &.btn-info {
+        background: $first;
+        border-color: $first-hover;
+        &:hover {
+            background: $first-hover;
+        }
+    }
+
+    &.btn-danger {
+        background: $red;
+        border-color: $red-hover;
+        &:hover {
+            background: $red-hover;
+        }
+    }
+
+    &.btn-secondary {
+        background: $gray-500;
+        border-color: $gray-600;
+        &:hover {
+            background: $gray-600;
+        }
+    }
+
+    &.btn-right {
+        float: right;
+    }
+
+    &.btn-link {
+        margin: 0 8px 0 0;
+        background: none;
+        border: none;
+        padding: 0;
+        &.btn-default {
+            color: $gray-200;
+            &:hover {
+                color: $gray-300;
+                background: none;
+            }
+        }
+        &.btn-info {
+            color: $first;
+            &:hover {
+                color: $first-hover;
+                background: none;
+            }
+        }
+        &.btn-danger {
+            color: $red;
+            &:hover {
+                color: $red-hover;
+                background: none;
+            }
+        }
+        &.btn-secondary {
+            color: $gray-500;
+            &:hover {
+                color: $gray-600;
+                background: none;
+            }
+        }
+    }
+    i {
+        margin: 0 8px 0 0;
+    }
+}
+
 .actions {
 
     text-align: right;
@@ -39,47 +130,6 @@
     }
 }
 
-.addition-information-tab {
-
-    .value-length {
-        text-align: left;
-        color: $green;
-        font-size: 12px;
-        display: inline-block;
-        width: 50%;
-        vertical-align: top;
-        margin: 0 -5px 0 0;
-    }
-
-    .validation-error {
-        text-align: right;
-        display: inline-block;
-        width: 50%;
-        font-size: 12px;
-        color: $red;
-        vertical-align: top;
-    }
-
-    .one-from-many-div,
-    .many-from-many-div {
-        margin: 0 16px 0 0;
-        display: inline-block;
-        vertical-align: top;
-        label {
-            display: inline-block;
-            vertical-align: middle;
-            margin: 0 8px 0 0;
-        }
-        input {
-            display: inline-block;
-            vertical-align: middle;
-            width: 16px;
-            height: auto;
-            margin-top: 3px;
-        }
-    }
-}
-
 header {
 
     #navbarCollapse {
@@ -106,7 +156,7 @@ header {
         }
 
         img {
-            max-height: 45px;
+            max-height: 40px;
             width: auto;
             margin: 0 8px 0 0;
         }
@@ -116,6 +166,7 @@ header {
             font-size: 10px;
             text-align: left;
             margin: 0 16px 0 0;
+            line-height: 1.3;
         }
 
         .person-name {
@@ -123,6 +174,7 @@ header {
             font-size: 10px;
             text-align: left;
             margin: 0 16px 0 0;
+            line-height: 1.3;
         }
 
         .person-post {
@@ -130,6 +182,7 @@ header {
             font-size: 10px;
             text-align: left;
             margin: 0 16px 0 0;
+            line-height: 1.3;
         }
     }
 }
@@ -164,87 +217,6 @@ header {
             padding: 56px 0 0;
             height: 100%;
             min-height: 100vh;
-        }
-    }
-
-    .btn {
-
-        @include border-radius(0);
-        margin: 0 0 0 20px;
-        vertical-align: middle;
-
-        &.btn-default {
-            background: $gray-200;
-            border-color: $gray-300;
-            &:hover {
-                background: $gray-300;
-            }
-        }
-
-        &.btn-info {
-            background: $first;
-            border-color: $first-hover;
-            &:hover {
-                background: $first-hover;
-            }
-        }
-
-        &.btn-danger {
-            background: $red;
-            border-color: $red-hover;
-            &:hover {
-                background: $red-hover;
-            }
-        }
-
-        &.btn-secondary {
-            background: $gray-500;
-            border-color: $gray-600;
-            &:hover {
-                background: $gray-600;
-            }
-        }
-
-        &.btn-right {
-            float: right;
-        }
-
-        &.btn-link {
-            margin: 0 8px 0 0;
-            background: none;
-            border: none;
-            padding: 0;
-            &.btn-default {
-                color: $gray-200;
-                &:hover {
-                    color: $gray-300;
-                    background: none;
-                }
-            }
-            &.btn-info {
-                color: $first;
-                &:hover {
-                    color: $first-hover;
-                    background: none;
-                }
-            }
-            &.btn-danger {
-                color: $red;
-                &:hover {
-                    color: $red-hover;
-                    background: none;
-                }
-            }
-            &.btn-secondary {
-                color: $gray-500;
-                &:hover {
-                    color: $gray-600;
-                    background: none;
-                }
-            }
-        }
-        i {
-            margin: 0 8px 0 0;
         }
     }
 
@@ -610,7 +582,7 @@ header {
         margin: 0 -177px 0 0;
         position: relative;
         z-index: 1;
-        border: 1px solid #ced4da;
+        border: 1px solid $gray-200;
         padding: 3px;
         @include border-radius(3px);
         @include box-sizing(border-box);
@@ -715,7 +687,7 @@ header {
     max-height: 400px;
     overflow-y: auto;
     overflow-x: hidden;
-    white-space: nowrap;
+    white-space: initial;
     margin: 10px 0 0 0;
 
     .layer-item {
@@ -727,7 +699,146 @@ header {
     }
 
     h4 {
-        margin: 10px 0;
+        margin: 16px 0 8px;
+        font-size: 16px;
+    }
+
+    button {
+        display: inline-block;
+        vertical-align: top;
+        font-size: 14px;
+        color: $black;
+        padding: 0px 8px 0px 0 !important;
+        margin: 0 8px 8px 0 !important;
+        border-right: 1px solid $gray-400;
+    }
+}
+
+.files-uploader {
+    width: 100%;
+    min-height: 200px;
+    background: $white;
+    border: 1px dashed $first;
+    position: relative;
+    padding: 15px 20px 80px;
+
+    input[type="file"] {
+        display: none;
+    }
+
+    &.drag {
+        background: $gray-200;
+    }
+
+    .add-file {
+        width: 200px;
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .add-file-info {
+        font-size: 14px;
+        color: $first;
+        font-style: italic;
+        margin: 50px;
+    }
+
+    .file-item {
+
+        padding: 5px 10px;
+        position: relative;
+
+        &:nth-child(2n) {
+            background: $gray-200;
+        }
+
+        label {
+            font-size: 14px;
+        }
+
+        &.deleted {
+            opacity: .5;
+
+            .file-title {
+                opacity: .5;
+            }
+        }
+
+        button {
+            color: $first;
+            line-height: 1;
+            vertical-align: middle;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            label {
+                line-height: 1;
+                font-size: 14px;
+                cursor: pointer;
+            }
+        }
+
+        &.error-file-item {
+            label {
+                font-size: 12px;
+                color: $red;
+            }
+        }
+    }
+
+    .file-item-extension {
+
+        display: inline-block;
+        vertical-align: top;
+        width: 25%;
+        padding: 0 8px 8px 0;
+        @include box-sizing(border-box);
+
+        .file-item-container {
+            width: 100%;
+            border: 1px solid $gray-200;
+            padding: 4px;
+            overflow: hidden;
+            text-align: right;
+            @include border-radius(3px);
+            @include box-sizing(border-box);
+        }
+
+        .image {
+            display: block;
+            background-size: cover;
+            width: 100%;
+            height: 179px;
+            overflow: hidden;
+        }
+
+        .file-title {
+            font-size: 12px;
+            text-align: left;
+            line-height: 1.4;
+            margin: 4px 0 0;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            border: none;
+            display: inline-block;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        button {
+            margin: 0;
+            padding: 0;
+
+            label {
+                margin: 0;
+                cursor: pointer;
+            }
+        }
     }
 }
 

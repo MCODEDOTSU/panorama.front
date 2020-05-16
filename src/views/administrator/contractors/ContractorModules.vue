@@ -26,8 +26,10 @@
 
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import ContractorState from '@/store/modules/manager/contractor/types';
-    import ModuleState from '@/store/modules/manager/module/types';
+
+    import ContractorState from '@/store/modules/administrator/contractor/types';
+    import ModuleState from '@/store/modules/administrator/module/types';
+
     import IncludeList from '@/components/common/IncludeList.vue';
 
     @Component({
@@ -35,26 +37,26 @@
     })
     export default class SingleContractor extends Vue {
 
-        @Action public managerGetModules: any;
+        @Action public administratorModuleGetAll: any;
         @Action public setIncludeList: any;
         @Action public setIncludeListActions: any;
-        @Action public attachContractorToModule: any;
-        @Action public detachContractorToModule: any;
+        @Action public administratorContractorAttachToModule: any;
+        @Action public administratorContractorDetachToModule: any;
 
-        @State('managerContractor') public contractorState: ContractorState;
-        @State('managerModule') public moduleState: ModuleState;
+        @State('administratorContractor') public contractorState: ContractorState;
+        @State('administratorModule') public moduleState: ModuleState;
 
         @Watch('contractorState.contractor.id')
         public async onChangeContractor() {
-            await this.managerGetModules();
+            await this.administratorModuleGetAll();
             this.setIncludeList({
                 list: this.moduleState.modules,
                 key: 'contractors',
                 parent: this.contractorState.contractor.id,
             });
             this.setIncludeListActions({
-                attach: this.attachContractorToModule,
-                detach: this.detachContractorToModule,
+                attach: this.administratorContractorAttachToModule,
+                detach: this.administratorContractorDetachToModule,
             });
         }
 

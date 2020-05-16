@@ -53,7 +53,7 @@ export const actions: ActionTree<ElementState, RootState> = {
     async managerUpdateElement({rootState}) {
         try {
             // Дополнительные данные для элемента - с использованием конструктора
-            state.element.additionalData = plainizeFields(rootState.konstructor.tableFields);
+            state.element.additionalData = plainizeFields(rootState.managerConstructor.tableFields);
             if (state.element.id !== 0) {
                 const res = await axios.put(`${baseUrlAPI}manager/element/${state.element.id}`, state.element);
                 SuccessNotifier.notify('Данные сохранены', `Элемент "${state.element.title}" изменен`);

@@ -1,3 +1,24 @@
+@media only screen and (max-width: 1200px) {
+    .files-uploader {
+        .file-item-extension {
+            .image {
+                height: 115px;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 990px) {
+    .files-uploader {
+        .file-item-extension {
+            width: 50%;
+            .image {
+                height: 136px;
+            }
+        }
+    }
+}
+
 @media only screen and (max-width: 800px) {
     .home {
         .main {

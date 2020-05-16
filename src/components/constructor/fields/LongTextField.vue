@@ -26,14 +26,11 @@
     export default class LongTextField extends Vue {
 
         @Prop() private field: any;
-        @Inject('validator') private $validator: any;
 
         @Provide()
         private toolbar: any = [
-            [{header: [1, 2, 3, 4, 5, 6, false]}],
             ['bold', 'italic', 'underline', 'strike'],
             [{align: []}],
-            ['blockquote', 'code-block'],
             [{list: 'ordered'}, {list: 'bullet'}, {list: 'check'}],
             [{indent: '-1'}, {indent: '+1'}],
             [{color: []}, {background: []}],

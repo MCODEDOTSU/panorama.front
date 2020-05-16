@@ -1,4 +1,4 @@
-import IElement from '@/domain/util/interface/map/IElement';
+import IElement from '@/domain/interfaces/IElement';
 import TableGroup from '@/domain/entities/constructor/TableGroup';
 
 export default interface ConstructorState {

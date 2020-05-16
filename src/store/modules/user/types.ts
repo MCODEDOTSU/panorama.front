@@ -1,4 +1,4 @@
-import IUser from '@/domain/entities/interfaces/IUser';
+import IUser from '@/domain/interfaces/IUser';
 
 export default interface UserState {
     user: IUser;        // Пользователь

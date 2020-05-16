@@ -20,8 +20,12 @@
                     <label class="title">{{ layer.title }}</label>
                     <label class="description" v-html="layer.description"></label>
                     <div class="actions">
-                        <button class="btn-info" data-toggle="modal" data-target="#singleLayerModal" @click="editLayer(layer)">Изменить</button>
-                        <button class="btn-danger" data-toggle="modal" data-target="#sureModal" @click="setSureModalContent(layer)">Удалить</button>
+                        <button class="btn-info" data-toggle="modal" data-target="#singleLayerModal"
+                                @click="editLayer(layer)">Изменить
+                        </button>
+                        <button class="btn-danger" data-toggle="modal" data-target="#sureModal"
+                                @click="setSureModalContent(layer)">Удалить
+                        </button>
                     </div>
                 </div>
                 <div class="col-3">
@@ -54,7 +58,9 @@
 
     import {Component, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import LayerState from '@/store/modules/manager/layer/types';
+
+    import LayerState from '@/store/modules/administrator/layer/types';
+
     import SingleLayer from '@/views/administrator/layers/SingleLayer.vue';
     import SureModal from '@/components/common/SureModal.vue';
 
@@ -63,11 +69,11 @@
     })
     export default class Layers extends Vue {
 
-        @Action public managerGetLayers: any;
+        @Action public administratorLayerGetAll: any;
         @Action public setSureModal: any;
-        @Action public deleteLayer: any;
-        @Action public setSingleLayer: any;
-        @Action public unsetSingleLayer: any;
+        @Action public administratorLayerDelete: any;
+        @Action public administratorLayerSetSingle: any;
+        @Action public administratorLayerUnsetSingle: any;
         @Action public setGeometryTypeByStyleEditor: any;
         @Action public setStyleByStyleEditor: any;
         @Action public setMapCenterDefault: any;
@@ -75,10 +81,10 @@
         @Action public getConstructorByLayer: any;
         @Action public unsetConstructorByLayer: any;
 
-        @State('managerLayer') public layerState: LayerState;
+        @State('administratorLayer') public layerState: LayerState;
 
         public async created() {
-            await this.managerGetLayers();
+            await this.administratorLayerGetAll();
         }
 
         /**
@@ -90,9 +96,9 @@
                 title: 'Удалить слой?',
                 text: `Вы уверены, что хотите удалить слой "${layer.title}" из системы?`,
                 action: async () => {
-                    this.setSingleLayer(layer);
-                    await this.deleteLayer();
-                    this.unsetSingleLayer();
+                    this.administratorLayerSetSingle(layer);
+                    await this.administratorLayerDelete();
+                    this.administratorLayerUnsetSingle();
                 },
             });
         }
@@ -102,9 +108,9 @@
          */
         public createLayer() {
 
-            this.unsetSingleLayer();
+            this.administratorLayerUnsetSingle();
             this.unsetConstructorByLayer();
-            this.setGeometryTypeByStyleEditor({ geometryType: this.layerState.layer.geometry_type });
+            this.setGeometryTypeByStyleEditor({geometryType: this.layerState.layer.geometry_type});
 
             // Сбрасываем значение стиля
             this.setDefaultStyleByStyleEditor();
@@ -121,10 +127,10 @@
 
             this.getConstructorByLayer({layerId: layer.id});
 
-            this.setSingleLayer(layer);
-            this.setGeometryTypeByStyleEditor({ geometryType: this.layerState.layer.geometry_type });
+            this.administratorLayerSetSingle(layer);
+            this.setGeometryTypeByStyleEditor({geometryType: this.layerState.layer.geometry_type});
 
-            this.setStyleByStyleEditor({ style: this.layerState.layer.style });
+            this.setStyleByStyleEditor({style: this.layerState.layer.style});
 
             // Сбрасываем значение карты
             this.setMapCenterDefault();

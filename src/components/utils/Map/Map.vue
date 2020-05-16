@@ -42,6 +42,7 @@
          * Изменили геометрию на слое
          */
         @Emit() public modifyend(e: any) {
+
             const features = e.features.getArray();
             for (const feature of features) {
                 /* Revision - номер версии объекта. Если номер изменился, значит объект обновился */
@@ -64,13 +65,17 @@
          * Изменили геометрию на слое
          */
         @Emit() public drawend(e: any) {
-            return {
+
+            const result = {
                 properties: e.feature.getProperties(),
                 geom: (new WKT()).writeFeature(e.feature, {
                     dataProjection: 'EPSG:4326',
                     featureProjection: 'EPSG:3857',
                 }),
             };
+
+            return result;
+
         }
 
         /**

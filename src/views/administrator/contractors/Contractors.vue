@@ -2,7 +2,7 @@
     <div class="manager-modules-container content">
 
         <h1>Справочник контрагентов</h1>
-        <button data-toggle="modal" data-target="#singleContractorModal" @click="unsetSingleContractor" class="btn btn-info">
+        <button data-toggle="modal" data-target="#singleContractorModal" @click="administratorContractorUnsetSingle" class="btn btn-info">
             <i class="fas fa-plus-circle"></i>
             Создать нового
         </button>
@@ -20,8 +20,8 @@
                     <label class="title">{{ contractor.name }}</label>
                     <label class="description">{{ contractor.full_name }}</label>
                     <div class="actions">
-                        <button class="btn-info" data-toggle="modal" data-target="#singleContractorModal" @click="setSingleContractor(contractor)">Изменить</button>
-                        <button class="btn-info" data-toggle="modal" data-target="#contractorModules" @click="setSingleContractor(contractor)">Доступные модули</button>
+                        <button class="btn-info" data-toggle="modal" data-target="#singleContractorModal" @click="administratorContractorSetSingle(contractor)">Изменить</button>
+                        <button class="btn-info" data-toggle="modal" data-target="#contractorModules" @click="administratorContractorSetSingle(contractor)">Доступные модули</button>
                         <button class="btn-info" @click="getContractorUsers(contractor)">Пользователи</button>
                         <button class="btn-danger"data-toggle="modal" data-target="#sureModal" @click="setSureModalContent(contractor)">Удалить</button>
                     </div>
@@ -59,7 +59,9 @@
 
     import {Component, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import ContractorState from '@/store/modules/manager/contractor/types';
+
+    import ContractorState from '@/store/modules/administrator/contractor/types';
+
     import SingleContractor from '@/views/administrator/contractors/SingleContractor.vue';
     import ContractorModule from '@/views/administrator/contractors/ContractorModules.vue';
     import SureModal from '@/components/common/SureModal.vue';
@@ -69,16 +71,16 @@
     })
     export default class Contractors extends Vue {
 
-        @Action public getContractors: any;
+        @Action public administratorContractorGetAll: any;
         @Action public setSureModal: any;
-        @Action public deleteContractor: any;
-        @Action public setSingleContractor: any;
-        @Action public unsetSingleContractor: any;
+        @Action public administratorContractorDelete: any;
+        @Action public administratorContractorSetSingle: any;
+        @Action public administratorContractorUnsetSingle: any;
 
-        @State('managerContractor') public contractorState: ContractorState;
+        @State('administratorContractor') public contractorState: ContractorState;
 
         public async created() {
-            await this.getContractors();
+            await this.administratorContractorGetAll();
         }
 
         /**
@@ -90,9 +92,9 @@
                 title: 'Удалить контрагента?',
                 text: `Вы уверены, что хотите удалить контрагента "${contractor.name}" из системы?`,
                 action: async () => {
-                    this.setSingleContractor(contractor);
-                    await this.deleteContractor();
-                    this.unsetSingleContractor();
+                    this.administratorContractorSetSingle(contractor);
+                    await this.administratorContractorDelete();
+                    this.administratorContractorUnsetSingle();
                 },
             });
         }
@@ -102,8 +104,8 @@
          * @param contractor
          */
         public getContractorUsers(contractor: any) {
-            this.setSingleContractor(contractor);
-            this.$router.push(`/manager/contractors/users/${contractor.id}`);
+            this.administratorContractorSetSingle(contractor);
+            this.$router.push(`/administrator/contractors/users/${contractor.id}`);
         }
 
     }

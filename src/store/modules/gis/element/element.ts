@@ -29,7 +29,7 @@ export const actions: ActionTree<ElementState, RootState> = {
     async updateElement({rootState}) {
         try {
             // Дополнительные данные для элемента - с использованием конструктора
-            state.element.additionalData = plainizeFields(rootState.konstructor.tableFields);
+            state.element.additionalData = plainizeFields(rootState.managerConstructor.tableFields);
             if (state.element.id !== 0) {
                 // const res = await axios.put(`${baseUrlAPI}gis/element/${state.element.id}`, {
                 //     title: state.element.title,

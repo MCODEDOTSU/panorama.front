@@ -31,7 +31,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" @click="updateModule" data-dismiss="modal">Сохранить</button>
+                    <button type="button" class="btn btn-primary" @click="administratorModuleUpdate" data-dismiss="modal">Сохранить</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                 </div>
             </div>
@@ -43,24 +43,23 @@
 
     import {Component, Vue, Provide} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import ModuleState from '@/store/modules/manager/module/types';
     import {VueEditor} from 'vue2-editor';
+
+    import ModuleState from '@/store/modules/administrator/module/types';
 
     @Component({
         components: {VueEditor},
     })
     export default class SingleModule extends Vue {
 
-        @Action public updateModule: any;
+        @Action public administratorModuleUpdate: any;
 
-        @State('managerModule') public moduleState: ModuleState;
+        @State('administratorModule') public moduleState: ModuleState;
 
         @Provide()
         public toolbar: any = [
-            [{header: [1, 2, 3, 4, 5, 6, false]}],
             ['bold', 'italic', 'underline', 'strike'],
             [{align: []}],
-            ['blockquote', 'code-block'],
             [{list: 'ordered'}, {list: 'bullet'}, {list: 'check'}],
             [{indent: '-1'}, {indent: '+1'}],
             [{color: []}, {background: []}],

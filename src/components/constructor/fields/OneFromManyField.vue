@@ -1,9 +1,9 @@
 <template>
     <div>
         <div v-for="enumValue in field.enums" class="one-from-many-div">
-            <label :for="enumValue">{{ enumValue }}</label>
             <input class="form-control" type="radio" :id="enumValue" :value="enumValue"
                    v-model="resolvedValue">
+            <label :for="enumValue">{{ enumValue }}</label>
         </div>
     </div>
 </template>

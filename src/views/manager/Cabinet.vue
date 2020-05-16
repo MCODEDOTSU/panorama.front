@@ -92,29 +92,31 @@
 
 <script lang="ts">
 
-    import {Component, Provide, Vue} from "vue-property-decorator";
-    import UserState from "@/store/modules/user/types";
-    import {Action, State} from "vuex-class";
+    import {Component, Provide, Vue} from 'vue-property-decorator';
+    import UserState from '@/store/modules/user/types';
+    import {Action, State} from 'vuex-class';
 
     @Component({
         components: {},
     })
     export default class Desktop extends Vue {
 
-        @State("user") public userState: UserState;
+        @State('user') public userState: UserState;
 
         @Action public logout: any;
 
         get resolvedRole() {
-            return this.userState.user.role === "superadmin" ? "Администратор" : "Управляющий";
+            return this.userState.user.role === 'superadmin' ? 'Администратор' : 'Управляющий';
         }
 
         get resolvedPhotoSrc() {
-            return (this.userState.user.photo === "" || this.userState.user.photo === null) ? "/images/social.png" : this.userState.user.photo;
+            return (this.userState.user.photo === '' || this.userState.user.photo === null) ?
+                '/images/social.png' : this.userState.user.photo;
         }
 
         get resolvedLogoSrc() {
-            return (this.userState.user.contractor.logo === "" || this.userState.user.contractor.logo === null) ? "/images/logo.png" : this.userState.user.contractor.logo;
+            return (this.userState.user.contractor.logo === '' || this.userState.user.contractor.logo === null) ?
+                '/images/logo.png' : this.userState.user.contractor.logo;
         }
 
         get resolvedAddress() {
@@ -122,31 +124,30 @@
             const address = this.userState.user.contractor_address;
 
             if (address === null || address === undefined) {
-                return "";
+                return '';
             }
 
-            let result = [];
+            const result = [];
 
-            if (address.index !== null && address.index !== "") {
+            if (address.index !== null && address.index !== '') {
                 result.push(address.index);
             }
 
-            if (address.city !== null && address.city !== "") {
+            if (address.city !== null && address.city !== '') {
                 result.push(address.city);
             }
 
-            if (address.street !== null && address.street !== "") {
+            if (address.street !== null && address.street !== '') {
                 result.push(address.street);
             }
 
-            if (address.build !== null && address.build !== "") {
+            if (address.build !== null && address.build !== '') {
                 result.push(address.build);
             }
 
-            return result.join(", ");
+            return result.join(', ');
 
         }
-
     }
 
 </script>

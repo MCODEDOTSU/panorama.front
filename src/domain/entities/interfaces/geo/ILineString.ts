@@ -1,4 +1,4 @@
-import IAddress from '@/domain/entities/interfaces/IAddress';
+import IAddress from '@/domain/interfaces/IAddress';
 
 export default interface ILineString {
     id: number;

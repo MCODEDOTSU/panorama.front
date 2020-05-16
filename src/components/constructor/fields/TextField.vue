@@ -20,7 +20,6 @@
     export default class TextField extends Vue {
 
         @Prop() private field: any;
-        @Inject('validator') private $validator: any;
 
         /**
          * Правила валидации

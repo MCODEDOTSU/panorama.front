@@ -20,7 +20,6 @@
     export default class NumberField extends Vue {
 
         @Prop() private field: any;
-        @Inject('validator') private $validator: any;
 
         /**
          * Правила валидации
