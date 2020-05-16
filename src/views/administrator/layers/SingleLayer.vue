@@ -113,7 +113,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary"
+                    <button type="button" class="btn btn-primary" test-tag="save"
                             @click="updateSingleLayer"
                             data-dismiss="modal">
                         Сохранить

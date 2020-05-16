@@ -2,7 +2,7 @@
     <div class="manager-modules-container content">
 
         <h1>Справочник картографических слоёв</h1>
-        <button data-toggle="modal" data-target="#singleLayerModal" @click="createLayer" class="btn btn-info">
+        <button test-tag="singleLayerModal" data-toggle="modal" data-target="#singleLayerModal" @click="createLayer" class="btn btn-info">
             <i class="fas fa-plus-circle"></i>
             Создать новый
         </button>
@@ -23,7 +23,8 @@
                         <button class="btn-info" data-toggle="modal" data-target="#singleLayerModal"
                                 @click="editLayer(layer)">Изменить
                         </button>
-                        <button class="btn-danger" data-toggle="modal" data-target="#sureModal"
+                        <button :test-tag="title.layer + `_delete`"
+                                class="btn-danger" data-toggle="modal" data-target="#sureModal"
                                 @click="setSureModalContent(layer)">Удалить
                         </button>
                     </div>

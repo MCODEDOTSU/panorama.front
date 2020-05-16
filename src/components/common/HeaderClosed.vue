@@ -27,7 +27,9 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuManagerLink"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                           v-if="userState.role === 'superadmin'">
+                           v-if="userState.role === 'superadmin'"
+                           test-tag="menu-administration"
+                        >
                             Администрирование
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuManagerLink">
@@ -35,7 +37,7 @@
                             </router-link>
                             <router-link class="nav-link dropdown-item" to="/administrator/modules" tag="a">Модули
                             </router-link>
-                            <router-link class="nav-link dropdown-item" to="/administrator/layers" tag="a">Слои</router-link>
+                            <router-link test-tag="manager-layers-link" class="nav-link dropdown-item" to="/administrator/layers" tag="a">Слои</router-link>
                         </div>
                     </li>
                 </ul>
