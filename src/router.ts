@@ -11,6 +11,7 @@ import ManagerLayers from './views/manager/layers/Layers.vue';
 import ManagerElements from './views/manager/layers/Elements.vue';
 import ManagerGis from './views/manager/gis/Gis.vue';
 import KMZParser from './views/manager/parser/KMZParser.vue';
+import XLSParser from './views/manager/parser/XLSParser.vue';
 
 // Administrator
 import AdministratorContractors from './views/administrator/contractors/Contractors.vue';
@@ -21,21 +22,16 @@ import AdministratorLayers from './views/administrator/layers/Layers.vue';
 Vue.use(Router);
 
 export default new Router({
+
     mode: 'history',
     base: process.env.BASE_URL,
     routes: [
+        {path: '/', name: 'home', component: Home, meta: {roles: []}},
+        {path: '/gis', name: 'gis', component: Gis, meta: {roles: []}},
         {
-            path: '/', name: 'home',
-            component: Home, meta: {roles: []},
-        },
-        {
-            path: '/gis', name: 'gis',
-            component: Gis, meta: {roles: []},
-        },
-        {
-            path: '/manager', name: 'manager',
-            component: Manager,
+            path: '/manager', name: 'manager', component: Manager,
             children: [
+
                 //  Administrator
                 {
                     path: '/administrator/contractors', name: 'administrator-contractors',
@@ -53,6 +49,7 @@ export default new Router({
                     path: '/administrator/layers', name: 'administrator-layers',
                     component: AdministratorLayers, meta: {roles: ['superadmin']},
                 },
+
                 // Manager
                 {
                     path: '/manager/cabinet', name: 'manager-cabinet',
@@ -74,6 +71,11 @@ export default new Router({
                     path: '/manager/parse_kmz', name: 'parse-kmz',
                     component: KMZParser, meta: {roles: ['superadmin', 'admin']},
                 },
+                {
+                    path: '/manager/parse_xls', name: 'parse-xls',
+                    component: XLSParser, meta: {roles: ['superadmin', 'admin']},
+                },
+
             ],
         },
     ],

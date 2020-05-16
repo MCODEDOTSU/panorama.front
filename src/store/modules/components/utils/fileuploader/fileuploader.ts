@@ -64,13 +64,13 @@ export const actions: ActionTree<FileUploaderState, RootState> = {
         });
     },
 
-    uploadKmlFile({state}, payload) {
+    uploadParsedFile({state}, payload) {
         const formData = new FormData();
-        formData.append('kmz', payload.fileres.files[0]);
+        formData.append(`${payload.parseType}`, payload.fileres.files[0]);
         formData.append('layerId', payload.layerId);
 
         return new Promise((resolve) => {
-            axios.post(`${baseUrlAPI}kmz/parse`, formData, {
+            axios.post(`${baseUrlAPI}${payload.parseType}/parse`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
