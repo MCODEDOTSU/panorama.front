@@ -16,7 +16,7 @@
 
     import {Vue, Component, Watch} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import StyleEditorState from '@/store/modules/components/utils/styleEditor/types';
+    import StyleEditorState from '@/store/modules/components/styleEditor/types';
     import OlMap from '@/components/utils/Map/Map.vue';
     import PointFields from './PointFields.vue';
     import LinestringFields from './LinestringFields.vue';

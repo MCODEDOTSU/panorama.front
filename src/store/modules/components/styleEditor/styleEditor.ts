@@ -1,4 +1,4 @@
-import StyleEditorState from '@/store/modules/components/utils/styleEditor/types';
+import StyleEditorState from '@/store/modules/components/styleEditor/types';
 import {ActionTree, Module} from 'vuex';
 import RootState from '@/store/types';
 import {baseUrlAPI, baseUrl} from '@/globals';

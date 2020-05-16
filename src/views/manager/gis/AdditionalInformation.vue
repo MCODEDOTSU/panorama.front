@@ -68,7 +68,7 @@
 
     import ElementState from '@/store/modules/element/types';
     import ConstructorState from '@/store/modules/constructor/types';
-    import ResolvedField from '@/views/manager/constructor/ResolvedField.vue';
+    import ResolvedField from '@/components/constructor/ResolvedField.vue';
     import {VueEditor} from 'vue2-editor';
 
     @Component({

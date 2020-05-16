@@ -93,35 +93,35 @@
                     </div>
 
                     <builder-many-from-many-field v-if="tableField.type === 'many_from_many_field'"
-                        :tableField="tableField"
+                                                  :tableField="tableField"
                     ></builder-many-from-many-field>
 
                     <builder-one-from-many-field v-if="tableField.type === 'one_from_many_field'"
-                        :table-field="tableField"
+                                                 :table-field="tableField"
                     ></builder-one-from-many-field>
 
                     <builder-doc-field v-if="tableField.type === 'doc_field'"
-                        :tableField="tableField"
+                                       :tableField="tableField"
                     ></builder-doc-field>
 
                     <builder-date-field v-if="tableField.type === 'date_field'"
-                        :tableField="tableField"
+                                        :tableField="tableField"
                     ></builder-date-field>
 
                     <builder-text-field v-if="tableField.type === 'text_field'"
-                        :tableField="tableField"
+                                        :tableField="tableField"
                     ></builder-text-field>
 
                     <builder-link-field v-if="tableField.type === 'link_field'"
-                        :tableField="tableField"
+                                        :tableField="tableField"
                     ></builder-link-field>
 
                     <builder-long-text-field v-if="tableField.type === 'long_text_field'"
-                        :tableField="tableField"
+                                             :tableField="tableField"
                     ></builder-long-text-field>
 
                     <builder-number-field v-if="tableField.type === 'number_field'"
-                        :tableField="tableField"
+                                          :tableField="tableField"
                     ></builder-number-field>
                 </div>
 
@@ -136,13 +136,13 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from 'vue-property-decorator';
+
+    import {Component, Vue} from 'vue-property-decorator';
     import TableField from '@/domain/entities/constructor/TableField';
-    import ConstructorState from '@/store/modules/constructor/types';
     import {Action, State} from 'vuex-class';
-    import TagSelector from 'vue-tag-selector';
-    import axios from 'axios';
-    import {baseUrlAPI} from '@/globals';
+
+    import ConstructorState from '@/store/modules/constructor/types';
+
     import BuilderDocField from '@/components/constructor/builder/BuilderDocField.vue';
     import BuilderManyFromManyField from '@/components/constructor/builder/BuilderManyFromManyField.vue';
     import BuilderOneFromManyField from '@/components/constructor/builder/BuilderOneFromManyField.vue';
@@ -162,10 +162,9 @@
             BuilderManyFromManyField,
             BuilderDocField,
             BuilderLinkField,
-            TagSelector,
         },
     })
-    export default class TableConstructor extends Vue {
+    export default class ResolvedField extends Vue {
 
         @Action public getConstructorByLayer: any;
 

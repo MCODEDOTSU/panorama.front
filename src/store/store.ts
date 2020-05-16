@@ -25,7 +25,7 @@ import {gisElement} from '@/store/modules/gis/element/element';
 // components
 import {sureModal} from '@/store/modules/components/common/sureModal/sureModal';
 import {includeList} from '@/store/modules/components/common/includeList/includeList';
-import {styleEditor} from '@/store/modules/components/utils/styleEditor/styleEditor';
+import {styleEditor} from '@/store/modules/components/styleEditor/styleEditor';
 import {map} from '@/store/modules/components/utils/map/map';
 import {fileuploader} from '@/store/modules/components/utils/fileuploader/fileuploader';
 

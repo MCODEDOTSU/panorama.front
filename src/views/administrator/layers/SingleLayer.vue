@@ -21,6 +21,7 @@
                         <b-tab title="Свойства" active>
 
                             <form>
+
                                 <div class="form-group">
                                     <label for="singleLayerAlias">Алиас *</label>
                                     <input type="text" id="singleLayerAlias" required
@@ -28,6 +29,7 @@
                                            placeholder="Алиас слоя"
                                            v-model="layerState.layer.alias">
                                 </div>
+
                                 <div class="form-group">
                                     <label for="singleLayerTitle">Наименование *</label>
                                     <input type="text" id="singleLayerTitle" required
@@ -35,6 +37,7 @@
                                            placeholder="Наименование слоя"
                                            v-model="layerState.layer.title">
                                 </div>
+
                                 <div class="form-group">
                                     <label for="singleLayerDescription">Описание</label>
                                     <vue-editor id="singleLayerDescription"
@@ -42,6 +45,7 @@
                                                 v-model="layerState.layer.description"
                                                 :editorToolbar="toolbar"></vue-editor>
                                 </div>
+
                                 <!--<div class="form-group">-->
                                     <!--<label for="singleLayerParentId">Родительский слой</label>-->
                                     <!--<select id="singleLayerParentId" class="form-control" v-model="layerState.layer.parent_id"-->
@@ -53,6 +57,7 @@
                                         <!--</option>-->
                                     <!--</select>-->
                                 <!--</div>-->
+
                                 <div class="form-group">
                                     <label for="singleLayerModuleId">Включить в модуль *</label>
                                     <select id="singleLayerModuleId" required
@@ -64,6 +69,7 @@
                                         </option>
                                     </select>
                                 </div>
+
                                 <div class="form-group">
                                     <label for="singleLayerVisibility">Видимость слоя *</label>
                                     <select id="singleLayerVisibility" required
@@ -73,6 +79,7 @@
                                         <option value="true" title="Отображаемый слой">Отображаемый слой</option>
                                     </select>
                                 </div>
+
                                 <div class="form-group">
                                     <label for="singleLayerGeometryType">Тип геометрии *</label>
                                     <select id="singleLayerGeometryType" required
@@ -85,17 +92,21 @@
                                         <option value="polygon">Полигональный элемент</option>
                                     </select>
                                 </div>
+
                             </form>
+
                         </b-tab>
 
                         <!-- Стиль компонента слоя -->
                         <b-tab title="Стиль" ref="style-tab" @click="resizeMap">
+
                             <layer-style-editor :geometryType="layerState.layer.geometry_type"></layer-style-editor>
+
                         </b-tab>
 
                         <!-- Форма - дополнительные поля конструктора -->
                         <b-tab title="Форма" ref="style-tab">
-                            <table-constructor></table-constructor>
+                            <resolved-field></resolved-field>
                         </b-tab>
 
                     </b-tabs>
@@ -122,13 +133,13 @@
 
     import ModuleState from '@/store/modules/administrator/module/types';
     import LayerState from '@/store/modules/administrator/layer/types';
-    import StyleEditorState from '@/store/modules/components/utils/styleEditor/types';
+    import StyleEditorState from '@/store/modules/components/styleEditor/types';
 
-    import LayerStyleEditor from '@/components/utils/StyleEditor/LayerStyleEditor.vue';
-    import TableConstructor from '@/views/manager/constructor/TableConstructor.vue';
+    import LayerStyleEditor from '@/components/styleEditor/LayerStyleEditor.vue';
+    import ResolvedField from '@/views/administrator/layers/ResolvedField.vue';
 
     @Component({
-        components: {LayerStyleEditor, VueEditor, TableConstructor},
+        components: {LayerStyleEditor, VueEditor, ResolvedField},
     })
     export default class SingleLayer extends Vue {
 

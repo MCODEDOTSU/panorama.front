@@ -12,50 +12,32 @@
         </div>
 
         <div class="form-group" v-if="styleEditorState.style.stroke">
-            <label>Цвет обводки</label>
+            <label>Цвет линии</label>
             <color-picker v-model="styleEditorState.style.stroke.color"
                           v-on:change="onChangeStrokeColor"></color-picker>
         </div>
 
-        <div class="form-group" v-if="styleEditorState.style.fill">
-            <label>Цвет заливки</label>
-            <color-picker v-model="styleEditorState.style.fill.color"
-                          v-on:change="onChangeFillColor"></color-picker>
-        </div>
-
         <div class="form-group" v-if="styleEditorState.style.stroke">
-            <label for="styleEditorPolygonStrokeOpacity">Прозрачность обводки</label>
+            <label for="styleEditorLinestringStrokeOpacity">Прозрачность линии</label>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <div class="input-group-text">%</div>
                 </div>
-                <input type="number" id="styleEditorPolygonStrokeOpacity" required class="form-control"
+                <input type="number" id="styleEditorLinestringStrokeOpacity" required class="form-control"
                        step="5" min="0" max="100"
                        v-model="styleEditorState.style.stroke.opacity"/>
             </div>
         </div>
 
         <div class="form-group" v-if="styleEditorState.style.stroke">
-            <label for="styleEditorPolygonStrokeWidth">Толщина обводки</label>
+            <label for="styleEditorLinestringStrokeWidth">Толщина линии</label>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <div class="input-group-text">px</div>
                 </div>
-                <input type="number" id="styleEditorPolygonStrokeWidth" required class="form-control"
+                <input type="number" id="styleEditorLinestringStrokeWidth" required class="form-control"
                        step="1" min="1" max="20"
                        v-model="styleEditorState.style.stroke.width"/>
-            </div>
-        </div>
-
-        <div class="form-group" v-if="styleEditorState.style.fill">
-            <label for="styleEditorPolygonFillOpacity">Прозрачность заливки</label>
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <div class="input-group-text">%</div>
-                </div>
-                <input type="number" id="styleEditorPolygonFillOpacity" required class="form-control"
-                       step="5" min="0" max="100"
-                       v-model="styleEditorState.style.fill.opacity"/>
             </div>
         </div>
 
@@ -66,7 +48,7 @@
 
     import {Component, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import StyleEditorState from '@/store/modules/components/utils/styleEditor/types';
+    import StyleEditorState from '@/store/modules/components/styleEditor/types';
     import ColorPicker from '@/components/utils/ColorPicker/ColorPicker.vue';
 
     @Component({
@@ -87,16 +69,6 @@
         public onChangeStrokeColor(color: string) {
             const style = this.styleEditorState.style;
             style.stroke.color = color;
-            this.styleEditorState.style = Object.assign({}, style);
-        }
-
-        /**
-         * Изменили значение цвета заливки
-         * @param color
-         */
-        public onChangeFillColor(color: string) {
-            const style = this.styleEditorState.style;
-            style.fill.color = color;
             this.styleEditorState.style = Object.assign({}, style);
         }
 

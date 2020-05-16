@@ -71,7 +71,7 @@
     import ConstructorState from '@/store/modules/constructor/types';
     import ElementState from '@/store/modules/manager/element/types';
     import LayerState from '@/store/modules/manager/layer/types';
-    import ResolvedField from '@/views/manager/constructor/ResolvedField.vue';
+    import ResolvedField from '@/components/constructor/ResolvedField.vue';
     import {VueEditor} from 'vue2-editor';
 
     @Component({

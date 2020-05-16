@@ -214,7 +214,7 @@
 
     import {Component, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import StyleEditorState from '@/store/modules/components/utils/styleEditor/types';
+    import StyleEditorState from '@/store/modules/components/styleEditor/types';
     import ColorPicker from '@/components/utils/ColorPicker/ColorPicker.vue';
 
     interface HTMLInputEvent extends Event {
