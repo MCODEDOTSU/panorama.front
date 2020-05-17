@@ -1,10 +1,10 @@
-import StyleEditorState from '@/store/modules/components/styleEditor/types';
 import {ActionTree, Module} from 'vuex';
 import RootState from '@/store/types';
-import {baseUrlAPI, baseUrl} from '@/globals';
 import axios from 'axios';
+import {baseUrl, baseUrlAPI} from '@/globals';
 import SuccessNotifier from '@/domain/util/notifications/SuccessNotifier';
 import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
+import StyleEditorState from '@/store/modules/administrator/styleEditor/types';
 
 /**
  * Стили "по-умолчанию"
@@ -70,7 +70,7 @@ export const actions: ActionTree<StyleEditorState, RootState> = {
      * Установить геотип (точка, линия, полигон) для редактора стилей
      * @param payload
      */
-    setGeometryTypeByStyleEditor({}, payload) {
+    styleEditorSetGeometryType({}, payload) {
         state.geometryType = payload.geometryType;
     },
 
@@ -78,7 +78,7 @@ export const actions: ActionTree<StyleEditorState, RootState> = {
      * Установить стиль (задается в json и разбирается) для редактора стилей
      * @param payload
      */
-    setStyleByStyleEditor({}, payload) {
+    styleEditorSetStyle({}, payload) {
         const style = (state.geometryType === 'point' ? defaultStyle.point : (
             state.geometryType === 'linestring' ? defaultStyle.linestring : defaultStyle.polygon
         ));
@@ -88,7 +88,7 @@ export const actions: ActionTree<StyleEditorState, RootState> = {
     /**
      * Установить стиль по-умолчанию, в зависимости от типа геоэлемента
      */
-    setDefaultStyleByStyleEditor() {
+    styleEditorSetDefaultStyle() {
         const style = (state.geometryType === 'point' ? defaultStyle.point : (
             state.geometryType === 'linestring' ? defaultStyle.linestring : defaultStyle.polygon
         ));
@@ -99,7 +99,7 @@ export const actions: ActionTree<StyleEditorState, RootState> = {
      * Загрузка иконки
      * @param payload
      */
-    async uploadIconByStyleEditor({}, payload) {
+    async styleEditorUploadIcon({}, payload) {
 
         const formData = new FormData();
         formData.append('file', payload.file);

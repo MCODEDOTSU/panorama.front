@@ -1,4 +1,4 @@
-import IStyle from '@/domain/util/interface/map/IStyle';
+import IStyle from '@/domain/interfaces/IStyle';
 import IInteraction from '@/domain/util/interface/map/IInteraction';
 
 export default interface MapState {

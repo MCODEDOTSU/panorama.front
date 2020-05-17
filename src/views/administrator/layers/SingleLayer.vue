@@ -100,7 +100,7 @@
                         <!-- Стиль компонента слоя -->
                         <b-tab title="Стиль" ref="style-tab" @click="resizeMap">
 
-                            <layer-style-editor :geometryType="layerState.layer.geometry_type"></layer-style-editor>
+                            <style-editor :geometryType="layerState.layer.geometry_type"></style-editor>
 
                         </b-tab>
 
@@ -133,13 +133,13 @@
 
     import ModuleState from '@/store/modules/administrator/module/types';
     import LayerState from '@/store/modules/administrator/layer/types';
-    import StyleEditorState from '@/store/modules/components/styleEditor/types';
+    import StyleEditorState from '@/store/modules/administrator/styleEditor/types';
 
-    import LayerStyleEditor from '@/components/styleEditor/LayerStyleEditor.vue';
-    import ResolvedField from '@/views/administrator/layers/ResolvedField.vue';
+    import StyleEditor from '@/views/administrator/layers/style/StyleEditor.vue';
+    import ResolvedField from '@/views/administrator/layers/constructor/ResolvedField.vue';
 
     @Component({
-        components: {LayerStyleEditor, VueEditor, ResolvedField},
+        components: {StyleEditor, VueEditor, ResolvedField},
     })
     export default class SingleLayer extends Vue {
 
@@ -155,10 +155,10 @@
         @Action public administratorModuleGetAll: any;
         @Action public administratorLayerUpdate: any;
         @Action public mapUpdateSize: any;
-        @Action public setGeometryTypeByStyleEditor: any;
-        @Action public setDefaultStyleByStyleEditor: any;
-        @Action public getConstructorByLayer: any;
-        @Action public updateConstructorTable: any;
+        @Action public styleEditorSetGeometryType: any;
+        @Action public styleEditorSetDefaultStyle: any;
+        @Action public administratorConstructorGetByLayer: any;
+        @Action public administratorConstructorUpdate: any;
 
         @State('administratorModule') public moduleState: ModuleState;
         @State('administratorLayer') public layerState: LayerState;
@@ -171,15 +171,15 @@
 
         public async created() {
             await this.administratorModuleGetAll();
-            await this.getConstructorByLayer({ layerId: this.layerState.layer.id });
+            await this.administratorConstructorGetByLayer({ layerId: this.layerState.layer.id });
         }
 
         /**
          * Был изменен тип геометрии компонента слоя
          */
         public geometryTypeChanged() {
-            this.setGeometryTypeByStyleEditor({ geometryType: this.layerState.layer.geometry_type });
-            this.setDefaultStyleByStyleEditor();
+            this.styleEditorSetGeometryType({ geometryType: this.layerState.layer.geometry_type });
+            this.styleEditorSetDefaultStyle();
         }
 
         /**
@@ -194,7 +194,7 @@
          */
         public async updateSingleLayer() {
             await this.administratorLayerUpdate();
-            this.updateConstructorTable({ layerId: this.layerState.layer.id });
+            this.administratorConstructorUpdate({ layerId: this.layerState.layer.id });
         }
 
     }

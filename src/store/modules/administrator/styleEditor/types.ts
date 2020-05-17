@@ -1,4 +1,4 @@
-import IStyle from '@/domain/util/interface/map/IStyle';
+import IStyle from '@/domain/interfaces/IStyle';
 
 export default interface StyleEditorState {
     geometryType: string;

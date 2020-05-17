@@ -10,9 +10,10 @@ import {administratorModule} from '@/store/modules/administrator/module/module';
 import {administratorLayer} from '@/store/modules/administrator/layer/layer';
 import {administratorContractor} from '@/store/modules/administrator/contractor/contractor';
 import {administratorUser} from '@/store/modules/administrator/user/user';
+import {administratorConstructor} from '@/store/modules/administrator/constructor/constructor';
+import {styleEditor} from '@/store/modules/administrator/styleEditor/styleEditor';
 
 // Manager
-
 
 // import {managerLayer} from '@/store/modules/manager/layer/layer';
 import {managerLayer} from '@/store/modules/layer/layer';
@@ -25,7 +26,7 @@ import {gisElement} from '@/store/modules/gis/element/element';
 // components
 import {sureModal} from '@/store/modules/components/common/sureModal/sureModal';
 import {includeList} from '@/store/modules/components/common/includeList/includeList';
-import {styleEditor} from '@/store/modules/components/styleEditor/styleEditor';
+
 import {map} from '@/store/modules/components/utils/map/map';
 import {fileuploader} from '@/store/modules/components/utils/fileuploader/fileuploader';
 
@@ -48,6 +49,7 @@ export default new Vuex.Store<RootState>({
         administratorLayer,
         administratorContractor,
         administratorUser,
+        administratorConstructor,
 
         // Manager
 

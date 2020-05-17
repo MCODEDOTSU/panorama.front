@@ -214,8 +214,8 @@
 
     import {Component, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import StyleEditorState from '@/store/modules/components/styleEditor/types';
-    import ColorPicker from '@/components/utils/ColorPicker/ColorPicker.vue';
+    import StyleEditorState from '@/store/modules/administrator/styleEditor/types';
+    import ColorPicker from '@/components/utils/colorPicker/ColorPicker.vue';
 
     interface HTMLInputEvent extends Event {
         target: HTMLInputElement & EventTarget;
@@ -231,7 +231,7 @@
         @Action public setMapStyles: any;
         @Action public setMapElements: any;
         @Action public setMapCenterDefault: any;
-        @Action public uploadIconByStyleEditor: any;
+        @Action public styleEditorUploadIcon: any;
 
         /**
          * Изменили значение цвета обводки
@@ -272,7 +272,7 @@
                 return;
             }
             const file = $fileInput.files[0];
-            this.uploadIconByStyleEditor({file});
+            this.styleEditorUploadIcon({file});
         }
 
         /**

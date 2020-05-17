@@ -65,42 +65,6 @@ export const actions: ActionTree<ConstructorState, RootState> = {
         }
     },
 
-    /***
-     * Создать или обновить таблицу
-     * @param payload
-     */
-    async updateConstructorTable({}, payload) {
-        try {
-            const plainizedFields = plainizeFields(state.tableFields);
-            if (state.isTableExists === true) {
-                const res = await axios.put(`${baseUrlAPI}constructor/${payload.layerId}`, {
-                    columns: plainizedFields,
-                });
-                SuccessNotifier.notify('Данные сохранены', `Метаданные слоя обновлены`);
-            } else {
-                const res = await axios.post(`${baseUrlAPI}constructor/${payload.layerId}`, {
-                    columns: plainizedFields,
-                });
-                state.isTableExists = true;
-                SuccessNotifier.notify('Данные сохранены', `Метаданные слоя созданы`);
-            }
-        } catch {
-            ErrorNotifier.notify();
-        }
-    },
-
-    /***
-     * Очистить конструкт для нового слоя
-     */
-    unsetConstructorByLayer() {
-        try {
-            state.isTableExists = false;
-            state.tableFields = [];
-        } catch {
-            ErrorNotifier.notify();
-        }
-    },
-
     /**
      * Получить данные для дополнительных таблиц
      * По layerId - связанная таблица с дополнительными данными

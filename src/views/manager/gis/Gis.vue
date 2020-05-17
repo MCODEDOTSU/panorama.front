@@ -26,7 +26,7 @@
 
     import {Component, Provide, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import OlMap from '@/components/utils/Map/Map.vue';
+    import OlMap from '@/components/utils/map/Map.vue';
 
     import LayerState from '@/store/modules/layer/types';
     import ElementState from '@/store/modules/element/types';

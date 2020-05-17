@@ -141,16 +141,16 @@
     import TableField from '@/domain/entities/constructor/TableField';
     import {Action, State} from 'vuex-class';
 
-    import ConstructorState from '@/store/modules/constructor/types';
+    import ConstructorState from '@/store/modules/administrator/constructor/types';
 
-    import BuilderDocField from '@/components/constructor/builder/BuilderDocField.vue';
-    import BuilderManyFromManyField from '@/components/constructor/builder/BuilderManyFromManyField.vue';
-    import BuilderOneFromManyField from '@/components/constructor/builder/BuilderOneFromManyField.vue';
-    import BuilderDateField from '@/components/constructor/builder/BuilderDateField.vue';
-    import BuilderTextField from '@/components/constructor/builder/BuilderTextField.vue';
-    import BuilderLinkField from '@/components/constructor/builder/BuilderLinkField.vue';
-    import BuilderLongTextField from '@/components/constructor/builder/BuilderLongTextField.vue';
-    import BuilderNumberField from '@/components/constructor/builder/BuilderNumberField.vue';
+    import BuilderDocField from '@/views/administrator/layers/constructor/BuilderDocField.vue';
+    import BuilderManyFromManyField from '@/views/administrator/layers/constructor/BuilderManyFromManyField.vue';
+    import BuilderOneFromManyField from '@/views/administrator/layers/constructor/BuilderOneFromManyField.vue';
+    import BuilderDateField from '@/views/administrator/layers/constructor/BuilderDateField.vue';
+    import BuilderTextField from '@/views/administrator/layers/constructor/BuilderTextField.vue';
+    import BuilderLinkField from '@/views/administrator/layers/constructor/BuilderLinkField.vue';
+    import BuilderLongTextField from '@/views/administrator/layers/constructor/BuilderLongTextField.vue';
+    import BuilderNumberField from '@/views/administrator/layers/constructor/BuilderNumberField.vue';
 
     @Component({
         components: {
@@ -166,9 +166,9 @@
     })
     export default class ResolvedField extends Vue {
 
-        @Action public getConstructorByLayer: any;
+        @Action public administratorConstructorGetByLayer: any;
 
-        @State('managerConstructor') private constructorState: ConstructorState;
+        @State('administratorConstructor') private constructorState: ConstructorState;
 
         /***
          * Добавить группу

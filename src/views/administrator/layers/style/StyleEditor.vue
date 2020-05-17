@@ -16,16 +16,18 @@
 
     import {Vue, Component, Watch} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import StyleEditorState from '@/store/modules/components/styleEditor/types';
-    import OlMap from '@/components/utils/Map/Map.vue';
-    import PointFields from './PointFields.vue';
-    import LinestringFields from './LinestringFields.vue';
-    import PolygonFields from './PolygonFields.vue';
+    import OlMap from '@/components/utils/map/Map.vue';
+
+    import StyleEditorState from '@/store/modules/administrator/styleEditor/types';
+
+    import PointFields from '@/views/administrator/layers/style/PointFields.vue';
+    import LinestringFields from '@/views/administrator/layers/style/LinestringFields.vue';
+    import PolygonFields from '@/views/administrator/layers/style/PolygonFields.vue';
 
     @Component({
         components: {LinestringFields, PointFields, PolygonFields, OlMap},
     })
-    export default class LayerStyleEditor extends Vue {
+    export default class StyleEditor extends Vue {
 
         @State('styleEditor') public styleEditorState: StyleEditorState;
 
