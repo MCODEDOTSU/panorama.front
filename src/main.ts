@@ -10,7 +10,8 @@ import $ from 'jquery';                 // typings - javascript
 
 Vue.config.productionTip = false;
 
-new Vue({
+// @ts-ignore
+window.appVue = new Vue({
     router,
     store,
     render: (h) => h(App),

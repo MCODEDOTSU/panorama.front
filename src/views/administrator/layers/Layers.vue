@@ -23,7 +23,7 @@
                         <button class="btn-info" data-toggle="modal" data-target="#singleLayerModal"
                                 @click="editLayer(layer)">Изменить
                         </button>
-                        <button :test-tag="title.layer + `_delete`"
+                        <button :test-tag="layer.title + `_delete`"
                                 class="btn-danger" data-toggle="modal" data-target="#sureModal"
                                 @click="setSureModalContent(layer)">Удалить
                         </button>
