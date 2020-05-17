@@ -26,11 +26,11 @@
 
     import {Component, Provide, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
+
+    import LayerState from '@/store/modules/manager/layer/types';
+    import ElementState from '@/store/modules/manager/element/types';
+
     import OlMap from '@/components/utils/map/Map.vue';
-
-    import LayerState from '@/store/modules/layer/types';
-    import ElementState from '@/store/modules/element/types';
-
     import LayersList from '@/views/manager/gis/LayersList.vue';
     import ElementsList from '@/views/manager/gis/ElementsList.vue';
     import SingleElement from '@/views/manager/gis/SingleElement.vue';
@@ -49,14 +49,14 @@
         @Action public addFeatureToMap: any;
 
         // Элементы
-        @Action public managerUpdateGeometry: any;
+        @Action public managerElementUpdateGeometry: any;
 
         /**
          * Изменили геометрию геообъекта
          * @param e
          */
         public onModifyend(e) {
-            this.managerUpdateGeometry({ id: e.properties.id, geometry: e.geom });
+            this.managerElementUpdateGeometry({ id: e.properties.id, geometry: e.geom });
             this.elementState.elements = this.elementState.elements.map( (element) => {
                 if (element.id === e.properties.id) {
                     element.geometry = e.geom;
@@ -72,7 +72,7 @@
 
             // Обновляем геометрию
             this.elementState.element.geometry = e.geom;
-            this.managerUpdateGeometry({ id: this.elementState.element.id, geometry: e.geom });
+            this.managerElementUpdateGeometry({ id: this.elementState.element.id, geometry: e.geom });
 
             // Меняем режим работы с картой
             this.setMapInteraction({ mode: '' });

@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import RootState from '@/store/types';
-import {infomodule} from '@/store/modules/info/infomodule/infomodule';
 import {user} from '@/store/modules/user/user';
 import createPersistedState from 'vuex-persistedstate';
 
@@ -14,10 +13,9 @@ import {administratorConstructor} from '@/store/modules/administrator/constructo
 import {styleEditor} from '@/store/modules/administrator/styleEditor/styleEditor';
 
 // Manager
-
-// import {managerLayer} from '@/store/modules/manager/layer/layer';
-import {managerLayer} from '@/store/modules/layer/layer';
-import {managerElement} from '@/store/modules/element/element';
+import {managerLayer} from '@/store/modules/manager/layer/layer';
+import {managerElement} from '@/store/modules/manager/element/element';
+import {managerConstructor} from '@/store/modules/manager/constructor/constructor';
 
 // gis
 import {gisLayer} from '@/store/modules/gis/layer/layer';
@@ -31,7 +29,7 @@ import {map} from '@/store/modules/components/utils/map/map';
 import {fileuploader} from '@/store/modules/components/utils/fileuploader/fileuploader';
 
 // constructor
-import {managerConstructor} from '@/store/modules/constructor/constructor';
+
 
 Vue.use(Vuex);
 
@@ -44,21 +42,20 @@ export default new Vuex.Store<RootState>({
     getters: {},
     modules: {
 
+        user,
+
         // Administrator
         administratorModule,
         administratorLayer,
         administratorContractor,
         administratorUser,
         administratorConstructor,
+        styleEditor,
 
         // Manager
-
-        infomodule,
-        user,
-
-        // manager
         managerLayer,
         managerElement,
+        managerConstructor,
 
         // gis
         gisLayer,
@@ -67,12 +64,9 @@ export default new Vuex.Store<RootState>({
         // components
         includeList,
         sureModal,
-        styleEditor,
         map,
         fileuploader,
 
-        // constructor
-        managerConstructor,
     },
 
     plugins: [createPersistedState({

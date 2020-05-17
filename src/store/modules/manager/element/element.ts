@@ -1,12 +1,12 @@
-import ElementState from '@/store/modules/manager/element/types';
 import {ActionTree, Module} from 'vuex';
-import SuccessNotifier from '@/domain/util/notifications/SuccessNotifier';
 import RootState from '@/store/types';
+import axios from 'axios';
 import {baseUrlAPI} from '@/globals';
 import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
+import SuccessNotifier from '@/domain/util/notifications/SuccessNotifier';
 import {editUpdatedItem, removeDeletedItem} from '@/domain/services/common/UpdateItemService';
-import axios from 'axios';
 import {plainizeFields} from '@/domain/services/common/AdditionalFieldsService';
+import ElementState from '@/store/modules/manager/element/types';
 
 export const state: ElementState = {
     element: {
@@ -14,9 +14,12 @@ export const state: ElementState = {
         layer_id: 0,
         title: '',
         description: '',
+        address_id: 0,
+        geometry: '',
         length: 0,
         area: 0,
         perimeter: 0,
+        element_next_id: 0,
     },
     elements: [],
 };
@@ -26,7 +29,7 @@ export const actions: ActionTree<ElementState, RootState> = {
     /**
      * Получить все элементы слоя
      */
-    async managerGetElements({}, payload) {
+    async managerElementGetByLayer({}, payload) {
         try {
             const res = await axios.get(`${baseUrlAPI}manager/element/layer/${payload.layerId}`);
             state.elements = res.data;
@@ -36,21 +39,9 @@ export const actions: ActionTree<ElementState, RootState> = {
     },
 
     /**
-     * Получить элемент по ИД
-     */
-    async managerGetElementById({}, payload) {
-        try {
-            const res = await axios.get(`${baseUrlAPI}manager/element/${payload.id}`);
-            state.element = Object.assign({}, res.data);
-        } catch {
-            ErrorNotifier.notify();
-        }
-    },
-
-    /**
      * Создать или обновить элемент
      */
-    async managerUpdateElement({rootState}) {
+    async managerElementUpdate({rootState}) {
         try {
             // Дополнительные данные для элемента - с использованием конструктора
             state.element.additionalData = plainizeFields(rootState.managerConstructor.tableFields);
@@ -69,10 +60,26 @@ export const actions: ActionTree<ElementState, RootState> = {
     },
 
     /**
+     * Обновить геометрию элемента
+     */
+    async managerElementUpdateGeometry({rootState}, payload) {
+        try {
+            if (payload.id !== 0) {
+                const res = await axios.put(`${baseUrlAPI}gis/geometry/${payload.id}`, {
+                    geometry: payload.geometry,
+                });
+                SuccessNotifier.notify('Данные сохранены', `Геометрия элемента обновлена`);
+            }
+        } catch {
+            ErrorNotifier.notify();
+        }
+    },
+
+    /**
      * Удалить элемент
      * @returns {Promise<void>}
      */
-    async managerDeleteElement() {
+    async managerElementDelete() {
         try {
             if (state.element.id !== 0) {
                 const res = await axios.delete(`${baseUrlAPI}manager/element/${state.element.id}`);
@@ -88,22 +95,25 @@ export const actions: ActionTree<ElementState, RootState> = {
      * Выделить элемент
      * @param payload
      */
-    managerSetSingleElement({}, payload) {
-        state.element = Object.assign({}, state.element, payload);
+    managerElementSetSingle({}, payload) {
+        state.element = Object.assign({}, state.element, payload.element );
     },
 
     /**
      * Отменить выделение элемента
      */
-    managerUnsetSingleElement({}, payload) {
+    managerElementUnsetSingle({}, payload) {
         state.element = {
             id: 0,
-            layer_id: payload.layerId ?  payload.layerId : 0,
+            layer_id: 0,
             title: '',
             description: '',
+            address_id: 0,
+            geometry: '',
             length: 0,
             area: 0,
             perimeter: 0,
+            element_next_id: 0,
         };
     },
 

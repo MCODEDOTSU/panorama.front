@@ -32,14 +32,14 @@
 
     import {Component, Prop, Vue, Provide} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import TableField from '@/domain/entities/constructor/TableField';
-    import LayerState from '@/store/modules/manager/layer/types';
+    import TableField from '@/domain/interfaces/IConstructorTableField';
+    import LayerState from '@/store/modules/administrator/layer/types';
 
     @Component
     export default class BuilderLinkField extends Vue {
 
-        @Action public managerGetLayers: any;
-        @State('managerLayer') public layerState: LayerState;
+        @Action public administratorLayerGetAll: any;
+        @State('administratorLayer') public layerState: LayerState;
 
         @Prop() private tableField: TableField;
 
@@ -53,7 +53,7 @@
         }
 
         public async created() {
-            await this.managerGetLayers();
+            await this.administratorLayerGetAll();
         }
 
         public allLayers() {

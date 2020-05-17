@@ -23,8 +23,9 @@
 </template>
 
 <script lang="ts">
+
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import TableField from '@/domain/entities/constructor/TableField';
+    import TableField from '@/domain/interfaces/IConstructorTableField';
 
     @Component
     export default class BuilderNumberField extends Vue {

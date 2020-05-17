@@ -22,8 +22,8 @@
 <script lang="ts">
 
     import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
-    import TableField from '@/domain/entities/constructor/TableField';
     import TagSelector from 'vue-tag-selector';
+    import TableField from '@/domain/interfaces/IConstructorTableField';
 
     @Component({
         components: { TagSelector },

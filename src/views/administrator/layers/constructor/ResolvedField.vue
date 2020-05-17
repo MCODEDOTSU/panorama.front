@@ -138,8 +138,8 @@
 <script lang="ts">
 
     import {Component, Vue} from 'vue-property-decorator';
-    import TableField from '@/domain/entities/constructor/TableField';
     import {Action, State} from 'vuex-class';
+    import TableField from '@/domain/interfaces/IConstructorTableField';
 
     import ConstructorState from '@/store/modules/administrator/constructor/types';
 

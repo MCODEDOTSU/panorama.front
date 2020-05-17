@@ -40,18 +40,6 @@ export const actions: ActionTree<LayerState, RootState> = {
         }
     },
 
-    // /**
-    //  * Получить слой по ИД
-    //  */
-    // async administratorLayerGetById({}, payload) {
-    //     try {
-    //         const res = await axios.get(`${baseUrlAPI}manager/layer/${payload.id}`);
-    //         state.layer = Object.assign({}, res.data, { style: JSON.parse(res.data.style) });
-    //     } catch {
-    //         ErrorNotifier.notify();
-    //     }
-    // },
-
     /**
      * Создать или обновить слой
      */

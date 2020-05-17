@@ -37,9 +37,10 @@
 </template>
 
 <script lang="ts">
+
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
     import TagSelector from 'vue-tag-selector';
-    import TableField from '@/domain/entities/constructor/TableField';
+    import TableField from '@/domain/interfaces/IConstructorTableField';
 
     @Component({
         components: { TagSelector },

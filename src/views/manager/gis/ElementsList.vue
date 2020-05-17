@@ -63,10 +63,10 @@
     import {baseUrlAPI} from '@/globals';
     import axios from 'axios';
 
-    import SureModal from '@/components/common/SureModal.vue';
+    import LayerState from '@/store/modules/manager/layer/types';
+    import ElementState from '@/store/modules/manager/element/types';
 
-    import LayerState from '@/store/modules/layer/types';
-    import ElementState from '@/store/modules/element/types';
+    import SureModal from '@/components/common/SureModal.vue';
 
     @Component({
         components: {SureModal},
@@ -77,14 +77,14 @@
         @State('managerElement') public elementState!: ElementState;
 
         // Элементы
-        @Action public managerElementGetAll: any;
-        @Action public setSingleManagerElement: any;
-        @Action public unsetSingleManagerElement: any;
-        @Action public managerUpdateElement: any;
-        @Action public deleteManagerElement: any;
+        @Action public managerElementGetByLayer: any;
+        @Action public managerElementSetSingle: any;
+        @Action public managerElementUnsetSingle: any;
+        @Action public managerElementUpdate: any;
+        @Action public managerElementDelete: any;
 
         // Слои
-        @Action public unsetSingleManagerLayer: any;
+        @Action public managerLayerUnsetSingle: any;
 
         // Карта
         @Action public addFeatureToMap: any;
@@ -102,7 +102,7 @@
 
         public async mounted() {
             localStorage.setItem('layerState.layer', JSON.stringify(this.layerState.layer));
-            await this.managerElementGetAll({layerId: this.layerState.layer.id});
+            await this.managerElementGetByLayer({layerId: this.layerState.layer.id});
         }
 
         /**
@@ -127,7 +127,7 @@
             });
 
             localStorage.removeItem('layerState.layer');
-            this.unsetSingleManagerLayer();
+            this.managerLayerUnsetSingle();
         }
 
         /**
@@ -211,10 +211,10 @@
         public async createElement() {
 
             // Очищаем singleElement (присваиваем значения по-умолчанию)
-            this.unsetSingleManagerElement({layer_id: this.layerState.layer.id});
+            this.managerElementUnsetSingle({layer_id: this.layerState.layer.id});
 
             // Сохраняем в Базу
-            await this.managerUpdateElement();
+            await this.managerElementUpdate();
 
             // Меняем режим работы карты на рисование
             this.setMapInteraction({mode: this.layerState.layer.geometry_type});
@@ -226,7 +226,7 @@
          */
         public addGeomery(i) {
             const element = Object.assign({}, this.elementState.elements[i]);
-            this.setSingleManagerElement({element});
+            this.managerElementSetSingle({element});
             if (!element.geometry) {
                 // Меняем режим работы карты на "рисование"
                 this.setMapInteraction({mode: this.layerState.layer.geometry_type});
@@ -244,7 +244,7 @@
                 this.selectElement(i);
             }
 
-            this.setSingleManagerElement({ element });
+            this.managerElementSetSingle({ element });
 
         }
 
@@ -353,7 +353,7 @@
                 action: async () => {
 
                     // Запрос на удаление элемента
-                    await this.deleteManagerElement({
+                    await this.managerElementDelete({
                         elementId: element.id,
                         elementTitle: element.title,
                     });

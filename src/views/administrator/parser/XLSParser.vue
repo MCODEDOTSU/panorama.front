@@ -1,7 +1,7 @@
 <template>
     <div class="manager-geom-data-container">
         <h4>
-            Загрузить KMZ файл
+            Загрузить XLS файл
         </h4>
 
         <div class="row">
@@ -9,7 +9,7 @@
                 <p>Выбрать файл</p>
             </div>
             <div class="col-4">
-                <p>Выбрать слой</p>
+                <p>Cлой</p>
             </div>
         </div>
 
@@ -19,11 +19,12 @@
                 <span @click="attachFile">Прикрепить</span>
             </div>
             <div class="col-4">
-                <select id="layers" required class="form-control" v-model="layer">
-                    <option v-for="layer in layerState.layers" :value="layer" :title="layer.title">
-                        {{ layer.title }}
-                    </option>
-                </select>
+                <input class="form-control" id="layer" ref="text" type="text" v-model="layer.title" disabled/>
+<!--                <select id="layers" required class="form-control" v-model="layer">-->
+<!--                    <option v-for="layer in layerState.layers" :value="layer" :title="layer.title">-->
+<!--                        {{ layer.title }}-->
+<!--                    </option>-->
+<!--                </select>-->
             </div>
         </div>
 
@@ -31,28 +32,37 @@
 </template>
 
 <script lang="ts">
+
     import {Component, Provide, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import SuccessNotifier from '@/domain/util/notifications/SuccessNotifier';
-    import LayerState from '@/store/modules/manager/layer/types';
-    import ILayer from '@/domain/entities/interfaces/ILayer';
     import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
 
+    import LayerState from '@/store/modules/administrator/layer/types';
+    import ILayer from '@/domain/interfaces/ILayer';
+
     @Component
-    export default class KMZParser extends Vue {
+    export default class XLSParser extends Vue {
 
         @Action private uploadParsedFile: any;
-        @Action private managerGetLayers: any;
+        @Action private administratorLayerGetAll: any;
 
-        @State('managerLayer') private layerState: LayerState;
+        @State('administratorLayer') private layerState: LayerState;
 
         @Provide()
         private layer: ILayer = {
-            description: '', geometry_type: '', id: null, parent_id: 0, title: '', visibility: false,
+            id: null,
+            alias: '',
+            title: '',
+            description: '',
+            parent_id: 0,
+            module_id: 0,
+            visibility: false,
+            geometry_type: '',
         };
 
         private async created() {
-            await this.managerGetLayers();
+            await this.administratorLayerGetAll();
         }
 
         private attachFile() {
@@ -68,11 +78,10 @@
             this.uploadParsedFile({
                 fileres: this.$refs.file,
                 layerId: this.layer.id,
-                parseType: 'kmz',
+                parseType: 'xls',
             }).then(() => {
                 SuccessNotifier.notify('File has been uploaded', 'It is uploaded');
             });
         }
-
     }
 </script>

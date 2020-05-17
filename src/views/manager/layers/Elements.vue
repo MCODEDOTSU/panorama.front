@@ -41,7 +41,7 @@
         </div>
         <!-- конец Список элементов -->
 
-        <single-information></single-information>
+        <single-element></single-element>
 
         <sure-modal></sure-modal>
 
@@ -51,37 +51,45 @@
 
     import {Component, Vue} from 'vue-property-decorator';
     import {Action, Mutation, State} from 'vuex-class';
-    import LayerState from '@/store/modules/manager/layer/types';
-    import ElementState from '@/store/modules/manager/element/types';
-    import SureModal from '@/components/common/SureModal.vue';
-    import ConstructorState from '@/store/modules/constructor/types';
-    import SingleInformation from '@/views/manager/layers/SingleElement.vue';
     import {lengthConverter, perimeterConverter, areaConverter} from '@/domain/services/common/Calculator';
 
+    import LayerState from '@/store/modules/manager/layer/types';
+    import ElementState from '@/store/modules/manager/element/types';
+    import ConstructorState from '@/store/modules/manager/constructor/types';
+
+    import SureModal from '@/components/common/SureModal.vue';
+    import SingleElement from '@/views/manager/layers/SingleElement.vue';
+
     @Component({
-        components: {SingleInformation, SureModal},
+        components: {SingleElement, SureModal},
     })
     export default class Elements extends Vue {
 
-        @Action public setSureModal: any;
-        @Action public getLayerById: any;
-        @Action public managerGetElements: any;
-        @Action public managerSetSingleElement: any;
-        @Action public getConstructorByLayer: any;
-        @Action public getAdditionalData: any;
-        @Action public managerUnsetSingleElement: any;
-        @Action public managerDeleteElement: any;
+        // Layer
+        @Action public managerLayerGetById: any;
 
-        @Mutation public unsetAdditionalInfoValues: any;
+        // Element
+        @Action public managerElementGetByLayer: any;
+        @Action public managerElementSetSingle: any;
+        @Action public managerElementUnsetSingle: any;
+        @Action public managerElementDelete: any;
+
+        // Constructor
+        @Action public managerConstructorGetByLayer: any;
+        @Action public managerConstructorGetAdditionalData: any;
+        @Action public managerConstructorUnsetAdditionalData: any;
+
+        // Common
+        @Action public setSureModal: any;
 
         @State('managerLayer') public layerState: LayerState;
         @State('managerElement') public elementState: ElementState;
         @State('managerConstructor') public constructorState: ConstructorState;
 
         public async created() {
-            await this.getLayerById({ id: this.$route.params.id });
-            this.managerGetElements({ layerId: this.$route.params.id });
-            await this.getConstructorByLayer({ layerId: this.$route.params.id });
+            await this.managerLayerGetById({ id: this.$route.params.id });
+            this.managerElementGetByLayer({ layerId: this.$route.params.id });
+            await this.managerConstructorGetByLayer({ layerId: this.$route.params.id });
         }
 
         /**
@@ -93,9 +101,9 @@
                 title: 'Удалить элемент?',
                 text: `Вы уверены, что хотите удалить элемент "${element.title}" из системы?`,
                 action: async () => {
-                    this.managerSetSingleElement(element);
-                    await this.managerDeleteElement();
-                    this.managerUnsetSingleElement({
+                    this.managerElementSetSingle(element);
+                    await this.managerElementDelete();
+                    this.managerElementUnsetSingle({
                         layerId: this.$route.params.id,
                     });
                 },
@@ -106,11 +114,11 @@
          * Создание нового элемента
          */
         public createElement() {
-            this.managerUnsetSingleElement({
+            this.managerElementUnsetSingle({
                 layerId: this.$route.params.id,
             });
-            this.unsetAdditionalInfoValues();
-            this.getAdditionalData({layerId: this.$route.params.id});
+            this.managerConstructorUnsetAdditionalData();
+            this.managerConstructorGetAdditionalData({layerId: this.$route.params.id});
         }
 
         /**
@@ -118,9 +126,9 @@
          * @param element
          */
         public showElementInfo(element) {
-            this.constructorState.element = element;
-            this.getAdditionalData({layerId: this.layerState.layer.id});
-            this.managerSetSingleElement(element);
+            this.constructorState.element = Object.assign({}, element);
+            this.managerConstructorGetAdditionalData({layerId: this.layerState.layer.id});
+            this.managerElementSetSingle(element);
         }
 
         public setLength(length) {

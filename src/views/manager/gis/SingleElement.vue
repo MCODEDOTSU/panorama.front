@@ -29,12 +29,12 @@
     import {Action, State} from 'vuex-class';
     import {VueEditor} from 'vue2-editor';
 
-    import AdditionalGroupTabs from './AdditonalGroupTabs.vue';
-    import AdditionalInformation from './AdditionalInformation.vue';
+    import AdditionalGroupTabs from '@/views/manager/gis/constructor/AdditonalGroupTabs.vue';
+    import AdditionalInformation from '@/views/manager/gis/constructor/AdditionalInformation.vue';
 
-    import LayerState from '@/store/modules/layer/types';
-    import ElementState from '@/store/modules/element/types';
-    import ConstructorState from '@/store/modules/constructor/types';
+    import LayerState from '@/store/modules/manager/layer/types';
+    import ElementState from '@/store/modules/manager/element/types';
+    import ConstructorState from '@/store/modules/manager/constructor/types';
     import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
 
     @Component({
@@ -48,15 +48,15 @@
 
         // Элементы
         @Action public managerElementById: any;
-        @Action public managerUpdateElement: any;
-        @Action public unsetSingleManagerElement: any;
+        @Action public managerElementUpdate: any;
+        @Action public managerElementUnsetSingle: any;
 
         // Карта
         @Action public addFeatureToMap: any;
         @Action public removeFeatureFromMap: any;
 
         // Конструктор
-        @Action public getAdditionalData: any;
+        @Action public managerConstructorGetAdditionalData: any;
 
         // TODO: this error is ignored. check if there is another possibility to get rid of this
         // @ts-ignore
@@ -65,14 +65,14 @@
         public async mounted() {
             await this.managerElementById({id: this.elementState.element.id});
             this.constructorState.element = Object.assign({}, this.elementState.element);
-            this.getAdditionalData({layerId: this.layerState.layer.id});
+            this.managerConstructorGetAdditionalData({layerId: this.layerState.layer.id});
         }
 
         /**
          * Вернуть к списку слоёв
          */
         public getElementsList() {
-            this.unsetSingleManagerElement({layer_id: this.layerState.layer.id});
+            this.managerElementUnsetSingle({layer_id: this.layerState.layer.id});
         }
 
         /**
@@ -84,7 +84,7 @@
 
                 if (validationSuccessed) {
 
-                    this.managerUpdateElement();
+                    this.managerElementUpdate();
 
                     // Перерисовываем элемент на карте
                     this.removeFeatureFromMap({ id: this.elementState.element.id });

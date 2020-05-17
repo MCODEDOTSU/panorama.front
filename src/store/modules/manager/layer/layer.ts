@@ -1,11 +1,9 @@
-import LayerState from '@/store/modules/manager/layer/types';
 import {ActionTree, Module} from 'vuex';
-import SuccessNotifier from '@/domain/util/notifications/SuccessNotifier';
 import RootState from '@/store/types';
+import axios from 'axios';
 import {baseUrlAPI} from '@/globals';
 import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
-import {editUpdatedItem, removeDeletedItem} from '@/domain/services/common/UpdateItemService';
-import axios from 'axios';
+import LayerState from '@/store/modules/manager/layer/types';
 
 export const state: LayerState = {
     layer: {
@@ -19,22 +17,22 @@ export const state: LayerState = {
         geometry_type: 'point',
     },
     layers: [],
+    styles: [],
 };
 
 export const actions: ActionTree<LayerState, RootState> = {
 
     /**
-     * Получить все слои
+     * Получить все доступные контрагенту слои слои
      */
-    async managerGetLayers() {
+    async managerLayerGetByContractor() {
         try {
-            const res = await axios.get(`${baseUrlAPI}manager/layer`);
+            const res = await axios.get(`${baseUrlAPI}manager/layer/contractor/get`);
+            state.layers = res.data;
             // Получаем стиль
-            const layers = [];
-            res.data.forEach((layer) => {
-                layers.push(Object.assign({}, layer, { style: JSON.parse(layer.style) }));
+            state.styles = res.data.map((layer) => {
+                return Object.assign({}, JSON.parse(layer.style), { id: layer.id });
             });
-            state.layers = layers;
         } catch {
             ErrorNotifier.notify();
         }
@@ -43,13 +41,37 @@ export const actions: ActionTree<LayerState, RootState> = {
     /**
      * Получить слой по ИД
      */
-    async getLayerById({}, payload) {
+    async managerLayerGetById({}, payload) {
         try {
             const res = await axios.get(`${baseUrlAPI}manager/layer/${payload.id}`);
             state.layer = Object.assign({}, res.data, { style: JSON.parse(res.data.style) });
         } catch {
             ErrorNotifier.notify();
         }
+    },
+
+    /**
+     * Выделить
+     * @param payload
+     */
+    managerLayerSetSingle({}, payload) {
+        state.layer = Object.assign({}, payload.layer);
+    },
+
+    /**
+     * Отменить выделение
+     */
+    managerLayerUnsetSingle() {
+        state.layer = {
+            id: 0,
+            alias: '',
+            title: '',
+            description: '',
+            parent_id: 0,
+            module_id: 0,
+            visibility: false,
+            geometry_type: 'point',
+        };
     },
 
 };

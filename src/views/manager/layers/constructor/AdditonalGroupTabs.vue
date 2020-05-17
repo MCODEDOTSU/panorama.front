@@ -12,9 +12,10 @@
 </template>
 
 <script lang="ts">
+
     import {Component, Vue} from 'vue-property-decorator';
     import {State} from 'vuex-class';
-    import ConstructorState from '@/store/modules/constructor/types';
+    import ConstructorState from '@/store/modules/manager/constructor/types';
 
     @Component
     export default class AdditionalGroupTabs extends Vue {

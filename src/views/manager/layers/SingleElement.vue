@@ -19,7 +19,7 @@
                 </div>
                 <div class="modal-footer">
                     <span class="validation-error" v-if="fieldsNonCompleteness" style="color: #ff0000; font-size: 10pt">Проверьте заполненность полей во всех вкладках</span>
-                    <button type="button" class="btn btn-primary" @click="validateAndUpdateElement">
+                    <button type="button" class="btn btn-primary" @click="update">
                         Сохранить
                     </button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
@@ -33,10 +33,12 @@
 
     import {Component, Vue, Provide} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import ElementState from '@/store/modules/manager/element/types';
     import {VueEditor} from 'vue2-editor';
-    import AdditionalInformation from '@/views/manager/layers/AdditionalInformation.vue';
-    import AdditionalGroupTabs from '@/views/manager/layers/AdditonalGroupTabs.vue';
+
+    import ElementState from '@/store/modules/manager/element/types';
+
+    import AdditionalGroupTabs from '@/views/manager/layers/constructor/AdditonalGroupTabs.vue';
+    import AdditionalInformation from '@/views/manager/layers/constructor/AdditionalInformation.vue';
 
     @Component({
         components: {AdditionalInformation, AdditionalGroupTabs, VueEditor},
@@ -48,17 +50,17 @@
         @Provide('validator') public $validator = this.$validator;
         // @Provide('validator') public $validator;
 
-        @Action public managerUpdateElement: any;
+        @Action public managerElementUpdate: any;
 
         @State('managerElement') public elementState: ElementState;
 
         @Provide() private fieldsNonCompleteness = false;
 
-        private validateAndUpdateElement() {
+        private update() {
             this.$validator.validateAll().then((validationSuccessed) => {
                 if (validationSuccessed) {
                     this.fieldsNonCompleteness = false;
-                    this.managerUpdateElement();
+                    this.managerElementUpdate();
                     $('#singleInformationModal').modal('hide');
                 } else {
                     this.fieldsNonCompleteness = true;

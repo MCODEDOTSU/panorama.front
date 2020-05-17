@@ -8,7 +8,7 @@
                 v-for="(layer, i) in layerState.layers" :key="layer.id">
 
                 <!-- Строка со слоем -->
-                <span class="layer-item-content" :title="`К элементам слоя ${layer.title}`" @click="setSingleManagerLayer({layer})">
+                <span class="layer-item-content" :title="`К элементам слоя ${layer.title}`" @click="managerLayerSetSingle({layer})">
 
                     <label>{{ layer.title }}</label>
 
@@ -27,7 +27,7 @@
     import {Component, Provide, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
 
-    import LayerState from '@/store/modules/layer/types';
+    import LayerState from '@/store/modules/manager/layer/types';
 
     @Component({
         components: {},
@@ -37,19 +37,19 @@
         @State('managerLayer') public layerState!: LayerState;
 
         // Слои
-        @Action public managerLayerGetAll: any;
-        @Action public setSingleManagerLayer: any;
+        @Action public managerLayerGetByContractor: any;
+        @Action public managerLayerSetSingle: any;
 
         // Карта
         @Action public setMapStyles: any;
 
         public async created() {
-            await this.managerLayerGetAll();
+            await this.managerLayerGetByContractor();
             this.setMapStyles({ styles: this.layerState.styles });
-            // Last Layer
+            // Last Selected Layer
             const layer = JSON.parse(localStorage.getItem('layerState.layer'));
             if (layer !== null) {
-                this.setSingleManagerLayer({ layer });
+                this.managerLayerSetSingle({ layer });
             }
         }
 

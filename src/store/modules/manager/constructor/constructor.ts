@@ -1,12 +1,10 @@
 import {ActionTree, Module, MutationTree} from 'vuex';
 import RootState from '@/store/types';
-import ConstructorState from '@/store/modules/constructor/types';
-import {baseUrl, baseUrlAPI} from '@/globals';
-import {plainizeFields} from '@/domain/services/common/AdditionalFieldsService';
 import axios from 'axios';
+import {baseUrlAPI} from '@/globals';
 import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
-import SuccessNotifier from '@/domain/util/notifications/SuccessNotifier';
-import TableGroup from '@/domain/entities/constructor/TableGroup';
+import IConstructorTableGroup from '@/domain/interfaces/IConstructorTableGroup';
+import ConstructorState from '@/store/modules/manager/constructor/types';
 
 export const state: ConstructorState = {
     isTableExists: false,
@@ -26,8 +24,42 @@ export const state: ConstructorState = {
     },
 };
 
-export const mutations: MutationTree<ConstructorState> = {
-    unsetAdditionalInfoValues() {
+export const actions: ActionTree<ConstructorState, RootState> = {
+
+    /***
+     * Проверить, сущетсвует ли таблица с доп. полями
+     * @param dispatch
+     * @param payload
+     */
+    async managerConstructorGetByLayer({dispatch}, payload) {
+        try {
+            const res = await axios.get(`${baseUrlAPI}constructor/${payload.layerId}`);
+            state.isTableExists = res.data.length === 0 ? false : true;
+            state.tableFields = res.data;
+        } catch {
+            ErrorNotifier.notify();
+        }
+    },
+
+    /**
+     * Получить данные для дополнительных таблиц
+     * По layerId - связанная таблица с дополнительными данными
+     * По elementId - какому элементу они принадлежат
+     */
+    async managerConstructorGetAdditionalData({}, payload) {
+        try {
+            const res = await axios.get(`${baseUrlAPI}constructor/${payload.layerId}/${state.element.id}`);
+            state.isTableExists = res.data.length === 0 ? false : true;
+            state.tableFields = resolveAdditionalData(res.data);
+        } catch {
+            ErrorNotifier.notify();
+        }
+    },
+
+    /**
+     * Очистить все дополнительные данные
+     */
+    managerConstructorUnsetAdditionalData() {
         state.element = {
             id: 0,
             layer_id: 0,
@@ -48,46 +80,13 @@ export const mutations: MutationTree<ConstructorState> = {
     },
 };
 
-export const actions: ActionTree<ConstructorState, RootState> = {
-
-    /***
-     * Проверить, сущетсвует ли таблица с доп. полями
-     * @param dispatch
-     * @param payload
-     */
-    async getConstructorByLayer({dispatch}, payload) {
-        try {
-            const res = await axios.get(`${baseUrlAPI}constructor/${payload.layerId}`);
-            state.isTableExists = res.data.length === 0 ? false : true;
-            state.tableFields = res.data;
-        } catch {
-            ErrorNotifier.notify();
-        }
-    },
-
-    /**
-     * Получить данные для дополнительных таблиц
-     * По layerId - связанная таблица с дополнительными данными
-     * По elementId - какому элементу они принадлежат
-     */
-    async getAdditionalData({}, payload) {
-        try {
-            const res = await axios.get(`${baseUrlAPI}constructor/${payload.layerId}/${state.element.id}`);
-            state.isTableExists = res.data.length === 0 ? false : true;
-            state.tableFields = resolveAdditionalData(res.data);
-        } catch {
-            ErrorNotifier.notify();
-        }
-    },
-};
-
 export const managerConstructor: Module<ConstructorState, RootState> = {
-    state, actions, mutations,
+    state, actions,
 };
 
 
-function resolveAdditionalData(tableFields: TableGroup[]) {
-    return tableFields.map((field: TableGroup) => {
+function resolveAdditionalData(tableFields: IConstructorTableGroup[]) {
+    return tableFields.map((field: IConstructorTableGroup) => {
         // TODO: Implement pattern to get rid of if code smell
         field.columns = field.columns.map((column) => {
             if (column.type === 'many_from_many_field') {

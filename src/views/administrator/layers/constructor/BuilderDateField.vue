@@ -25,9 +25,9 @@
 <script lang="ts">
 
     import {Component, Prop, Provide, Vue} from 'vue-property-decorator';
-    import TableField from '@/domain/entities/constructor/TableField';
     import {ru} from 'vuejs-datepicker/dist/locale';
     import Datepicker from 'vuejs-datepicker';
+    import TableField from '@/domain/interfaces/IConstructorTableField';
 
     @Component({
         components: { Datepicker },

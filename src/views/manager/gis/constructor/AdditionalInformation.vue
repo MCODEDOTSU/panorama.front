@@ -66,8 +66,8 @@
     import {Component, Provide, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
 
-    import ElementState from '@/store/modules/element/types';
-    import ConstructorState from '@/store/modules/constructor/types';
+    import ElementState from '@/store/modules/manager/element/types';
+    import ConstructorState from '@/store/modules/manager/constructor/types';
     import ResolvedField from '@/components/constructor/ResolvedField.vue';
     import {VueEditor} from 'vue2-editor';
 
@@ -76,7 +76,7 @@
     })
     export default class AdditionalInformation extends Vue {
 
-        @Action public getLayerById: any;
+        @Action public managerLayerGetById: any;
 
         @State('managerConstructor') public constructorState: ConstructorState;
         @State('managerElement') public elementState!: ElementState;

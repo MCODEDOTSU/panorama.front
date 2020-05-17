@@ -2,6 +2,7 @@
     <div class="tab-content" id="mainContent">
         <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="main-tab">
             <form>
+
                 <!-- Title -->
                 <div class="form-group">
                     <label for="singleInformationTitle">Наименование *</label>
@@ -24,23 +25,24 @@
                                 :editorToolbar="toolbar"></vue-editor>
                 </div>
 
-                <!-- Next Elemets -->
-                <div class="form-group" v-if="style.list && style.list.hasList">
-                    <label for="nextElementId">Следующий элемент</label>
-                    <select id="nextElementId" class="form-control" v-model="elementState.element.element_next_id">
-                        <option value="">-</option>
-                        <option v-for="next in elementState.elements" v-if="elementState.element.id !== next.id"
-                                :value="next.id" :title="next.description">
-                            {{ next.title }}
-                        </option>
-                    </select>
-                </div>
+                <!-- TODO: Функционал Связки Элементов, Пока не нужен, т.к. это можно сделать через конструктор -->
+                <!--&lt;!&ndash; Next Elemets &ndash;&gt;-->
+                <!--<div class="form-group" v-if="style.list && style.list.hasList">-->
+                    <!--<label for="nextElementId">Следующий элемент</label>-->
+                    <!--<select id="nextElementId" class="form-control" v-model="elementState.element.element_next_id">-->
+                        <!--<option value="">-</option>-->
+                        <!--<option v-for="next in elementState.elements" v-if="elementState.element.id !== next.id"-->
+                                <!--:value="next.id" :title="next.description">-->
+                            <!--{{ next.title }}-->
+                        <!--</option>-->
+                    <!--</select>-->
+                <!--</div>-->
 
-                <!-- Prev Elements -->
-                <div class="form-group" v-if="style.list && style.list.hasList && getPrevElement()">
-                    <label for="prevElementId">Предыдущий элемент</label>
-                    <input type="text" id="prevElementId" readonly class="form-control" :value="getPrevElement().title">
-                </div>
+                <!--&lt;!&ndash; Prev Elements &ndash;&gt;-->
+                <!--<div class="form-group" v-if="style.list && style.list.hasList && getPrevElement()">-->
+                    <!--<label for="prevElementId">Предыдущий элемент</label>-->
+                    <!--<input type="text" id="prevElementId" readonly class="form-control" :value="getPrevElement().title">-->
+                <!--</div>-->
 
             </form>
         </div>
@@ -68,7 +70,7 @@
 
     import {Component, Inject, Provide, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import ConstructorState from '@/store/modules/constructor/types';
+    import ConstructorState from '@/store/modules/manager/constructor/types';
     import ElementState from '@/store/modules/manager/element/types';
     import LayerState from '@/store/modules/manager/layer/types';
     import ResolvedField from '@/components/constructor/ResolvedField.vue';
@@ -79,7 +81,7 @@
     })
     export default class AdditionalInformation extends Vue {
 
-        @Action public getLayerById: any;
+        @Action public managerLayerGetById: any;
 
         @State('managerConstructor') public constructorState: ConstructorState;
         @State('managerLayer') public layerState: LayerState;
@@ -99,7 +101,7 @@
         @Inject('validator') private $validator: any;
 
         public async created() {
-            await this.getLayerById({ id: this.$route.params.id });
+            await this.managerLayerGetById({ id: this.$route.params.id });
             this.style = Object.assign({}, this.layerState.layer.style);
         }
 
