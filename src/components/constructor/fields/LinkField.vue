@@ -60,8 +60,6 @@
     @Component
     export default class LinkField extends Vue {
 
-        @Action public managerGetElementById: any;
-
         @State('managerElement') public elementState!: ElementState;
 
         @Provide() public search = '';

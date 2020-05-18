@@ -4,7 +4,7 @@
         <div class="geom-data manager">
 
             <!-- Компонент Карты -->
-            <ol-map :editor='true' v-on:modifyend='onModifyend' v-on:drawend='onDrawend'></ol-map>
+            <ol-map :editor="true" v-on:selected="onSelected" v-on:modifyend="onModifyend" v-on:drawend="onDrawend"></ol-map>
 
             <!-- Список слоев и элементов -->
             <div class="geom-data-list">
@@ -19,6 +19,8 @@
 
         </div>
 
+        <sure-modal></sure-modal>
+
     </div>
 </template>
 
@@ -26,17 +28,19 @@
 
     import {Component, Provide, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import OlMap from '@/components/utils/Map/Map.vue';
 
-    import LayerState from '@/store/modules/layer/types';
-    import ElementState from '@/store/modules/element/types';
+    import LayerState from '@/store/modules/manager/layer/types';
+    import ElementState from '@/store/modules/manager/element/types';
 
+    import OlMap from '@/components/utils/map/Map.vue';
     import LayersList from '@/views/manager/gis/LayersList.vue';
     import ElementsList from '@/views/manager/gis/ElementsList.vue';
     import SingleElement from '@/views/manager/gis/SingleElement.vue';
 
+    import SureModal from '@/components/common/SureModal.vue';
+
     @Component({
-        components: { OlMap, LayersList, ElementsList, SingleElement },
+        components: { OlMap, LayersList, ElementsList, SingleElement, SureModal },
     })
 
     export default class Gis extends Vue {
@@ -49,14 +53,22 @@
         @Action public addFeatureToMap: any;
 
         // Элементы
-        @Action public managerUpdateGeometry: any;
+        @Action public managerElementUpdateGeometry: any;
+
+        /**
+         * Кликнули по Элементу на карте
+         * @param e
+         */
+        public onSelected(e) {
+
+        }
 
         /**
          * Изменили геометрию геообъекта
          * @param e
          */
         public onModifyend(e) {
-            this.managerUpdateGeometry({ id: e.properties.id, geometry: e.geom });
+            this.managerElementUpdateGeometry({ id: e.properties.id, geometry: e.geom });
             this.elementState.elements = this.elementState.elements.map( (element) => {
                 if (element.id === e.properties.id) {
                     element.geometry = e.geom;
@@ -72,7 +84,7 @@
 
             // Обновляем геометрию
             this.elementState.element.geometry = e.geom;
-            this.managerUpdateGeometry({ id: this.elementState.element.id, geometry: e.geom });
+            this.managerElementUpdateGeometry({ id: this.elementState.element.id, geometry: e.geom });
 
             // Меняем режим работы с картой
             this.setMapInteraction({ mode: '' });

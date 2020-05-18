@@ -1,5 +1,5 @@
 <template>
-    <div class="manager-modules-container content">
+    <div class="manager-container content">
 
         <h1>Справочник картографических слоёв</h1>
         <button test-tag="singleLayerModal" data-toggle="modal" data-target="#singleLayerModal" @click="createLayer" class="btn btn-info">
@@ -24,6 +24,8 @@
                                 @click="editLayer(layer)">Изменить
                         </button>
                         <button :test-tag="layer.title + `_delete`"
+                                class="btn-danger" data-toggle="modal" data-target="#sureModal"
+                        <button :test-tag="layer.title + '_delete'"
                                 class="btn-danger" data-toggle="modal" data-target="#sureModal"
                                 @click="setSureModalContent(layer)">Удалить
                         </button>
@@ -75,12 +77,12 @@
         @Action public administratorLayerDelete: any;
         @Action public administratorLayerSetSingle: any;
         @Action public administratorLayerUnsetSingle: any;
-        @Action public setGeometryTypeByStyleEditor: any;
-        @Action public setStyleByStyleEditor: any;
+        @Action public styleEditorSetGeometryType: any;
+        @Action public styleEditorSetStyle: any;
         @Action public setMapCenterDefault: any;
-        @Action public setDefaultStyleByStyleEditor: any;
-        @Action public getConstructorByLayer: any;
-        @Action public unsetConstructorByLayer: any;
+        @Action public styleEditorSetDefaultStyle: any;
+        @Action public administratorConstructorGetByLayer: any;
+        @Action public administratorConstructorUnsetSingle: any;
 
         @State('administratorLayer') public layerState: LayerState;
 
@@ -110,11 +112,11 @@
         public createLayer() {
 
             this.administratorLayerUnsetSingle();
-            this.unsetConstructorByLayer();
-            this.setGeometryTypeByStyleEditor({geometryType: this.layerState.layer.geometry_type});
+            this.administratorConstructorUnsetSingle();
+            this.styleEditorSetGeometryType({geometryType: this.layerState.layer.geometry_type});
 
             // Сбрасываем значение стиля
-            this.setDefaultStyleByStyleEditor();
+            this.styleEditorSetDefaultStyle();
 
             // Сбрасываем значение карты
             this.setMapCenterDefault();
@@ -126,12 +128,12 @@
          */
         public editLayer(layer: any) {
 
-            this.getConstructorByLayer({layerId: layer.id});
+            this.administratorConstructorGetByLayer({layerId: layer.id});
 
             this.administratorLayerSetSingle(layer);
-            this.setGeometryTypeByStyleEditor({geometryType: this.layerState.layer.geometry_type});
+            this.styleEditorSetGeometryType({geometryType: this.layerState.layer.geometry_type});
 
-            this.setStyleByStyleEditor({style: this.layerState.layer.style});
+            this.styleEditorSetStyle({style: this.layerState.layer.style});
 
             // Сбрасываем значение карты
             this.setMapCenterDefault();

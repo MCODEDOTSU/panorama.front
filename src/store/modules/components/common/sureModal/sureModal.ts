@@ -8,7 +8,8 @@ export const state: SureModalState = {
         text: 'Вы уверены, что хотите удалить этот элемент?',
         buttonOk: 'Да, удалить',
         buttonCansel: 'Отменить',
-        action: ({}),
+        action: false,
+        actionCansel: false,
     },
 };
 
@@ -19,7 +20,14 @@ export const actions: ActionTree<SureModalState, RootState> = {
      * @param payload
      */
     setSureModal({}, payload) {
-        state.modal = Object.assign({}, state.modal, payload);
+        state.modal = Object.assign({}, {
+            title: 'Вы уверены?',
+            text: 'Вы уверены, что хотите удалить этот элемент?',
+            buttonOk: 'Да, удалить',
+            buttonCansel: 'Отменить',
+            action: false,
+            actionCansel: false,
+        }, payload);
     },
 
 };

@@ -1,4 +1,4 @@
-import IStyle from '@/domain/util/interface/map/IStyle';
+import IStyle from '@/domain/interfaces/IStyle';
 import {Style, Stroke, Fill, Circle, RegularShape, Text, Icon} from 'ol/style';
 
 /**

@@ -1,4 +1,4 @@
-import IElement from '@/domain/entities/interfaces/IElement';
+import IElement from '@/domain/interfaces/IElement';
 
 export default interface ElementState {
     element: IElement;

@@ -33,11 +33,17 @@
                             Администрирование
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuManagerLink">
-                            <router-link class="nav-link dropdown-item" to="/administrator/contractors" tag="a">Контрагенты
+                            <router-link class="nav-link dropdown-item" to="/administrator/contractors" tag="a">
+                                Контрагенты
                             </router-link>
                             <router-link class="nav-link dropdown-item" to="/administrator/modules" tag="a">Модули
                             </router-link>
-                            <router-link test-tag="manager-layers-link" class="nav-link dropdown-item" to="/administrator/layers" tag="a">Слои</router-link>
+                            <router-link test-tag="manager-layers-link" class="nav-link dropdown-item" to="/administrator/layers" tag="a">Слои
+                            </router-link>
+                            <router-link class="nav-link dropdown-item" to="/administrator/parse/kmz" tag="a">Парсинг KMZ
+                            </router-link>
+                            <router-link class="nav-link dropdown-item" to="/administrator/parse/xls" tag="a">Парсинг XLS
+                            </router-link>
                         </div>
                     </li>
                 </ul>
@@ -45,12 +51,14 @@
 
             <div class="collapse navbar-collapse" id="navbarContractor">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item" v-if="userState.user.contractor !== null && userState.user.contractor !== undefined">
+                    <li class="nav-item"
+                        v-if="userState.user.contractor !== null && userState.user.contractor !== undefined">
                         <img v-if="userState.user.contractor.logo !== '' && userState.user.contractor.logo !== null"
                              :src="userState.user.contractor.logo" class="photo"/>
                     </li>
                     <li class="nav-item">
-                        <label class="contractor-name" v-if="userState.user.contractor !== null && userState.user.contractor !== undefined">
+                        <label class="contractor-name"
+                               v-if="userState.user.contractor !== null && userState.user.contractor !== undefined">
                             {{ userState.user.contractor.name }}
                         </label>
                         <label class="person-name">

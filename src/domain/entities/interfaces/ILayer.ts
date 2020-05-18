@@ -1,5 +1,5 @@
 import IElement from './IElement';
-import IStyle from '@/domain/util/interface/map/IStyle';
+import IStyle from '@/domain/interfaces/IStyle';
 
 export default interface ILayer {
     id: number;

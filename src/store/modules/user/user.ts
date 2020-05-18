@@ -1,8 +1,8 @@
-import Router from '@/router';
 import {ActionTree, Module, MutationTree} from 'vuex';
+import RootState from '@/store/types';
 import axios from 'axios';
 import {baseUrlAPI} from '@/globals';
-import RootState from '@/store/types';
+import Router from '@/router';
 import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
 import UserState from '@/store/modules/user/types';
 

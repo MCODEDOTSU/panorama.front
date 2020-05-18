@@ -1,3 +1,5 @@
+import TableField from '@/domain/entities/constructor/TableField';
+
 export default interface IElement {
     id: number;
     layer_id: number;
@@ -10,4 +12,5 @@ export default interface IElement {
     perimeter: number;
     element_next_id: number;
     checked?: boolean;
+    additionalData?: TableField[];
 }

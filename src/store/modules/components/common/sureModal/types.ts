@@ -5,5 +5,6 @@ export default interface SureModalState {
         buttonOk: string;
         buttonCansel: string;
         action: any;
+        actionCansel: any;
     };
 }

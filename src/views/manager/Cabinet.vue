@@ -1,5 +1,5 @@
 <template>
-    <div class="manager-modules-container manager-cabinet content modal-dialog-user">
+    <div class="manager-container manager-cabinet content modal-dialog-user">
 
         <h1>Профиль пользователя</h1>
 
@@ -92,9 +92,10 @@
 
 <script lang="ts">
 
-    import {Component, Provide, Vue} from 'vue-property-decorator';
-    import UserState from '@/store/modules/user/types';
+    import {Component, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
+
+    import UserState from '@/store/modules/user/types';
 
     @Component({
         components: {},

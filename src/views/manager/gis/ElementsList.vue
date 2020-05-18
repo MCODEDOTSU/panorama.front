@@ -24,7 +24,8 @@
                          v-bind:class="{checked: element.checked}" title="Отобразить на карте"></div>
                     <i v-else @click="addGeomery(i)" class="fa fa-exclamation-triangle"></i>
 
-                    <label>{{ element.title }}</label>
+                    <label v-if="element.checked === true" @click="focusOfFeature({ id: element.id })" title="Показать элемент">{{ element.title }}</label>
+                    <label v-else @click="selectElement(i)" title="Показать элемент">{{ element.title }}</label>
 
                     <!-- Кнопка "Отобразить связанные элементы" -->
                     <button class="btn-action btn-show-link" title="Отобразить связанные элементы"
@@ -35,7 +36,7 @@
 
                     <!-- Кнопка "Редактировать" -->
                     <button class="btn-action btn-edit" title="Редактировать элемент"
-                            @click="getSingleElement(i)">
+                            @click="getSingleElement(i); focusOfFeature({ id: element.id })">
                     <i class="fa fa-pen"></i>
                     </button>
 
@@ -51,8 +52,6 @@
             </li>
         </ul>
 
-        <sure-modal></sure-modal>
-
     </div>
 </template>
 
@@ -63,28 +62,24 @@
     import {baseUrlAPI} from '@/globals';
     import axios from 'axios';
 
-    import SureModal from '@/components/common/SureModal.vue';
+    import LayerState from '@/store/modules/manager/layer/types';
+    import ElementState from '@/store/modules/manager/element/types';
 
-    import LayerState from '@/store/modules/layer/types';
-    import ElementState from '@/store/modules/element/types';
-
-    @Component({
-        components: {SureModal},
-    })
+    @Component({})
     export default class ElementsList extends Vue {
 
         @State('managerLayer') public layerState!: LayerState;
         @State('managerElement') public elementState!: ElementState;
 
         // Элементы
-        @Action public managerElementGetAll: any;
-        @Action public setSingleManagerElement: any;
-        @Action public unsetSingleManagerElement: any;
-        @Action public managerUpdateElement: any;
-        @Action public deleteManagerElement: any;
+        @Action public managerElementGetByLayer: any;
+        @Action public managerElementSetSingle: any;
+        @Action public managerElementUnsetSingle: any;
+        @Action public managerElementUpdate: any;
+        @Action public managerElementDelete: any;
 
         // Слои
-        @Action public unsetSingleManagerLayer: any;
+        @Action public managerLayerUnsetSingle: any;
 
         // Карта
         @Action public addFeatureToMap: any;
@@ -102,32 +97,17 @@
 
         public async mounted() {
             localStorage.setItem('layerState.layer', JSON.stringify(this.layerState.layer));
-            await this.managerElementGetAll({layerId: this.layerState.layer.id});
+            await this.managerElementGetByLayer({layerId: this.layerState.layer.id});
+            // Отмечаем выбраннные в прошлый раз элементы
+            this.localStorageCheckedElements();
         }
 
         /**
          * Вернуть к списку слоёв
          */
         public getLayersList() {
-
-            this.elementState.elements.forEach((element) => {
-
-                this.removeFeatureFromMap({id: element.id});
-
-                // Стираем старые линии
-                const linksList = Object.assign({}, this.linksList);
-                if (linksList[element.id]) {
-                    linksList[element.id].forEach((id) => {
-                        this.removeFeatureFromMap({id});
-                    });
-                }
-                linksList[element.id] = [];
-                this.linksList = Object.assign({}, linksList);
-
-            });
-
             localStorage.removeItem('layerState.layer');
-            this.unsetSingleManagerLayer();
+            this.managerLayerUnsetSingle();
         }
 
         /**
@@ -137,36 +117,24 @@
 
             this.checkedAll = !this.checkedAll;
 
-            this.elementState.elements = this.elementState.elements.map((element) => {
-                return Object.assign({}, element, {checked: this.checkedAll});
-            });
-
-            this.elementState.elements.forEach((element) => {
+            this.elementState.elements.forEach((element, i) => {
 
                 if (this.checkedAll === true) {
-                    this.drawElement(element);
+                    this.check(i);
+                    this.localStorageAddElement(element);
                 } else {
-                    this.removeFeatureFromMap({id: element.id});
-
-                    // Стираем старые линии
-                    const linksList = Object.assign({}, this.linksList);
-                    if (linksList[element.id]) {
-                        linksList[element.id].forEach((id) => {
-                            this.removeFeatureFromMap({id});
-                        });
-                    }
-                    linksList[element.id] = [];
-                    this.linksList = Object.assign({}, linksList);
-
+                    this.uncheck(i);
+                    this.localStorageRemoveElement(element);
                 }
 
             });
 
-            const ids = this.elementState.elements.map((element) => {
-                return element.id;
-            });
-
-            this.focusOfFeatures({ids});
+            if (this.checkedAll === true) {
+                const ids = this.elementState.elements.map((element) => {
+                    return element.id;
+                });
+                this.focusOfFeatures({ids});
+            }
 
             // this.drawElementsList();
 
@@ -179,29 +147,49 @@
         public async selectElement(i) {
 
             const checked = this.elementState.elements[i].checked === true ? false : true;
-            const element = Object.assign({}, this.elementState.elements[i], {checked});
-            this.elementState.elements.splice(i, 1, element);
+            const element = Object.assign({}, this.elementState.elements[i], { checked: true });
 
             if (checked === true) {
-                this.drawElement(element);
-                this.focusOfFeature({id: element.id});
+                this.check(i);
+                this.localStorageAddElement(element);
+                this.focusOfFeature({ id: element.id });
             } else {
-                this.removeFeatureFromMap({id: element.id});
-                this.checkedAll = false;
-
-                // Стираем старые линии
-                const linksList = Object.assign({}, this.linksList);
-                if (linksList[element.id]) {
-                    linksList[element.id].forEach((id) => {
-                        this.removeFeatureFromMap({id});
-                    });
-                }
-                linksList[element.id] = [];
-                this.linksList = Object.assign({}, linksList);
-
+                this.uncheck(i);
+                this.localStorageRemoveElement(element);
             }
 
             // this.drawElementsList();
+
+        }
+
+        /**
+         * Нарисовать и отметить элемент в списке
+         */
+        public check(i) {
+            const element = Object.assign({}, this.elementState.elements[i], { checked: true });
+            this.elementState.elements.splice(i, 1, element);
+            this.drawElement(element);
+        }
+
+        /**
+         * Стереть и снять отметку с элемента в списке
+         */
+        public uncheck(i) {
+            const element = Object.assign({}, this.elementState.elements[i], { checked: false });
+            this.elementState.elements.splice(i, 1, element);
+            this.removeFeatureFromMap({ id: element.id });
+
+            this.checkedAll = false;
+
+            // Стираем старые линии
+            const linksList = Object.assign({}, this.linksList);
+            if (linksList[element.id]) {
+                linksList[element.id].forEach((id) => {
+                    this.removeFeatureFromMap({id});
+                });
+            }
+            linksList[element.id] = [];
+            this.linksList = Object.assign({}, linksList);
 
         }
 
@@ -211,13 +199,16 @@
         public async createElement() {
 
             // Очищаем singleElement (присваиваем значения по-умолчанию)
-            this.unsetSingleManagerElement({layer_id: this.layerState.layer.id});
+            this.managerElementUnsetSingle({
+                layer_id: this.layerState.layer.id,
+            });
 
             // Сохраняем в Базу
-            await this.managerUpdateElement();
+            await this.managerElementUpdate();
 
             // Меняем режим работы карты на рисование
             this.setMapInteraction({mode: this.layerState.layer.geometry_type});
+
         }
 
         /**
@@ -226,7 +217,7 @@
          */
         public addGeomery(i) {
             const element = Object.assign({}, this.elementState.elements[i]);
-            this.setSingleManagerElement({element});
+            this.managerElementSetSingle({element});
             if (!element.geometry) {
                 // Меняем режим работы карты на "рисование"
                 this.setMapInteraction({mode: this.layerState.layer.geometry_type});
@@ -244,7 +235,7 @@
                 this.selectElement(i);
             }
 
-            this.setSingleManagerElement({ element });
+            this.managerElementSetSingle({element});
 
         }
 
@@ -353,9 +344,9 @@
                 action: async () => {
 
                     // Запрос на удаление элемента
-                    await this.deleteManagerElement({
-                        elementId: element.id,
-                        elementTitle: element.title,
+                    await this.managerElementDelete({
+                        element_id: element.id,
+                        element_title: element.title,
                     });
 
                     // Удаляем с карты
@@ -369,6 +360,51 @@
 
                 },
             });
+        }
+
+        /**
+         * Выделить Элементы из локального харнилища
+         */
+        public localStorageCheckedElements() {
+            let checkedList = JSON.parse(localStorage.getItem('elementState.checked'));
+            if (checkedList === null) {
+                return;
+            }
+            this.checkedAll = true;
+            this.elementState.elements.forEach((element, i) => {
+                if (checkedList.indexOf(element.id) !== -1) {
+                    this.check(i);
+                } else {
+                    this.checkedAll = false;
+                }
+            });
+        }
+
+        /**
+         * Добавить выделенный элемент в локальное хранилище
+         */
+        public localStorageAddElement(element) {
+            let checkedList = JSON.parse(localStorage.getItem('elementState.checked'));
+            if (checkedList === null) {
+                checkedList = [];
+            }
+            checkedList.push(element.id);
+            localStorage.setItem('elementState.checked', JSON.stringify(checkedList));
+        }
+
+        /**
+         * Удалить элемент из локального харнилища
+         */
+        public localStorageRemoveElement(element) {
+            let checkedList = JSON.parse(localStorage.getItem('elementState.checked'));
+            if (checkedList === null) {
+                checkedList = [];
+            } else {
+                checkedList = checkedList.filter((item) => {
+                    return ((element.id === item) ? false : true);
+                });
+            }
+            localStorage.setItem('elementState.checked', JSON.stringify(checkedList));
         }
 
         /**

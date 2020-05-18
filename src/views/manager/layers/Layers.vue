@@ -1,5 +1,5 @@
 <template>
-    <div class="manager-modules-container content">
+    <div class="manager-container content">
 
         <h1>Панель редактирования данных</h1>
 
@@ -9,8 +9,8 @@
                 <div class="col-7">Доступные данные</div>
                 <div class="col-5">Наименование модуля</div>
             </div>
-            <div v-for="module in moduleState.infomodules">
-                <div class="row row-body" v-for="layer in module.layers">
+            <div>
+                <div class="row row-body" v-for="layer in layerState.layers">
                     <div class="col-7">
                         <label class="title">{{ layer.title }}</label>
                         <label class="description" v-html="layer.description"></label>
@@ -20,8 +20,8 @@
                         </div>
                     </div>
                     <div class="col-5">
-                        <label class="title">{{ module.title }}</label>
-                        <label class="description" v-html="module.description"></label>
+                        <label class="title">{{ layer.module.title }}</label>
+                        <label class="description" v-html="layer.module.description"></label>
                     </div>
                 </div>
             </div>
@@ -36,20 +36,21 @@
 </template>
 
 <script lang="ts">
-    import {Component, Provide, Vue} from 'vue-property-decorator';
+    import {Component, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import InfoModuleState from '@/store/modules/info/infomodule/types';
-    import ILayer from '@/domain/entities/interfaces/ILayer';
+
+    import ILayer from '@/domain/interfaces/ILayer';
+    import LayerState from '@/store/modules/manager/layer/types';
 
     @Component
     export default class Layers extends Vue {
 
-        @Action('getModules') public getModules: any;
+        @Action('managerLayerGetByContractor') public managerLayerGetByContractor: any;
 
-        @State('infomodule') private moduleState!: InfoModuleState;
+        @State('managerLayer') private layerState!: LayerState;
 
         public created() {
-            this.getModules();
+            this.managerLayerGetByContractor();
         }
 
         public showLayer(layer: ILayer) {

@@ -57,7 +57,7 @@
     import {Action, State} from 'vuex-class';
     import LayerState from '@/store/modules/gis/layer/types';
     import ElementState from '@/store/modules/gis/element/types';
-    import OlMap from '@/components/utils/Map/Map.vue';
+    import OlMap from '@/components/utils/map/Map.vue';
     import {getGeometryTypeByGeom} from '@/domain/services/ol/FeatureService';
     import {editUpdatedItem} from '@/domain/services/common/UpdateItemService';
 
