@@ -1,31 +1,60 @@
 <template>
-    <div class="manager-geom-data-container">
-        <h4>
-            Загрузить XLS файл
-        </h4>
+    <div class="manager-container content">
 
-        <div class="row">
-            <div class="col-2">
-                <p>Выбрать файл</p>
+        <h1>Импорт XLS-файла</h1>
+
+        <div class="content">
+
+            <div class="alert alert-info">
+                Данный инструмент позволяет произвести импорт данных из файла формата .xls.
+                <hr>
+                <b>Инструмен находиться в разработке.</b>
+                <hr>
+                Правила импорта имеют строгий формат и правила:
+                <br>
+                1. Производиться импорт данных для уже созданных элементов слоя "Опоры"<br>
+                2. Поиск элемента осуществляется по наименованию и наименованию родительского элемента ("Питающий Пункт")<br>
+                3. Каждая ячейка таблицы импортируется в поле, строго соответствующее названию:<br>
+                - Данные стобца "A" - "organization_name" (Наименование организации)<br>
+                - Данные стобца "B" - "combined_title" (№ ПП)<br>
+                - Данные стобца "C" - "title" (№ опор по схеме)<br>
+                - Данные стобца "E" - "address" (Адрес расположения)<br>
+                - Данные стобца "F" - "allocation_type" (Вид размещения)<br>
+                - Данные стобца "G" - "places_for_nodes_quantity" (Количество мест на опоре под узлы креплений для данного вида размещений, шт.)<br>
+                - Данные стобца "H" - "allocations_quantity" (Количество размещений данного вида на опоре, шт.)<br>
+                - Данные стобца "I" - "transfered_places_quantity" (Количество переданных мест на опоре (узлов креплений), шт. Всего)<br>
+                - Данные стобца "J" - "transfered_places_quantity_before_2018" (Количество переданных мест на опоре (узлов креплений), шт. В том числе по договорам заключенным до 01.01.2018)<br>
+                - Данные стобца "K" - "transfered_places_quantity_after_2019" (Количество переданных мест на опоре (узлов креплений), шт. В том числе по договорам заключенным после 01.01.2019)<br>
+                - Данные стобца "L" - "status" (Статус)<br>
+                - Данные стобца "M" - "changes_impl_month" (Месяц внесения изменений в договор)
             </div>
-            <div class="col-4">
-                <p>Cлой</p>
-            </div>
+
         </div>
 
-        <div class="row">
-            <div class="col-2">
-                <input id="file" hidden ref="file" type="file" @change="processFile()"/>
-                <span @click="attachFile">Прикрепить</span>
-            </div>
-            <div class="col-4">
-                <input class="form-control" id="layer" ref="text" type="text" v-model="layer.title" disabled/>
-<!--                <select id="layers" required class="form-control" v-model="layer">-->
-<!--                    <option v-for="layer in layerState.layers" :value="layer" :title="layer.title">-->
-<!--                        {{ layer.title }}-->
-<!--                    </option>-->
-<!--                </select>-->
-            </div>
+        <div class="step">
+            <h2>Шаг 1. Выберите файл для импорта</h2>
+            <button @click="$refs.file.click()" class="btn btn-info">
+                <i class="fas fa-plus-circle"></i>
+                Выбрать файл
+            </button>
+            <input id="file" hidden ref="file" type="file" @change="selectFile()" accept=".xls, .xlsx" />
+        </div>
+
+        <div class="step" v-if="fileName !== ''">
+            <h2>Шаг 2. Выберите слой, в элементы которого необходимо загрузить данные</h2>
+            <select id="layers" required class="form-control" v-model="layer">
+                <option v-for="layer in resolveLayers" :value="layer" :title="layer.title">
+                    {{ layer.title }}
+                </option>
+            </select>
+        </div>
+
+        <div class="step" v-if="layer.id !== 0">
+            <h2>Шаг 3. Запустите импорт</h2>
+            <button @click="start()" class="btn btn-info">
+                <i class="fa fa-play"></i>
+                Запустить импорт
+            </button>
         </div>
 
     </div>
@@ -45,15 +74,15 @@
     export default class XLSParser extends Vue {
 
         @Action private uploadParsedFile: any;
-        @Action private administratorLayerGetAll: any;
+        @Action private administratorLayerGetByType: any;
 
         @State('administratorLayer') private layerState: LayerState;
 
         @Provide()
         private layer: ILayer = {
-            id: null,
+            id: 0,
             alias: '',
-            title: '',
+            title: 'Опоры',
             description: '',
             parent_id: 0,
             module_id: 0,
@@ -61,26 +90,39 @@
             geometry_type: '',
         };
 
+        @Provide() private fileName = '';
+
         private async created() {
-            await this.administratorLayerGetAll();
+            await this.administratorLayerGetByType({ type: 'point' });
         }
 
-        private attachFile() {
-            document.getElementById('file').click();
+        /***
+         * Выбрать файл
+         */
+        private selectFile() {
+            const $fileInput: HTMLInputElement = (this.$refs.file as HTMLInputElement);
+            this.fileName = $fileInput.files[0].name;
         }
 
-        private processFile() {
-            if (this.layer.id === null) {
-                ErrorNotifier.notifyWithCustomMessage('Выберите слой');
-                return;
-            }
-
+        /***
+         * Запустить импорт
+         */
+        private start() {
             this.uploadParsedFile({
                 fileres: this.$refs.file,
                 layerId: this.layer.id,
                 parseType: 'xls',
             }).then(() => {
-                SuccessNotifier.notify('File has been uploaded', 'It is uploaded');
+                SuccessNotifier.notify('Импорт завершен', 'Данные файла были успешно выгружены в систему');
+            });
+        }
+
+        /***
+         * Фильтрация слоёв
+         */
+        private get resolveLayers() {
+            return this.layerState.layers.filter((layer: ILayer) => {
+                return (layer.title === 'Опоры' ? true : false);
             });
         }
     }

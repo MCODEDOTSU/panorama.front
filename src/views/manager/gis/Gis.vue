@@ -4,7 +4,7 @@
         <div class="geom-data manager">
 
             <!-- Компонент Карты -->
-            <ol-map :editor='true' v-on:modifyend='onModifyend' v-on:drawend='onDrawend'></ol-map>
+            <ol-map :editor="true" v-on:selected="onSelected" v-on:modifyend="onModifyend" v-on:drawend="onDrawend"></ol-map>
 
             <!-- Список слоев и элементов -->
             <div class="geom-data-list">
@@ -18,6 +18,8 @@
             </div>
 
         </div>
+
+        <sure-modal></sure-modal>
 
     </div>
 </template>
@@ -35,8 +37,10 @@
     import ElementsList from '@/views/manager/gis/ElementsList.vue';
     import SingleElement from '@/views/manager/gis/SingleElement.vue';
 
+    import SureModal from '@/components/common/SureModal.vue';
+
     @Component({
-        components: { OlMap, LayersList, ElementsList, SingleElement },
+        components: { OlMap, LayersList, ElementsList, SingleElement, SureModal },
     })
 
     export default class Gis extends Vue {
@@ -50,6 +54,14 @@
 
         // Элементы
         @Action public managerElementUpdateGeometry: any;
+
+        /**
+         * Кликнули по Элементу на карте
+         * @param e
+         */
+        public onSelected(e) {
+
+        }
 
         /**
          * Изменили геометрию геообъекта

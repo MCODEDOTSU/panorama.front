@@ -41,6 +41,18 @@ export const actions: ActionTree<LayerState, RootState> = {
     },
 
     /**
+     * Получить все слои
+     */
+    async administratorLayerGetByType({}, payload) {
+        try {
+            const res = await axios.get(`${baseUrlAPI}manager/layer/type/${payload.type}`);
+            state.layers = res.data;
+        } catch {
+            ErrorNotifier.notify();
+        }
+    },
+
+    /**
      * Создать или обновить слой
      */
     async administratorLayerUpdate() {

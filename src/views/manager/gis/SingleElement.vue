@@ -1,13 +1,18 @@
 <template>
     <div class="single-element" ref="single-element">
         <h2>
-            <div title="Вернуться к списку элементов" class="btn" @click="getElementsList()">
+
+            <div v-if="isChanged"  title="Вернуться к списку элементов" class="btn" @click="setSureModalContent()"
+                 data-toggle="modal" data-target="#sureModal">
+                <i class="fa fa-angle-left"></i>
+            </div>
+            <div v-else title="Вернуться к списку элементов" class="btn" @click="getElementsList()">
                 <i class="fa fa-angle-left"></i>
             </div>
 
             {{ elementState.element.title }}
 
-            <div class="btn btn-action btn-update-element"
+            <div v-if="isChanged" class="btn btn-action btn-update-element"
                  title="Сохранить элемент" @click="update()">
                 <i class="fa fa-floppy-o"></i>
             </div>
@@ -19,13 +24,12 @@
             <additional-information ref="tabs"></additional-information>
         </div>
 
-
     </div>
 </template>
 
 <script lang="ts">
 
-    import {Component, Provide, Vue} from 'vue-property-decorator';
+    import {Component, Provide, Vue, Watch} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import {VueEditor} from 'vue2-editor';
 
@@ -38,7 +42,7 @@
     import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
 
     @Component({
-        components: {AdditionalGroupTabs, AdditionalInformation},
+        components: { AdditionalGroupTabs, AdditionalInformation },
     })
     export default class SingleInformation extends Vue {
 
@@ -58,27 +62,60 @@
         // Конструктор
         @Action public managerConstructorGetAdditionalData: any;
 
+        // Common
+        @Action public setSureModal: any;
+
         // TODO: this error is ignored. check if there is another possibility to get rid of this
         // @ts-ignore
         @Provide('validator') public $validator = this.$validator;
+        @Provide() public isChanged = false;
+
+        /***
+         * Отслеживаем, были ли внесены изменения
+         */
+        @Watch('elementState.element', {deep: true})
+        public onChangeElement() {
+            this.isChanged = true;
+        }
 
         public async mounted() {
             await this.managerElementById({id: this.elementState.element.id});
             this.constructorState.element = Object.assign({}, this.elementState.element);
             this.managerConstructorGetAdditionalData({layerId: this.layerState.layer.id});
+            this.isChanged = false;
         }
 
         /**
-         * Вернуть к списку слоёв
+         * Вернуть к списку элементов
          */
         public getElementsList() {
-            this.managerElementUnsetSingle({layer_id: this.layerState.layer.id});
+            this.managerElementUnsetSingle({
+                layer_id: this.layerState.layer.id,
+            });
+        }
+
+        /**
+         * Показать уведомление о несохраненных данных
+         */
+        public setSureModalContent() {
+            this.setSureModal({
+                title: 'Сохранить изменения?',
+                text: `Сохранить изменения элемента "${this.elementState.element.title}"?`,
+                buttonOk: 'Сохранить и закрыть',
+                buttonCansel: 'Выйти без сохранения',
+                action: async () => {
+                    this.update(true);
+                },
+                actionCansel: async () => {
+                    this.getElementsList();
+                },
+            });
         }
 
         /**
          * Проверить карточку Элемента и сохранить
          */
-        private update() {
+        private update(isClose = false) {
 
             this.$validator.validateAll().then((validationSuccessed) => {
 
@@ -104,6 +141,12 @@
                             revision: 3,
                         },
                     });
+
+                    if (isClose === true) {
+                        this.getElementsList();
+                    }
+
+                    this.isChanged = false;
 
                 } else {
 

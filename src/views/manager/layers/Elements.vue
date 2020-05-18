@@ -1,5 +1,5 @@
 <template>
-    <div class="manager manager-modules-container content">
+    <div class="manager manager-container content">
 
         <h1>Редактор открытых данных слоя "{{ layerState.layer.title }}"</h1>
 
@@ -101,10 +101,10 @@
                 title: 'Удалить элемент?',
                 text: `Вы уверены, что хотите удалить элемент "${element.title}" из системы?`,
                 action: async () => {
-                    this.managerElementSetSingle(element);
-                    await this.managerElementDelete();
-                    this.managerElementUnsetSingle({
-                        layerId: this.$route.params.id,
+                    // Запрос на удаление элемента
+                    await this.managerElementDelete({
+                        element_id: element.id,
+                        element_title: element.title,
                     });
                 },
             });
@@ -115,7 +115,7 @@
          */
         public createElement() {
             this.managerElementUnsetSingle({
-                layerId: this.$route.params.id,
+                layer_id: this.$route.params.id,
             });
             this.managerConstructorUnsetAdditionalData();
             this.managerConstructorGetAdditionalData({layerId: this.$route.params.id});

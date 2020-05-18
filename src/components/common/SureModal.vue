@@ -13,8 +13,8 @@
                     <p>{{ sureModalState.modal.text }}</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" @click="sureModalState.modal.action">{{ sureModalState.modal.buttonOk }}</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ sureModalState.modal.buttonCansel }}</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" @click="ok()">{{ sureModalState.modal.buttonOk }}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" @click="cansel()">{{ sureModalState.modal.buttonCansel }}</button>
                 </div>
             </div>
         </div>
@@ -29,6 +29,20 @@
 
     @Component({ })
     export default class SureModal extends Vue {
+
         @State('sureModal') public sureModalState: SureModalState;
+
+        public ok() {
+            if (this.sureModalState.modal.action !== false) {
+                this.sureModalState.modal.action();
+            }
+        }
+
+        public cansel() {
+            if (this.sureModalState.modal.actionCansel !== false) {
+                this.sureModalState.modal.actionCansel();
+            }
+        }
+
     }
 </script>

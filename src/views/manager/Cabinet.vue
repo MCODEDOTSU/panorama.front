@@ -1,5 +1,5 @@
 <template>
-    <div class="manager-modules-container manager-cabinet content modal-dialog-user">
+    <div class="manager-container manager-cabinet content modal-dialog-user">
 
         <h1>Профиль пользователя</h1>
 

@@ -1,30 +1,42 @@
 <template>
-    <div class="manager-geom-data-container">
-        <h4>
-            Загрузить KMZ файл
-        </h4>
+    <div class="manager-container">
 
-        <div class="row">
-            <div class="col-2">
-                <p>Выбрать файл</p>
-            </div>
-            <div class="col-4">
-                <p>Выбрать слой</p>
-            </div>
-        </div>
+        <h1>Импорт KMZ-файла</h1>
 
-        <div class="row">
-            <div class="col-2">
-                <input id="file" hidden ref="file" type="file" @change="processFile()"/>
-                <span @click="attachFile">Прикрепить</span>
+        <div class="content">
+
+            <div class="alert alert-info">
+                Данный инструмент позволяет произвести импорт данных из файла формата .kmz.
+                Данные в файле должны принадлежать одному слою и являться точечными геоэлементами. Геоэлементы другого типа будут игнорироваться.
+                Перед началом испорта необходимо выбрать слой, на который будут выгружены все данные, после чего запустить импорт.
             </div>
-            <div class="col-4">
+
+            <div class="step">
+                <h2>Шаг 1. Выберите файл для импорта</h2>
+                <button @click="$refs.file.click()" class="btn btn-info">
+                    <i class="fas fa-plus-circle"></i>
+                    Выбрать файл
+                </button>
+                <input id="file" hidden ref="file" type="file" @change="selectFile()" accept=".kmz" />
+            </div>
+
+            <div class="step" v-if="fileName !== ''">
+                <h2>Шаг 2. Выберите слой, куда необходимо загрузить все данные из файла</h2>
                 <select id="layers" required class="form-control" v-model="layer">
                     <option v-for="layer in layerState.layers" :value="layer" :title="layer.title">
                         {{ layer.title }}
                     </option>
                 </select>
             </div>
+
+            <div class="step" v-if="layer.id !== 0">
+                <h2>Шаг 3. Запустите импорт</h2>
+                <button @click="start()" class="btn btn-info">
+                    <i class="fa fa-play"></i>
+                    Запустить импорт
+                </button>
+            </div>
+
         </div>
 
     </div>
@@ -44,13 +56,13 @@
     export default class KMZParser extends Vue {
 
         @Action private uploadParsedFile: any;
-        @Action private administratorLayerGetAll: any;
+        @Action private administratorLayerGetByType: any;
 
         @State('administratorLayer') private layerState: LayerState;
 
         @Provide()
         private layer: ILayer = {
-            id: null,
+            id: 0,
             alias: '',
             title: '',
             description: '',
@@ -60,26 +72,30 @@
             geometry_type: '',
         };
 
+        @Provide() private fileName = '';
+
         private async created() {
-            await this.administratorLayerGetAll();
+            await this.administratorLayerGetByType({ type: 'point' });
         }
 
-        private attachFile() {
-            document.getElementById('file').click();
+        /***
+         * Выбрать файл
+         */
+        private selectFile() {
+            const $fileInput: HTMLInputElement = (this.$refs.file as HTMLInputElement);
+            this.fileName = $fileInput.files[0].name;
         }
 
-        private processFile() {
-            if (this.layer.id === null) {
-                ErrorNotifier.notifyWithCustomMessage('Выберите слой');
-                return;
-            }
-
+        /***
+         * Запустить импорт
+         */
+        private start() {
             this.uploadParsedFile({
                 fileres: this.$refs.file,
                 layerId: this.layer.id,
                 parseType: 'kmz',
             }).then(() => {
-                SuccessNotifier.notify('File has been uploaded', 'It is uploaded');
+                SuccessNotifier.notify('Импорт завершен', 'Данные файла были успешно выгружены в систему');
             });
         }
 

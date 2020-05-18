@@ -1,5 +1,5 @@
 <template>
-    <div class="manager-modules-container content">
+    <div class="manager-container content">
 
         <h1>Панель редактирования данных</h1>
 

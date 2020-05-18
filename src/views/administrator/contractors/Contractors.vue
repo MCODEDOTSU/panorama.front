@@ -1,5 +1,5 @@
 <template>
-    <div class="manager-modules-container content">
+    <div class="manager-container content">
 
         <h1>Справочник контрагентов</h1>
         <button data-toggle="modal" data-target="#singleContractorModal" @click="administratorContractorUnsetSingle" class="btn btn-info">

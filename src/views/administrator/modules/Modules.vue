@@ -1,5 +1,5 @@
 <template>
-    <div class="manager-modules-container content">
+    <div class="manager-container content">
 
         <h1>Справочник модулей</h1>
         <button data-toggle="modal" data-target="#singleModuleModal" @click="administratorModuleUnsetSingle" class="btn btn-info">

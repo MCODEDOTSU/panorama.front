@@ -65,6 +65,7 @@ export const actions: ActionTree<FileUploaderState, RootState> = {
     },
 
     uploadParsedFile({state}, payload) {
+
         const formData = new FormData();
         formData.append(`${payload.parseType}`, payload.fileres.files[0]);
         formData.append('layerId', payload.layerId);
@@ -75,7 +76,7 @@ export const actions: ActionTree<FileUploaderState, RootState> = {
                     'Content-Type': 'multipart/form-data',
                 },
             }).then(() => {
-                SuccessNotifier.notify('', 'Файл загружен');
+                // SuccessNotifier.notify('Импорт завершен', 'Данные файла были успешно выгружены в систему');
                 resolve();
             }).catch((error) => {
                 ErrorNotifier.notifyWithCustomMessage(error.response.data);

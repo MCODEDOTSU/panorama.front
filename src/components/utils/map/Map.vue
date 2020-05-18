@@ -50,6 +50,7 @@
                 const lastRevision = feature.get('revision');
                 if (lastRevision !== undefined && revision > lastRevision) {
                     feature.set('revision', revision, true);
+                    console.log(feature);
                     return {
                         properties: feature.getProperties(),
                         geom: (new WKT()).writeFeature(feature, {

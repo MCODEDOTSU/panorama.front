@@ -1,5 +1,5 @@
 <template>
-    <div class="manager-modules-container content">
+    <div class="manager-container content">
 
         <h1>Справочник картографических слоёв</h1>
         <button data-toggle="modal" data-target="#singleLayerModal" @click="createLayer" class="btn btn-info">
@@ -23,7 +23,8 @@
                         <button class="btn-info" data-toggle="modal" data-target="#singleLayerModal"
                                 @click="editLayer(layer)">Изменить
                         </button>
-                        <button class="btn-danger" data-toggle="modal" data-target="#sureModal"
+                        <button :test-tag="layer.title + '_delete'"
+                                class="btn-danger" data-toggle="modal" data-target="#sureModal"
                                 @click="setSureModalContent(layer)">Удалить
                         </button>
                     </div>

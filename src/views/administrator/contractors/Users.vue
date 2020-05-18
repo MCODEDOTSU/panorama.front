@@ -1,5 +1,5 @@
 <template>
-    <div class="manager-modules-container content">
+    <div class="manager-container content">
 
         <h1>Пользователи контрагента "{{ contractorState.contractor.name }}"</h1>
         <button data-toggle="modal" data-target="#singleUserModal" @click="createUser()" class="btn btn-info">

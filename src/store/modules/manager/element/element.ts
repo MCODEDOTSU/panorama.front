@@ -39,6 +39,18 @@ export const actions: ActionTree<ElementState, RootState> = {
     },
 
     /**
+     * Получить элемент по ИД
+     */
+    async managerElementById({}, payload) {
+        try {
+            const res = await axios.get(`${baseUrlAPI}manager/element/${payload.id}`);
+            state.element = Object.assign({}, res.data);
+        } catch {
+            ErrorNotifier.notify();
+        }
+    },
+
+    /**
      * Создать или обновить элемент
      */
     async managerElementUpdate({rootState}) {
@@ -52,6 +64,7 @@ export const actions: ActionTree<ElementState, RootState> = {
             } else {
                 const res = await axios.post(`${baseUrlAPI}manager/element`, state.element);
                 SuccessNotifier.notify('Данные сохранены', `Элемент "${state.element.title}" создан`);
+                state.element = Object.assign({}, res.data);
                 state.elements.push(res.data);
             }
         } catch {
@@ -79,13 +92,11 @@ export const actions: ActionTree<ElementState, RootState> = {
      * Удалить элемент
      * @returns {Promise<void>}
      */
-    async managerElementDelete() {
+    async managerElementDelete({}, payload) {
         try {
-            if (state.element.id !== 0) {
-                const res = await axios.delete(`${baseUrlAPI}manager/element/${state.element.id}`);
-                SuccessNotifier.notify('Данные удалены', `Элемент "${state.element.title}" удален`);
-                state.elements = removeDeletedItem(state.elements, state.element);
-            }
+            const res = await axios.delete(`${baseUrlAPI}manager/element/${payload.element_id}`);
+            SuccessNotifier.notify('Данные удалены', `Элемент "${payload.element_title}" удален`);
+            state.elements = removeDeletedItem(state.elements, { id: payload.element_id });
         } catch {
             ErrorNotifier.notify();
         }
@@ -105,8 +116,8 @@ export const actions: ActionTree<ElementState, RootState> = {
     managerElementUnsetSingle({}, payload) {
         state.element = {
             id: 0,
-            layer_id: 0,
-            title: '',
+            layer_id: payload.layer_id,
+            title: 'Новый элемент',
             description: '',
             address_id: 0,
             geometry: '',
