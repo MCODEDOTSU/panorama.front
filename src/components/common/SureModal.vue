@@ -13,7 +13,7 @@
                     <p>{{ sureModalState.modal.text }}</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" @click="ok()">{{ sureModalState.modal.buttonOk }}</button>
+                    <button type="button" test-tag="button-ok" class="btn btn-danger" data-dismiss="modal" @click="ok()">{{ sureModalState.modal.buttonOk }}</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal" @click="cansel()">{{ sureModalState.modal.buttonCansel }}</button>
                 </div>
             </div>
