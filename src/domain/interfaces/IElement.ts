@@ -1,4 +1,5 @@
 import TableField from '@/domain/entities/constructor/TableField';
+import IElementGraph from '@/domain/interfaces/IElementGraph';
 
 export default interface IElement {
     id: number;
@@ -10,7 +11,9 @@ export default interface IElement {
     length: number;
     area: number;
     perimeter: number;
-    element_next_id: number;
+    previous: IElementGraph | null;
+    next?: IElementGraph;
     checked?: boolean;
+    showGraph?: boolean;
     additionalData?: TableField[];
 }

@@ -17,10 +17,6 @@ import {managerLayer} from '@/store/modules/manager/layer/layer';
 import {managerElement} from '@/store/modules/manager/element/element';
 import {managerConstructor} from '@/store/modules/manager/constructor/constructor';
 
-// gis
-import {gisLayer} from '@/store/modules/gis/layer/layer';
-import {gisElement} from '@/store/modules/gis/element/element';
-
 // components
 import {sureModal} from '@/store/modules/components/common/sureModal/sureModal';
 import {includeList} from '@/store/modules/components/common/includeList/includeList';
@@ -56,10 +52,6 @@ export default new Vuex.Store<RootState>({
         managerLayer,
         managerElement,
         managerConstructor,
-
-        // gis
-        gisLayer,
-        gisElement,
 
         // components
         includeList,

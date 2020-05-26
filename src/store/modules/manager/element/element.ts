@@ -19,7 +19,9 @@ export const state: ElementState = {
         length: 0,
         area: 0,
         perimeter: 0,
-        element_next_id: 0,
+        previous: {
+            id: 0, element_id: 0, next_element_id: 0, element: null
+        },
     },
     elements: [],
 };
@@ -44,7 +46,23 @@ export const actions: ActionTree<ElementState, RootState> = {
     async managerElementById({}, payload) {
         try {
             const res = await axios.get(`${baseUrlAPI}manager/element/${payload.id}`);
-            state.element = Object.assign({}, res.data);
+            const previous = res.data.previous !== null ? res.data.previous : {
+                id: 0, element_id: 0, next_element_id: 0, element: null,
+            };
+            state.element = Object.assign({}, state.element, res.data, { previous });
+        } catch {
+            ErrorNotifier.notify();
+        }
+    },
+
+    /**
+     * Получить граф элемента
+     */
+    async managerElementGetGraph({}, payload) {
+        try {
+            const res = await axios.get(`${baseUrlAPI}manager/element/graph/${state.elements[payload.i].id}`);
+            const element = Object.assign({}, state.elements[payload.i], { next: res.data });
+            state.elements.splice(payload.i, 1, element);
         } catch {
             ErrorNotifier.notify();
         }
@@ -96,7 +114,7 @@ export const actions: ActionTree<ElementState, RootState> = {
         try {
             const res = await axios.delete(`${baseUrlAPI}manager/element/${payload.element_id}`);
             SuccessNotifier.notify('Данные удалены', `Элемент "${payload.element_title}" удален`);
-            state.elements = removeDeletedItem(state.elements, { id: payload.element_id });
+            state.elements = removeDeletedItem(state.elements, {id: payload.element_id});
         } catch {
             ErrorNotifier.notify();
         }
@@ -107,7 +125,7 @@ export const actions: ActionTree<ElementState, RootState> = {
      * @param payload
      */
     managerElementSetSingle({}, payload) {
-        state.element = Object.assign({}, state.element, payload.element );
+        state.element = Object.assign({}, state.element, payload.element);
     },
 
     /**
@@ -124,8 +142,22 @@ export const actions: ActionTree<ElementState, RootState> = {
             length: 0,
             area: 0,
             perimeter: 0,
-            element_next_id: 0,
+            previous: {
+                id: 0, element_id: 0, next_element_id: 0, element: null
+            },
         };
+    },
+
+    /**
+     * Очистить поле "Предыдущий Элемент"
+     * @param payload
+     */
+    managerElementPreviousUnsetSingle({}, payload) {
+        state.element.previous = Object.assign({}, state.element.previous, {
+            element_id: 0,
+            next_element_id: 0,
+            element: null,
+        });
     },
 
 };

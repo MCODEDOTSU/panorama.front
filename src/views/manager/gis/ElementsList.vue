@@ -29,7 +29,8 @@
 
                     <!-- Кнопка "Отобразить связанные элементы" -->
                     <button class="btn-action btn-show-link" title="Отобразить связанные элементы"
-                            v-bind:class="{active: (linksList[element.id] && linksList[element.id].length > 0)}"
+                            v-if="element.next !== undefined && element.next.length !== 0"
+                            v-bind:class="{active: element.showGraph}"
                             @click="showLinkElements(i)">
                         <i class="fa fa-link"></i>
                     </button>
@@ -77,6 +78,7 @@
         @Action public managerElementUnsetSingle: any;
         @Action public managerElementUpdate: any;
         @Action public managerElementDelete: any;
+        @Action public managerElementGetGraph: any;
 
         // Слои
         @Action public managerLayerUnsetSingle: any;
@@ -89,8 +91,7 @@
         @Action public setMapInteraction: any;
 
         @Provide() public checkedAll = false;
-        @Provide('pointList') public pointList = [];
-        @Provide('linksList') public linksList = {};
+        // @Provide('linksList') public linksList = {};
 
         // Интерфейсы
         @Action public setSureModal: any;
@@ -136,8 +137,6 @@
                 this.focusOfFeatures({ids});
             }
 
-            // this.drawElementsList();
-
         }
 
         /**
@@ -158,8 +157,6 @@
                 this.localStorageRemoveElement(element);
             }
 
-            // this.drawElementsList();
-
         }
 
         /**
@@ -175,22 +172,10 @@
          * Стереть и снять отметку с элемента в списке
          */
         public uncheck(i) {
-            const element = Object.assign({}, this.elementState.elements[i], { checked: false });
+            const element = Object.assign({}, this.elementState.elements[i], { checked: false, showGraph: false });
             this.elementState.elements.splice(i, 1, element);
-            this.removeFeatureFromMap({ id: element.id });
-
+            this.eraseElement(element);
             this.checkedAll = false;
-
-            // Стираем старые линии
-            const linksList = Object.assign({}, this.linksList);
-            if (linksList[element.id]) {
-                linksList[element.id].forEach((id) => {
-                    this.removeFeatureFromMap({id});
-                });
-            }
-            linksList[element.id] = [];
-            this.linksList = Object.assign({}, linksList);
-
         }
 
         /**
@@ -216,7 +201,9 @@
          *  @param i
          */
         public addGeomery(i) {
+
             const element = Object.assign({}, this.elementState.elements[i]);
+
             this.managerElementSetSingle({element});
             if (!element.geometry) {
                 // Меняем режим работы карты на "рисование"
@@ -240,80 +227,30 @@
         }
 
         /**
-         * Отобразить связанные элементы (через доп. поля карточки)
+         * Отобразить связанные элементы (граф)
          */
         public async showLinkElements(i) {
 
-            const element = Object.assign({}, this.elementState.elements[i]);
+            const showGraph = !this.elementState.elements[i].showGraph;
 
-            if (element.checked === undefined || element.checked === false) {
-                this.selectElement(i);
-            }
-
-            // Стираем старые линии
-            const linksList = Object.assign({}, this.linksList);
-
-            if (linksList[element.id] === undefined || linksList[element.id].length === 0) {
-
-                const result = await axios.get(`${baseUrlAPI}gis/element/link/${element.id}`);
-                linksList[element.id] = [];
-
-                for (const i in result.data) {
-
-                    const child = result.data[i];
-
-                    this.drawElement(child);
-
-                    // Запоминаем связанные элементы
-                    linksList[element.id].push(child.id);
-
-                    // Отображение связи между элементами
-                    let x = '';
-                    let y = '';
-                    let geometry = /^POINT\((.+)\)$/.exec(child.parent.geometry);
-                    if (geometry.length === 2) {
-                        x = geometry[1];
-                    }
-                    geometry = /^POINT\((.+)\)$/.exec(child.geometry);
-                    if (geometry.length === 2) {
-                        y = geometry[1];
-                    }
-
-                    if (x === '' || y === '') {
-                        continue;
-                    }
-
-                    // Рисуем на карте элемент
-                    this.addFeatureToMap({
-                        id: `${child.parent.id}-${child.id}`,
-                        geom: `LINESTRING(${x}, ${y})`,
-                        property: {id: element.id},
-                        style: {
-                            id: child.layer_id,
-                            stroke: {color: '#000000', width: 1},
-                        },
-                    });
-
-                    // Запоминаем линии
-                    linksList[element.id].push(`${child.parent.id}-${child.id}`);
-                }
-
-                this.focusOfFeatures({ids: linksList[element.id]});
-
+            if (showGraph === true) {
+                await this.managerElementGetGraph({ i });
+                const element = Object.assign({}, this.elementState.elements[i], { showGraph });
+                this.elementState.elements.splice(i, 1, element);
+                this.drawElement(element);
             } else {
-
-                linksList[element.id].forEach((id) => {
-                    this.removeFeatureFromMap({id});
+                const element = Object.assign({}, this.elementState.elements[i], { showGraph });
+                this.elementState.elements.splice(i, 1, element);
+                element.next.forEach((next) => {
+                    this.removeFeatureFromMap({ id: `grap-${element.id}-${next.next_element.id}` });
+                    this.removeFeatureFromMap({ id: `graph-arrow-${element.id}-${next.next_element.id}` });
+                    this.eraseElement(next.next_element);
                 });
-                linksList[element.id] = [];
-
             }
-
-            this.linksList = Object.assign({}, linksList);
-
         }
 
         public drawElement(element) {
+
             this.addFeatureToMap({
                 id: element.id,
                 layer_id: element.layer_id,
@@ -328,6 +265,97 @@
                     revision: 3,
                 },
             });
+
+            // Если для элемента есть граф
+            if (element.next !== undefined && element.next.lenght !== 0) {
+                element.next.forEach((next) => {
+                    if (next.next_element !== undefined) {
+                        this.drawArrow(element, next.next_element);
+                        this.drawElement(next.next_element);
+                    }
+                });
+            }
+
+        }
+
+        public eraseElement(element) {
+
+            this.removeFeatureFromMap({ id: element.id });
+
+            // Если для элемента есть граф
+            if (element.next !== undefined && element.next.lenght !== 0) {
+                element.next.forEach((next) => {
+                    this.removeFeatureFromMap({ id: `grap-${element.id}-${next.next_element.id}` });
+                    this.removeFeatureFromMap({ id: `graph-arrow-${element.id}-${next.next_element.id}` });
+                    this.eraseElement(next.next_element);
+                });
+            }
+        }
+
+        /**
+         * Нарисовать связь между элементами
+         */
+        public drawArrow(element, next_element) {
+
+            if (element.geometry.indexOf('POINT') == -1
+                || next_element.geometry.indexOf('POINT') == -1) {
+                return;
+            }
+
+            let x = /^POINT\((.+)\)$/.exec(element.geometry);
+            let y = /^POINT\((.+)\)$/.exec(next_element.geometry);
+            if (x.length !== 2 || y.length !== 2) {
+                return;
+            }
+
+            // Рисуем на карте линию
+            this.addFeatureToMap({
+                id: `grap-${element.id}-${next_element.id}`,
+                geom: `LINESTRING(${x[1]}, ${y[1]})`,
+                property: {
+                    id: `grap-${element.id}-${next_element.id}`,
+                    title: `${element.id}-${next_element.id}`,
+                    x: element.id,
+                    y: next_element.id,
+                },
+                style: {
+                    id: 0, stroke: {color: '#a42038', width: 2},
+                },
+            });
+
+            x = /^POINT\(([\d\.]+)\s([\d\.]+)\)$/.exec(element.geometry);
+            y = /^POINT\(([\d\.]+)\s([\d\.]+)\)$/.exec(next_element.geometry);
+            if (x.length !== 3 || y.length !== 3) {
+                return;
+            }
+
+            const dx = y[1] - x[1];
+            const dy = y[2] - x[2];
+            const rotation = ((Math.atan2(dy, dx) * -180) / Math.PI);
+
+            // Рисуем на карте стрелочку
+            this.addFeatureToMap({
+                id: `graph-arrow-${element.id}-${next_element.id}`,
+                geom: next_element.geometry,
+                property: {
+                    id: `graph-arrow-${element.id}-${next_element.id}`,
+                    title: `${element.id}-${next_element.id}`,
+                    x: element.id,
+                    y: next_element.id,
+                },
+                style: {
+                    id: 0,
+                    pointType: 'icon',
+                    icon: {
+                        src: '/images/next.png',
+                        anchor: [20, 4],
+                        opacity: 0, scale: 1,
+                        rotation,
+                    },
+                    showTitle: false
+                },
+            });
+
         }
 
         /**
@@ -351,7 +379,7 @@
 
                     // Удаляем с карты
                     if (element.geometry) {
-                        this.removeFeatureFromMap({id: element.id});
+                        this.eraseElement(element);
                     }
 
                     // Удаляем элемент из списка
@@ -366,7 +394,7 @@
          * Выделить Элементы из локального харнилища
          */
         public localStorageCheckedElements() {
-            let checkedList = JSON.parse(localStorage.getItem('elementState.checked'));
+            const checkedList = JSON.parse(localStorage.getItem('elementState.checked'));
             if (checkedList === null) {
                 return;
             }
@@ -406,67 +434,6 @@
             }
             localStorage.setItem('elementState.checked', JSON.stringify(checkedList));
         }
-
-        /**
-         * Отобразить связанный список на карте
-         */
-        // public drawElementsList() {
-
-        // // Стираем старые линии
-        // this.pointList.forEach((id) => {
-        //     this.removeFeatureFromMap({ id });
-        // });
-        // this.pointList = [];
-        //
-        // // Рисуем новые линии
-        // const layers = this.layerState.layers.filter((a) => {
-        //     return (a.geometry_type === 'point' && a.style.list && a.style.list.visibility);
-        // });
-        // layers.forEach((layer) => {
-        //     layer.elements.filter((a) => {
-        //         return (a.checked && a.element_next_id);
-        //     }).forEach((element) => {
-        //         const next = layer.elements.find((a) => {
-        //             return (a.id === element.element_next_id && a.checked);
-        //         });
-        //         if (next) {
-        //             let x = '';
-        //             let y = '';
-        //             let geometry = /^POINT\((.+)\)$/.exec(element.geometry);
-        //             if (geometry.length === 2) {
-        //                 x = geometry[1];
-        //             }
-        //             geometry = /^POINT\((.+)\)$/.exec(next.geometry);
-        //             if (geometry.length === 2) {
-        //                 y = geometry[1];
-        //             }
-        //             if (x !== '' && y !== '') {
-        //                 // Рисуем на карте элемент
-        //                 this.addFeatureToMap({
-        //                     id: `${element.id}:${next.id}`,
-        //                     geom: `LINESTRING(${x}, ${y})`,
-        //                     property: {
-        //                         id: element.id,
-        //                         element_next_id: next.id,
-        //                         revision: 3,
-        //                     },
-        //                     style: {
-        //                         id: layer.id,
-        //                         font: Object.assign({}, layer.style.font),
-        //                         stroke: {
-        //                             color: layer.style.list.color,
-        //                             opacity: layer.style.list.opacity,
-        //                             width: 1,
-        //                         },
-        //                     },
-        //                 });
-        //                 // Запоминаем линии
-        //                 this.pointList.push(`${element.id}:${next.id}`);
-        //             }
-        //         }
-        //     });
-        // });
-        // }
 
     }
 

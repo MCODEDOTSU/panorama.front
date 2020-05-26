@@ -28,6 +28,20 @@
                                 :editorToolbar="toolbar"></vue-editor>
                 </div>
 
+                <!-- Previous Element -->
+                <div class="form-group">
+                    <label for="singleInformationPrevious" class="title">Предыдущий Элемент</label>
+                    <input type="text" id="singleInformationPrevious" readonly
+                           class="form-control"
+                           placeholder="Предыдущий Элемент"
+                           v-model="resolvedPreviousElement"
+                           name="previous-element"
+                           data-toggle="modal" data-target="#selectPreviousElementModal">
+                    <div class="actions">
+                        <a class="btn btn-link btn-danger" @click="managerElementPreviousUnsetSingle">Очистить</a>
+                    </div>
+                </div>
+
             </form>
 
         </div>
@@ -58,6 +72,38 @@
 
         </div>
 
+        <!-- Modal For Previous Element -->
+        <div class="modal fade" id="selectPreviousElementModal" tabindex="-1" role="dialog"
+             aria-labelledby="selectPreviousElementModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Выбор предыдущего Элемента</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" class="form-control" placeholder="Начните ввод для поиска" v-model="search"/>
+                        <div class="layer-items">
+                            <!-- Layers -->
+                            <div v-for="layer in layers" v-if="elementsFilter(layer.elements).length !== 0" class="layer-item">
+                                <h4>{{ layer.title }}</h4>
+                                <!-- Elements -->
+                                <button class="btn btn-link" v-for="element in elementsFilter(layer.elements)"
+                                        @click="selectElement(element)" data-dismiss="modal">
+                                    {{ element.title }}
+                                </button>
+                                <!-- end Elements -->
+                            </div>
+                            <!-- end Layers -->
+                        </div>
+                        <div class="alert alert-info" v-if="resolvedLayersList">Список элементов пуст.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 
@@ -65,6 +111,8 @@
 
     import {Component, Provide, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
+    import {baseUrlAPI} from '@/globals';
+    import axios from 'axios';
 
     import ElementState from '@/store/modules/manager/element/types';
     import ConstructorState from '@/store/modules/manager/constructor/types';
@@ -77,6 +125,7 @@
     export default class AdditionalInformation extends Vue {
 
         @Action public managerLayerGetById: any;
+        @Action public managerElementPreviousUnsetSingle: any;
 
         @State('managerConstructor') public constructorState: ConstructorState;
         @State('managerElement') public elementState!: ElementState;
@@ -91,6 +140,58 @@
             [{color: []}, {background: []}],
             ['clean'],
         ];
+        @Provide() public layers = [];
+        @Provide() public search = '';
+
+        public async created() {
+            const res = await axios.get(`${baseUrlAPI}manager/layer/contractor/get`);
+            this.layers = res.data;
+        }
+
+        /**
+         * Поиск элементов по имени в диалоговом окне выбора предыдущего элемента
+         * @param elements
+         */
+        public elementsFilter(elements) {
+            return elements.filter((item: any) => {
+                return (item.title.toLowerCase().indexOf(this.search.toLowerCase()) + 1);
+            });
+        }
+
+        /**
+         * Выбрать предыдущий Элемент
+         * @param element
+         */
+        public selectElement(element) {
+            this.elementState.element.previous = {
+                id: this.elementState.element.previous.id,
+                element_id: element.id,
+                next_element_id: this.elementState.element.id,
+                element,
+            };
+        }
+
+        /**
+         * Получаем наименование предыдущего элемента
+         */
+        get resolvedPreviousElement() {
+            return this.elementState.element.previous.element === null ? '' :
+                this.elementState.element.previous.element.title;
+        }
+
+        /**
+         * Пустой ли список элоементов в диалоговом окне выбора предыдущего элемента
+         */
+        get resolvedLayersList() {
+            let result = true;
+            this.layers.forEach((layer) => {
+                if (this.elementsFilter(layer.elements).length !== 0) {
+                    result = false;
+                }
+            });
+            return result;
+        }
+
 
         // @Inject('validator') private $validator: any;
     }

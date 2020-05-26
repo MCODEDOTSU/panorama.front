@@ -20,7 +20,7 @@ export const state: ConstructorState = {
         length: 0,
         area: 0,
         perimeter: 0,
-        element_next_id: 0,
+        previous: null,
     },
 };
 
@@ -70,7 +70,7 @@ export const actions: ActionTree<ConstructorState, RootState> = {
             length: 0,
             area: 0,
             perimeter: 0,
-            element_next_id: 0,
+            previous: null,
         };
         for (const group of state.tableFields) {
             for (const column of group.columns) {

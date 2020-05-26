@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Home from './views/Home.vue';
-import Gis from './views/gis/Gis.vue';
 
 import Manager from './views/Manager.vue';
 
@@ -26,8 +25,9 @@ export default new Router({
     mode: 'history',
     base: process.env.BASE_URL,
     routes: [
-        {path: '/', name: 'home', component: Home, meta: {roles: []}},
-        {path: '/gis', name: 'gis', component: Gis, meta: {roles: []}},
+        {
+            path: '/', name: 'home', component: Home, meta: {roles: []}
+        },
         {
             path: '/manager', name: 'manager', component: Manager,
             children: [

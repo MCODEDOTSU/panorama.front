@@ -25,25 +25,6 @@
                                 :editorToolbar="toolbar"></vue-editor>
                 </div>
 
-                <!-- TODO: Функционал Связки Элементов, Пока не нужен, т.к. это можно сделать через конструктор -->
-                <!--&lt;!&ndash; Next Elemets &ndash;&gt;-->
-                <!--<div class="form-group" v-if="style.list && style.list.hasList">-->
-                    <!--<label for="nextElementId">Следующий элемент</label>-->
-                    <!--<select id="nextElementId" class="form-control" v-model="elementState.element.element_next_id">-->
-                        <!--<option value="">-</option>-->
-                        <!--<option v-for="next in elementState.elements" v-if="elementState.element.id !== next.id"-->
-                                <!--:value="next.id" :title="next.description">-->
-                            <!--{{ next.title }}-->
-                        <!--</option>-->
-                    <!--</select>-->
-                <!--</div>-->
-
-                <!--&lt;!&ndash; Prev Elements &ndash;&gt;-->
-                <!--<div class="form-group" v-if="style.list && style.list.hasList && getPrevElement()">-->
-                    <!--<label for="prevElementId">Предыдущий элемент</label>-->
-                    <!--<input type="text" id="prevElementId" readonly class="form-control" :value="getPrevElement().title">-->
-                <!--</div>-->
-
             </form>
         </div>
 
@@ -105,11 +86,11 @@
             this.style = Object.assign({}, this.layerState.layer.style);
         }
 
-        private getPrevElement() {
-            return this.elementState.elements.find((a) => {
-                return a.element_next_id === this.elementState.element.id;
-            });
-        }
+        // private getPrevElement() {
+        //     return this.elementState.elements.find((a) => {
+        //         return a.element_next_id === this.elementState.element.id;
+        //     });
+        // }
     }
 </script>
 

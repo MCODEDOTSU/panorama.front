@@ -54,6 +54,7 @@ export const createOLStyle = (style: IStyle, title?: string) => {
                 opacity: ((100 - style.icon.opacity) / 100),
                 scale: style.icon.scale,
                 rotation: (style.icon.rotation * Math.PI / 180),
+                rotateWithView: true,
             }),
         });
 
