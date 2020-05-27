@@ -22,8 +22,8 @@
                            name="main-name"
                            data-vv-validate-on="change|blur"
                            v-validate="'required'">
+                    <span class="validation-error">{{ errors.first('main-name') }}</span>
                 </div>
-                <span class="validation-error">{{ errors.first('main-name') }}</span>
 
                 <!-- Description -->
                 <div class="form-group">
@@ -121,7 +121,7 @@
 
 <script lang="ts">
 
-    import {Component, Provide, Vue} from 'vue-property-decorator';
+    import {Component, Provide, Vue, Inject} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import {baseUrlAPI} from '@/globals';
     import axios from 'axios';
@@ -204,6 +204,6 @@
             return result;
         }
 
-        // @Inject('validator') private $validator: any;
+        @Inject('validator') private $validator: any;
     }
 </script>
