@@ -4,16 +4,20 @@
         <div class="geom-data manager">
 
             <!-- Компонент Карты -->
-            <ol-map :editor="true" v-on:selected="onSelected" v-on:modifyend="onModifyend" v-on:drawend="onDrawend"></ol-map>
+            <ol-map :editor="true" v-on:selected="onSelected" v-on:modifyend="onModifyend"
+                    v-on:drawend="onDrawend"></ol-map>
 
             <!-- Список слоев и элементов -->
             <div class="geom-data-list">
 
                 <layers-list v-if="layerState.layer.id === 0"></layers-list>
 
-                <elements-list v-else-if="elementState.element.id === 0"></elements-list>
+                <elements-list
+                        v-else-if="elementState.element.id === 0 && elementState.magicElement.active === false"></elements-list>
 
-                <single-element v-else></single-element>
+                <single-element v-else-if="elementState.magicElement.active === false"></single-element>
+
+                <magic-element v-else></magic-element>
 
             </div>
 
@@ -36,11 +40,12 @@
     import LayersList from '@/views/manager/gis/LayersList.vue';
     import ElementsList from '@/views/manager/gis/ElementsList.vue';
     import SingleElement from '@/views/manager/gis/SingleElement.vue';
+    import MagicElement from '@/views/manager/gis/magic/MagicElement.vue';
 
     import SureModal from '@/components/common/SureModal.vue';
 
     @Component({
-        components: { OlMap, LayersList, ElementsList, SingleElement, SureModal },
+        components: {OlMap, LayersList, ElementsList, SingleElement, MagicElement, SureModal},
     })
 
     export default class Gis extends Vue {
@@ -51,9 +56,11 @@
         // Карта
         @Action public setMapInteraction: any;
         @Action public addFeatureToMap: any;
+        @Action public addFeaturesArrowToMap: any;
 
         // Элементы
         @Action public managerElementUpdateGeometry: any;
+        @Action public managerMagicElementUpdate: any;
 
         /**
          * Кликнули по Элементу на карте
@@ -68,8 +75,8 @@
          * @param e
          */
         public onModifyend(e) {
-            this.managerElementUpdateGeometry({ id: e.properties.id, geometry: e.geom });
-            this.elementState.elements = this.elementState.elements.map( (element) => {
+            this.managerElementUpdateGeometry({id: e.properties.id, geometry: e.geom});
+            this.elementState.elements = this.elementState.elements.map((element) => {
                 if (element.id === e.properties.id) {
                     element.geometry = e.geom;
                 }
@@ -82,35 +89,85 @@
          */
         public async onDrawend(e) {
 
-            // Обновляем геометрию
-            this.elementState.element.geometry = e.geom;
-            this.managerElementUpdateGeometry({ id: this.elementState.element.id, geometry: e.geom });
+            if (this.elementState.magicElement.active === false) {
 
-            // Меняем режим работы с картой
-            this.setMapInteraction({ mode: '' });
+                // Если мы добавляем новый элемент
 
-            this.addFeatureToMap({
-                id: this.elementState.element.id,
-                layer_id: this.elementState.element.layer_id,
-                geom: this.elementState.element.geometry,
-                property: {
+                // Обновляем геометрию
+                this.elementState.element.geometry = e.geom;
+                this.managerElementUpdateGeometry({id: this.elementState.element.id, geometry: e.geom});
+
+                // Меняем режим работы с картой
+                this.setMapInteraction({mode: ''});
+
+                this.addFeatureToMap({
                     id: this.elementState.element.id,
-                    title: this.elementState.element.title,
-                    description: this.elementState.element.description,
-                    lenght: this.elementState.element.length,
-                    area: this.elementState.element.area,
-                    perimeter: this.elementState.element.perimeter,
-                    revision: 3,
-                },
-            });
+                    layer_id: this.elementState.element.layer_id,
+                    geom: this.elementState.element.geometry,
+                    property: {
+                        id: this.elementState.element.id,
+                        title: this.elementState.element.title,
+                        description: this.elementState.element.description,
+                        lenght: this.elementState.element.length,
+                        area: this.elementState.element.area,
+                        perimeter: this.elementState.element.perimeter,
+                        revision: 3,
+                    },
+                });
 
-            this.elementState.elements = this.elementState.elements.map( (element) => {
-                if (element.id === this.elementState.element.id) {
-                    element.checked = true;
-                    element.geometry = e.geom;
+                this.elementState.elements = this.elementState.elements.map((element) => {
+                    if (element.id === this.elementState.element.id) {
+                        element.checked = true;
+                        element.geometry = e.geom;
+                    }
+                    return element;
+                });
+
+            } else {
+
+                // Если массовое добавление элементов на карту
+
+                // Запоминаем предыдущий элемент
+                const previous = Object.assign({}, this.elementState.magicElement.element);
+
+                // Обновляем геометрию
+                this.elementState.magicElement.element.geometry = e.geom;
+
+                // Сохраняем в базу по шаблону
+                await this.managerMagicElementUpdate();
+
+                // Рисуем элемент на карте
+                const i = this.elementState.magicElement.index - 1;
+                this.addFeatureToMap({
+                    id: this.elementState.magicElement.element.id,
+                    layer_id: this.elementState.magicElement.element.layer_id,
+                    geom: this.elementState.magicElement.element.geometry,
+                    property: {
+                        id: this.elementState.magicElement.element.id,
+                        title: this.elementState.magicElement.element.title.replace('%i', i.toString()),
+                        description: this.elementState.magicElement.element.description,
+                        lenght: this.elementState.magicElement.element.length,
+                        area: this.elementState.magicElement.element.area,
+                        perimeter: this.elementState.magicElement.element.perimeter,
+                        revision: 3,
+                    },
+                });
+
+                // Добавляем элемент как отмеченный в хранилие
+                let checkedList = JSON.parse(localStorage.getItem('elementState.checked'));
+                if (checkedList === null) {
+                    checkedList = [];
                 }
-                return element;
-            });
+                checkedList.push(this.elementState.magicElement.element.id);
+                localStorage.setItem('elementState.checked', JSON.stringify(checkedList));
+
+                // Рисуем стрелочку до предыдущего элемента
+                if (previous.id !== 0) {
+                    this.addFeaturesArrowToMap({ first: previous, second: this.elementState.magicElement.element });
+                }
+
+            }
+
 
         }
 

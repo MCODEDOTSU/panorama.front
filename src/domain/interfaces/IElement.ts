@@ -12,7 +12,7 @@ export default interface IElement {
     area: number;
     perimeter: number;
     previous: IElementGraph | null;
-    next?: IElementGraph;
+    next?: IElementGraph[];
     checked?: boolean;
     showGraph?: boolean;
     additionalData?: TableField[];

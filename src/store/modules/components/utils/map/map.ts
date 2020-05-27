@@ -18,7 +18,7 @@ export const state: MapState = {
     },
     layer: false,
     styles: [],
-    interaction: { draw: { layer: false, mode: '', draw: false } },
+    interaction: {draw: {layer: false, mode: '', draw: false}},
 };
 
 export const actions: ActionTree<MapState, RootState> = {
@@ -100,8 +100,8 @@ export const actions: ActionTree<MapState, RootState> = {
     setMapInteraction({}, payload) {
         state.interaction.draw = Object.assign({}, state.interaction.draw, {
             mode: (payload.mode === 'point' ? 'Point' :
-                        (payload.mode === 'linestring' ? 'LineString' :
-                            (payload.mode === 'polygon' ? 'Polygon' : '' ))),
+                (payload.mode === 'linestring' ? 'LineString' :
+                    (payload.mode === 'polygon' ? 'Polygon' : ''))),
         });
     },
 
@@ -134,6 +134,92 @@ export const actions: ActionTree<MapState, RootState> = {
         const feature = state.layer.getSource().getFeatureById(payload.id);
         if (feature) {
             state.layer.getSource().removeFeature(feature);
+        }
+    },
+
+    /**
+     * Соединить два точечных объекта линией
+     * @param payload
+     */
+    addFeaturesArrowToMap({}, payload) {
+
+        if (!payload.first || !payload.second) {
+            return;
+        }
+
+        if (payload.first.geometry.indexOf('POINT') === -1
+            || payload.second.geometry.indexOf('POINT') === -1) {
+            return;
+        }
+
+        let x = /^POINT\((.+)\)$/.exec(payload.first.geometry);
+        let y = /^POINT\((.+)\)$/.exec(payload.second.geometry);
+        if (x.length !== 2 || y.length !== 2) {
+            return;
+        }
+
+        const featureGraph = createOLFeature(
+            `graph-${payload.first.id}-${payload.second.id}`,
+            `LINESTRING(${x[1]}, ${y[1]})`,
+            {
+                id: `graph-${payload.first.id}-${payload.second.id}`,
+                title: `graph-${payload.first.id}-${payload.second.id}`,
+                x: payload.first.id,
+                y: payload.second.id,
+            },
+            {
+                id: 0, stroke: {color: '#a42038', width: 2},
+            },
+        );
+        state.layer.getSource().addFeature(featureGraph);
+
+        x = /^POINT\(([\d\.]+)\s([\d\.]+)\)$/.exec(payload.first.geometry);
+        y = /^POINT\(([\d\.]+)\s([\d\.]+)\)$/.exec(payload.second.geometry);
+        if (x.length !== 3 || y.length !== 3) {
+            return;
+        }
+
+        const dx = parseFloat(y[1]) - parseFloat(x[1]);
+        const dy = parseFloat(y[2]) - parseFloat(x[2]);
+        const rotation = ((Math.atan2(dy, dx) * -180) / Math.PI) - 7;
+
+        const featureGraphArrow = createOLFeature(
+            `graph-arrow-${payload.first.id}-${payload.second.id}`,
+            payload.second.geometry,
+            {
+                id: `graph-arrow-${payload.first.id}-${payload.second.id}`,
+                title: `graph-arrow-${payload.first.id}-${payload.second.id}`,
+                x: payload.first.id,
+                y: payload.second.id,
+            },
+            {
+                id: 0,
+                pointType: 'icon',
+                icon: {
+                    src: '/images/next.png',
+                    anchor: [20, 4],
+                    opacity: 0, scale: 1,
+                    rotation,
+                },
+                showTitle: false,
+            },
+        );
+        state.layer.getSource().addFeature(featureGraphArrow);
+
+    },
+
+    /**
+     * Удалить линию между точечяными объектами
+     * @param payload
+     */
+    removeFeaturesArrowFromMap({}, payload) {
+        const featureGraph = state.layer.getSource().getFeatureById(`graph-${payload.first.id}-${payload.second.id}`);
+        if (featureGraph) {
+            state.layer.getSource().removeFeature(featureGraph);
+        }
+        const featureGraphArrow = state.layer.getSource().getFeatureById(`graph-arrow-${payload.first.id}-${payload.second.id}`);
+        if (featureGraphArrow) {
+            state.layer.getSource().removeFeature(featureGraphArrow);
         }
     },
 

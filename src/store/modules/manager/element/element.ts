@@ -7,6 +7,7 @@ import SuccessNotifier from '@/domain/util/notifications/SuccessNotifier';
 import {editUpdatedItem, removeDeletedItem} from '@/domain/services/common/UpdateItemService';
 import {plainizeFields} from '@/domain/services/common/AdditionalFieldsService';
 import ElementState from '@/store/modules/manager/element/types';
+import IElement from '@/domain/interfaces/IElement';
 
 export const state: ElementState = {
     element: {
@@ -20,10 +21,14 @@ export const state: ElementState = {
         area: 0,
         perimeter: 0,
         previous: {
-            id: 0, element_id: 0, next_element_id: 0, element: null
+            id: 0, element_id: 0, next_element_id: 0, element: null,
         },
     },
     elements: [],
+    magicElement: {
+        active: false,
+        index: 1,
+    },
 };
 
 export const actions: ActionTree<ElementState, RootState> = {
@@ -49,20 +54,7 @@ export const actions: ActionTree<ElementState, RootState> = {
             const previous = res.data.previous !== null ? res.data.previous : {
                 id: 0, element_id: 0, next_element_id: 0, element: null,
             };
-            state.element = Object.assign({}, state.element, res.data, { previous });
-        } catch {
-            ErrorNotifier.notify();
-        }
-    },
-
-    /**
-     * Получить граф элемента
-     */
-    async managerElementGetGraph({}, payload) {
-        try {
-            const res = await axios.get(`${baseUrlAPI}manager/element/graph/${state.elements[payload.i].id}`);
-            const element = Object.assign({}, state.elements[payload.i], { next: res.data });
-            state.elements.splice(payload.i, 1, element);
+            state.element = Object.assign({}, state.element, res.data, {previous});
         } catch {
             ErrorNotifier.notify();
         }
@@ -114,7 +106,24 @@ export const actions: ActionTree<ElementState, RootState> = {
         try {
             const res = await axios.delete(`${baseUrlAPI}manager/element/${payload.element_id}`);
             SuccessNotifier.notify('Данные удалены', `Элемент "${payload.element_title}" удален`);
-            state.elements = removeDeletedItem(state.elements, {id: payload.element_id});
+        } catch {
+            ErrorNotifier.notify();
+        }
+    },
+
+    /**
+     * Удалить отмеченные элементы
+     * @returns {Promise<void>}
+     */
+    async managerElementDeleteChecked({}, payload) {
+        try {
+            const elements = state.elements.filter((item: any) => {
+                return (item.checked === true);
+            }).map((item: any) => {
+                return item.id;
+            });
+            const res = await axios.post(`${baseUrlAPI}manager/element/delete/some`, { elements, layer_id: payload.layer_id });
+            SuccessNotifier.notify('Данные удалены', `Все выделенные элементы удалены из системы`);
         } catch {
             ErrorNotifier.notify();
         }
@@ -143,9 +152,22 @@ export const actions: ActionTree<ElementState, RootState> = {
             area: 0,
             perimeter: 0,
             previous: {
-                id: 0, element_id: 0, next_element_id: 0, element: null
+                id: 0, element_id: 0, next_element_id: 0, element: null,
             },
         };
+    },
+
+    /**
+     * Получить граф элемента
+     */
+    async managerElementGetGraph({}, payload) {
+        try {
+            const res = await axios.get(`${baseUrlAPI}manager/element/graph/${state.elements[payload.i].id}`);
+            const element = Object.assign({}, state.elements[payload.i], {next: res.data});
+            state.elements.splice(payload.i, 1, element);
+        } catch {
+            ErrorNotifier.notify();
+        }
     },
 
     /**
@@ -158,6 +180,73 @@ export const actions: ActionTree<ElementState, RootState> = {
             next_element_id: 0,
             element: null,
         });
+    },
+
+    /**
+     * Создать или элемент по шаблону
+     */
+    async managerMagicElementUpdate({rootState}) {
+        try {
+
+            const element = Object.assign({}, state.magicElement.element, {id: 0});
+
+            // Дополнительные данные для элемента - с использованием конструктора
+            element.additionalData = plainizeFields(rootState.managerConstructor.tableFields);
+
+            // Формируем название по шаблону
+            element.title = element.title.replace('%i', state.magicElement.index.toString());
+
+            const res = await axios.post(`${baseUrlAPI}manager/element`, element);
+            SuccessNotifier.notify('Данные сохранены', `Элемент "${element.title}" создан`);
+            state.elements.push(res.data);
+
+            // ИД Элемента
+            state.magicElement.element.id = res.data.id;
+
+            // Формируем цепочку
+            state.magicElement.element.previous.element_id = res.data.id;
+
+            state.magicElement.index++;
+
+        } catch {
+            ErrorNotifier.notify();
+        }
+    },
+
+    /**
+     * Задать шаблон для массового создания элементов
+     * @param payload
+     */
+    managerMagicElementSetSingle({}, payload) {
+        state.magicElement = {
+            active: true,
+            index: 1,
+            element: {
+                id: 0,
+                layer_id: payload.layer_id,
+                title: '',
+                description: '',
+                address_id: 0,
+                geometry: '',
+                length: 0,
+                area: 0,
+                perimeter: 0,
+                previous: {
+                    id: 0, element_id: 0, next_element_id: 0, element: null,
+                },
+            },
+        };
+    },
+
+    /**
+     * Очистить шаблон
+     * @param payload
+     */
+    managerMagicElementUnsetSingle({}, payload) {
+        state.magicElement = {
+            active: false,
+            index: 1,
+        };
     },
 
 };

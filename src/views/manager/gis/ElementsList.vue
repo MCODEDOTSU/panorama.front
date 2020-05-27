@@ -8,50 +8,75 @@
             <div @click="selectLayer()" class="btn-checked" v-bind:class="{checked: checkedAll}"
                  title="Отобразить все элементы на карте"></div>
             {{ layerState.layer.title }}
+
+            <!-- Кнопка "Создать Несколько Элементов" -->
+            <div class="btn btn-action btn-magic-element"
+                 title="Массовое создание Элементов" @click="managerMagicElementSetSingle({ layer_id: layerState.layer.id })">
+                <i class="fas fa-magic"></i>
+            </div>
+
+            <!-- Кнопка "Создать Элемент" -->
             <div class="btn btn-action btn-add-element"
                  title="Создать элемент" @click="createElement()">
                 <i class="fas fa-plus-circle"></i>
             </div>
+
+            <!-- Кнопка "Массовое Удаление Элементов" -->
+            <div class="btn btn-action btn-delete-element"
+                 data-toggle="modal" data-target="#sureModal"
+                 v-if="resolvedDeleteAllButtonShow"
+                 title="Удалить все отмеченные Элементы" @click="setSureModalContentDeleteAll()">
+                <i class="fas fa-trash"></i>
+            </div>
+
         </h2>
 
-        <ul class="data-list elements-list">
-            <li class="element-item" v-for="(element, i) in elementState.elements" :key="element.id">
+        <div class="scroll-container">
 
-                <!-- Строка со слоем -->
-                <span class="element-item-content">
+            <vue-scrollbar class="scrollbar scrollbar-min" ref="Scrollbar">
 
-                    <div v-if="element.geometry" @click="selectElement(i)" class="btn-checked element-item-select"
-                         v-bind:class="{checked: element.checked}" title="Отобразить на карте"></div>
-                    <i v-else @click="addGeomery(i)" class="fa fa-exclamation-triangle"></i>
+                <ul class="data-list elements-list">
+                    <li class="element-item" v-for="(element, i) in elementState.elements" :key="element.id">
 
-                    <label v-if="element.checked === true" @click="focusOfFeature({ id: element.id })" title="Показать элемент">{{ element.title }}</label>
-                    <label v-else @click="selectElement(i)" title="Показать элемент">{{ element.title }}</label>
+                        <!-- Строка со слоем -->
+                        <span class="element-item-content">
 
-                    <!-- Кнопка "Отобразить связанные элементы" -->
-                    <button class="btn-action btn-show-link" title="Отобразить связанные элементы"
-                            v-if="element.next !== undefined && element.next.length !== 0"
-                            v-bind:class="{active: element.showGraph}"
-                            @click="showLinkElements(i)">
-                        <i class="fa fa-link"></i>
-                    </button>
+                            <div v-if="element.geometry" @click="selectElement(i)" class="btn-checked element-item-select"
+                                 v-bind:class="{checked: element.checked}" title="Отобразить на карте"></div>
+                            <i v-else @click="addGeomery(i)" class="fa fa-exclamation-triangle"></i>
 
-                    <!-- Кнопка "Редактировать" -->
-                    <button class="btn-action btn-edit" title="Редактировать элемент"
-                            @click="getSingleElement(i); focusOfFeature({ id: element.id })">
-                    <i class="fa fa-pen"></i>
-                    </button>
+                            <label v-if="element.checked === true" @click="focusOfFeature({ id: element.id })" title="Показать элемент">{{ element.title }}</label>
+                            <label v-else @click="selectElement(i)" title="Показать элемент">{{ element.title }}</label>
 
-                    <!-- Кнопка "Удалить" -->
-                    <button class="btn-action btn-delete" title="Удалить элемент"
-                            data-toggle="modal" data-target="#sureModal"
-                            @click="setSureModalContent(i)">
-                    <i class="fas fa-trash"></i>
-                    </button>
+                            <!-- Кнопка "Отобразить связанные элементы" -->
+                            <button class="btn-action btn-show-link" title="Отобразить связанные элементы"
+                                    v-if="element.next !== undefined && element.next.length !== 0"
+                                    v-bind:class="{active: element.showGraph}"
+                                    @click="showLinkElements(i)">
+                                <i class="fa fa-link"></i>
+                            </button>
 
-                </span>
+                            <!-- Кнопка "Редактировать" -->
+                            <button class="btn-action btn-edit" title="Редактировать элемент"
+                                    @click="getSingleElement(i); focusOfFeature({ id: element.id })">
+                            <i class="fa fa-pen"></i>
+                            </button>
 
-            </li>
-        </ul>
+                            <!-- Кнопка "Удалить" -->
+                            <button class="btn-action btn-delete" title="Удалить элемент"
+                                    data-toggle="modal" data-target="#sureModal"
+                                    @click="setSureModalContent(i)">
+                            <i class="fas fa-trash"></i>
+                            </button>
+
+                        </span>
+
+                    </li>
+                </ul>
+
+            </vue-scrollbar>
+
+        </div>
 
     </div>
 </template>
@@ -78,14 +103,19 @@
         @Action public managerElementUnsetSingle: any;
         @Action public managerElementUpdate: any;
         @Action public managerElementDelete: any;
+        @Action public managerElementDeleteChecked: any;
         @Action public managerElementGetGraph: any;
+        @Action public managerMagicElementSetSingle: any;
+        @Action public managerMagicElementUnsetSingle: any;
 
         // Слои
         @Action public managerLayerUnsetSingle: any;
 
         // Карта
         @Action public addFeatureToMap: any;
+        @Action public addFeaturesArrowToMap: any;
         @Action public removeFeatureFromMap: any;
+        @Action public removeFeaturesArrowFromMap: any;
         @Action public focusOfFeature: any;
         @Action public focusOfFeatures: any;
         @Action public setMapInteraction: any;
@@ -242,14 +272,16 @@
                 const element = Object.assign({}, this.elementState.elements[i], { showGraph });
                 this.elementState.elements.splice(i, 1, element);
                 element.next.forEach((next) => {
-                    this.removeFeatureFromMap({ id: `grap-${element.id}-${next.next_element.id}` });
-                    this.removeFeatureFromMap({ id: `graph-arrow-${element.id}-${next.next_element.id}` });
+                    this.removeFeaturesArrowFromMap({ first: element, second: next.next_element });
                     this.eraseElement(next.next_element);
                 });
             }
         }
 
-        public drawElement(element) {
+        /**
+         * Нарисовать Элемент
+         */
+        public drawElement(element, isChild = false) {
 
             this.addFeatureToMap({
                 id: element.id,
@@ -267,95 +299,34 @@
             });
 
             // Если для элемента есть граф
-            if (element.next !== undefined && element.next.lenght !== 0) {
+            if (element.next !== undefined && element.next.lenght !== 0
+                && (element.showGraph === true || isChild === true)) {
                 element.next.forEach((next) => {
                     if (next.next_element !== undefined) {
-                        this.drawArrow(element, next.next_element);
-                        this.drawElement(next.next_element);
+                        this.addFeaturesArrowToMap({ first: element, second: next.next_element });
+                        this.drawElement(next.next_element, true);
                     }
                 });
             }
 
         }
 
+        /**
+         * Стереть Элемент
+         */
         public eraseElement(element) {
 
             this.removeFeatureFromMap({ id: element.id });
 
             // Если для элемента есть граф
-            if (element.next !== undefined && element.next.lenght !== 0) {
+            if (element.next !== undefined && element.next.length !== 0) {
                 element.next.forEach((next) => {
-                    this.removeFeatureFromMap({ id: `grap-${element.id}-${next.next_element.id}` });
-                    this.removeFeatureFromMap({ id: `graph-arrow-${element.id}-${next.next_element.id}` });
-                    this.eraseElement(next.next_element);
+                    if (next.next_element !== undefined) {
+                        this.removeFeaturesArrowFromMap({ first: element, second: next.next_element });
+                        this.eraseElement(next.next_element);
+                    }
                 });
             }
-        }
-
-        /**
-         * Нарисовать связь между элементами
-         */
-        public drawArrow(element, next_element) {
-
-            if (element.geometry.indexOf('POINT') == -1
-                || next_element.geometry.indexOf('POINT') == -1) {
-                return;
-            }
-
-            let x = /^POINT\((.+)\)$/.exec(element.geometry);
-            let y = /^POINT\((.+)\)$/.exec(next_element.geometry);
-            if (x.length !== 2 || y.length !== 2) {
-                return;
-            }
-
-            // Рисуем на карте линию
-            this.addFeatureToMap({
-                id: `grap-${element.id}-${next_element.id}`,
-                geom: `LINESTRING(${x[1]}, ${y[1]})`,
-                property: {
-                    id: `grap-${element.id}-${next_element.id}`,
-                    title: `${element.id}-${next_element.id}`,
-                    x: element.id,
-                    y: next_element.id,
-                },
-                style: {
-                    id: 0, stroke: {color: '#a42038', width: 2},
-                },
-            });
-
-            x = /^POINT\(([\d\.]+)\s([\d\.]+)\)$/.exec(element.geometry);
-            y = /^POINT\(([\d\.]+)\s([\d\.]+)\)$/.exec(next_element.geometry);
-            if (x.length !== 3 || y.length !== 3) {
-                return;
-            }
-
-            const dx = y[1] - x[1];
-            const dy = y[2] - x[2];
-            const rotation = ((Math.atan2(dy, dx) * -180) / Math.PI);
-
-            // Рисуем на карте стрелочку
-            this.addFeatureToMap({
-                id: `graph-arrow-${element.id}-${next_element.id}`,
-                geom: next_element.geometry,
-                property: {
-                    id: `graph-arrow-${element.id}-${next_element.id}`,
-                    title: `${element.id}-${next_element.id}`,
-                    x: element.id,
-                    y: next_element.id,
-                },
-                style: {
-                    id: 0,
-                    pointType: 'icon',
-                    icon: {
-                        src: '/images/next.png',
-                        anchor: [20, 4],
-                        opacity: 0, scale: 1,
-                        rotation,
-                    },
-                    showTitle: false
-                },
-            });
-
         }
 
         /**
@@ -391,6 +362,45 @@
         }
 
         /**
+         * Удалить отмеченные Элементы
+         */
+        public setSureModalContentDeleteAll() {
+
+            this.setSureModal({
+                title: 'Удалить элементы?',
+                text: `Вы уверены, что хотите удалить все отмеченные элементы из системы?`,
+                action: async () => {
+
+                    // Запрос на удаление элемента
+                    await this.managerElementDeleteChecked({
+                        layer_id: this.layerState.layer.id,
+                    });
+
+                    // Удаляем с карты
+                    this.elementState.elements.forEach((element, i) => {
+                        if (element.checked === true) {
+                            this.eraseElement(element);
+                        }
+                    });
+
+                    // Удаляем из списка
+                    this.elementState.elements = this.elementState.elements.filter((element) => {
+                        return (element.checked !== true);
+                    });
+
+                    this.checkedAll = false;
+
+                },
+            });
+        }
+
+        get resolvedDeleteAllButtonShow() {
+            return (this.elementState.elements.filter((element) => {
+                return (element.checked === true);
+            }).length !== 0);
+        }
+
+        /**
          * Выделить Элементы из локального харнилища
          */
         public localStorageCheckedElements() {
@@ -398,7 +408,7 @@
             if (checkedList === null) {
                 return;
             }
-            this.checkedAll = true;
+            this.checkedAll = (this.elementState.elements.length !== 0);
             this.elementState.elements.forEach((element, i) => {
                 if (checkedList.indexOf(element.id) !== -1) {
                     this.check(i);
