@@ -54,12 +54,13 @@ export const actions: ActionTree<UserState, RootState> = {
      * @returns {any}
      */
     getUser({commit, state, dispatch}): any {
-        axios.get(baseUrlAPI + 'user').then((response) => {
+        axios.get(`${baseUrlAPI}user`).then((response) => {
             const payload = response.data;
             state.role = response.data.role;
             commit('getUser', payload);
         }, () => {
             state.token = '';
+            Router.push({name: 'home'});
             // ErrorNotifier.notify();
         });
     },
@@ -93,7 +94,7 @@ export const actions: ActionTree<UserState, RootState> = {
             state.role = '';
             Router.push({name: 'home'});
         } catch {
-            ErrorNotifier.notify();
+            Router.push({name: 'home'});
         }
     },
 

@@ -1,5 +1,7 @@
 import {WKT} from 'ol/format';
 import {createOLStyle} from '@/domain/services/ol/StyleService';
+// @ts-ignore
+import {Select, Modify, Draw} from 'ol/interaction';
 
 /**
  * Создать новый геообъект на карте

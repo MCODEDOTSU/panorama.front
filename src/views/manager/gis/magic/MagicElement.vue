@@ -60,10 +60,8 @@
         @Action public managerMagicElementUnsetSingle: any;
 
         // Карта
-        @Action public setMapInteraction: any;
+        @Action public setInteraction: any;
         @Action public removeFeaturesArrowFromMap: any;
-        // @Action public addFeatureToMap: any;
-        // @Action public removeFeatureFromMap: any;
 
         // Конструктор
         @Action public managerConstructorGetAdditionalData: any;
@@ -150,7 +148,7 @@
                 if (validationSuccessed) {
 
                     // Меняем режим работы карты на рисование
-                    this.setMapInteraction({mode: this.layerState.layer.geometry_type});
+                    this.setInteraction({ mode: this.layerState.layer.geometry_type });
                     this.isStart = true;
 
                 } else {
@@ -168,7 +166,7 @@
         private stop() {
 
             // Меняем режим работы с картой
-            this.setMapInteraction({mode: ''});
+            this.setInteraction({ mode: 'select' });
             this.isChanged = false;
             this.isStart = false;
 

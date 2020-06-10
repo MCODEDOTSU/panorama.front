@@ -36,6 +36,7 @@
             <vue-scrollbar class="scrollbar scrollbar-min" ref="Scrollbar">
 
                 <ul class="data-list elements-list">
+
                     <li class="element-item" v-for="(element, i) in elementState.elements" :key="element.id">
 
                         <!-- Строка со слоем -->
@@ -58,7 +59,7 @@
 
                             <!-- Кнопка "Редактировать" -->
                             <button class="btn-action btn-edit" title="Редактировать элемент"
-                                    @click="getSingleElement(i); focusOfFeature({ id: element.id })">
+                                    @click="getSingleElement(i)">
                             <i class="fa fa-pen"></i>
                             </button>
 
@@ -118,10 +119,9 @@
         @Action public removeFeaturesArrowFromMap: any;
         @Action public focusOfFeature: any;
         @Action public focusOfFeatures: any;
-        @Action public setMapInteraction: any;
+        @Action public setInteraction: any;
 
         @Provide() public checkedAll = false;
-        // @Provide('linksList') public linksList = {};
 
         // Интерфейсы
         @Action public setSureModal: any;
@@ -222,7 +222,7 @@
             await this.managerElementUpdate();
 
             // Меняем режим работы карты на рисование
-            this.setMapInteraction({mode: this.layerState.layer.geometry_type});
+            this.setInteraction({ mode: this.layerState.layer.geometry_type });
 
         }
 
@@ -237,7 +237,7 @@
             this.managerElementSetSingle({element});
             if (!element.geometry) {
                 // Меняем режим работы карты на "рисование"
-                this.setMapInteraction({mode: this.layerState.layer.geometry_type});
+                this.setInteraction({ mode: this.layerState.layer.geometry_type });
             }
         }
 
@@ -250,9 +250,13 @@
 
             if (element.checked === undefined || element.checked === false) {
                 this.selectElement(i);
+            } else {
+                this.focusOfFeature({ id: element.id });
             }
 
-            this.managerElementSetSingle({element});
+            this.managerElementSetSingle({ element });
+
+            this.setInteraction({ mode: (element.geometry !== null ? 'modify' : this.layerState.layer.geometry_type) });
 
         }
 
@@ -289,12 +293,12 @@
                 geom: element.geometry,
                 property: {
                     id: element.id,
+                    layer_id: element.layer_id,
                     title: element.title,
                     description: element.description,
                     lenght: element.lenght,
                     area: element.area,
                     perimeter: element.perimeter,
-                    revision: 3,
                 },
             });
 

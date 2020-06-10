@@ -12,7 +12,7 @@
 
             {{ elementState.element.title }}
 
-            <div v-if="isChanged" class="btn btn-action btn-update-element"
+            <div class="btn btn-action btn-update-element"
                  title="Сохранить элемент" @click="update()">
                 <i class="fa fa-floppy-o"></i>
             </div>
@@ -57,7 +57,9 @@
 
         // Карта
         @Action public addFeatureToMap: any;
+        @Action public setInteraction: any;
         @Action public removeFeatureFromMap: any;
+        @Action public updateFeatureTitle: any;
 
         // Конструктор
         @Action public managerConstructorGetAdditionalData: any;
@@ -89,9 +91,42 @@
          * Вернуть к списку элементов
          */
         public getElementsList() {
+
+            this.setInteraction({ mode: 'select' });
+
+            const element = Object.assign({}, this.elementState.element);
+
             this.managerElementUnsetSingle({
                 layer_id: this.layerState.layer.id,
             });
+
+            // TODO: необходимо только поменять подпись, но методо ниже не работает
+
+            // this.updateFeatureTitle({
+            //     id: this.elementState.element.id,
+            //     title: this.elementState.element.title,
+            //     layer_id: this.layerState.layer
+            // });
+
+            // Перерисовываем элемент на карте
+            this.removeFeatureFromMap({ id: element.id });
+
+            // Рисуем на карте элемент
+            this.addFeatureToMap({
+                id: element.id,
+                layer_id: this.layerState.layer.id,
+                geom: element.geometry,
+                property: {
+                    id: element.id,
+                    layer_id: this.layerState.layer.id,
+                    title: element.title,
+                    description: element.description,
+                    length: element.length,
+                    area: element.area,
+                    perimeter: element.perimeter,
+                },
+            });
+
         }
 
         /**
@@ -122,25 +157,6 @@
                 if (validationSuccessed) {
 
                     this.managerElementUpdate();
-
-                    // Перерисовываем элемент на карте
-                    this.removeFeatureFromMap({ id: this.elementState.element.id });
-
-                    // Рисуем на карте элемент
-                    this.addFeatureToMap({
-                        id: this.elementState.element.id,
-                        layer_id: this.layerState.layer.id,
-                        geom: this.elementState.element.geometry,
-                        property: {
-                            id: this.elementState.element.id,
-                            title: this.elementState.element.title,
-                            description: this.elementState.element.description,
-                            length: this.elementState.element.length,
-                            area: this.elementState.element.area,
-                            perimeter: this.elementState.element.perimeter,
-                            revision: 3,
-                        },
-                    });
 
                     if (isClose === true) {
                         this.getElementsList();

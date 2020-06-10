@@ -5,7 +5,7 @@ import Vue from 'vue';
 // @ts-ignore
 import {transform} from 'ol/proj';
 import {focusOfFeature, focusOLFeatures, updateOLFeaturesStyle} from '@/domain/services/ol/MapService';
-import {createOLFeature} from '@/domain/services/ol/FeatureService';
+import {createOLFeature, updateOLFeatureStyle} from '@/domain/services/ol/FeatureService';
 import {arrayIndexOf} from '@/domain/services/common/ArrayActions';
 
 export const state: MapState = {
@@ -18,7 +18,7 @@ export const state: MapState = {
     },
     layer: false,
     styles: [],
-    interaction: {draw: {layer: false, mode: '', draw: false}},
+    interaction: {mode: 'select', draw: false, select: false},
 };
 
 export const actions: ActionTree<MapState, RootState> = {
@@ -94,15 +94,14 @@ export const actions: ActionTree<MapState, RootState> = {
 
     /**
      * Изменить режим работы карты
-     * @param rootState
      * @param payload
      */
-    setMapInteraction({}, payload) {
-        state.interaction.draw = Object.assign({}, state.interaction.draw, {
-            mode: (payload.mode === 'point' ? 'Point' :
-                (payload.mode === 'linestring' ? 'LineString' :
-                    (payload.mode === 'polygon' ? 'Polygon' : ''))),
-        });
+    setInteraction({}, payload) {
+        state.interaction.mode = (payload.mode === 'point' ? 'Point' :
+            (payload.mode === 'linestring' ? 'LineString' :
+                (payload.mode === 'polygon' ? 'Polygon' :
+                    (payload.mode === 'modify' ? 'modify' : 'select'))));
+
     },
 
     /**
@@ -117,11 +116,9 @@ export const actions: ActionTree<MapState, RootState> = {
             const feature = createOLFeature(payload.id, payload.geom, payload.property, payload.style);
             state.layer.getSource().addFeature(feature);
         } else {
-            const i = arrayIndexOf(state.styles, payload.layer_id);
-            if (i === -1 || !payload.geom) {
-                return;
-            }
-            const feature = createOLFeature(payload.id, payload.geom, payload.property, state.styles[i]);
+            const feature = createOLFeature(payload.id, payload.geom, payload.property, state.styles.find((item) => {
+                return item.id === payload.layer_id;
+            }));
             state.layer.getSource().addFeature(feature);
         }
     },
@@ -134,6 +131,16 @@ export const actions: ActionTree<MapState, RootState> = {
         const feature = state.layer.getSource().getFeatureById(payload.id);
         if (feature) {
             state.layer.getSource().removeFeature(feature);
+        }
+    },
+
+    updateFeatureTitle({}, payload) {
+        const feature = state.layer.getSource().getFeatureById(payload.id);
+        feature.set('title', payload.title);
+        if (feature) {
+            updateOLFeatureStyle(feature, state.styles.find((item) => {
+                return item.id === payload.layer_id;
+            }));
         }
     },
 
@@ -168,7 +175,7 @@ export const actions: ActionTree<MapState, RootState> = {
                 y: payload.second.id,
             },
             {
-                id: 0, stroke: {color: '#a42038', width: 2},
+                id: 0, stroke: {color: '#a42038', width: 1},
             },
         );
         state.layer.getSource().addFeature(featureGraph);
@@ -179,32 +186,32 @@ export const actions: ActionTree<MapState, RootState> = {
             return;
         }
 
-        const dx = parseFloat(y[1]) - parseFloat(x[1]);
-        const dy = parseFloat(y[2]) - parseFloat(x[2]);
-        const rotation = ((Math.atan2(dy, dx) * -180) / Math.PI) - 7;
-
-        const featureGraphArrow = createOLFeature(
-            `graph-arrow-${payload.first.id}-${payload.second.id}`,
-            payload.second.geometry,
-            {
-                id: `graph-arrow-${payload.first.id}-${payload.second.id}`,
-                title: `graph-arrow-${payload.first.id}-${payload.second.id}`,
-                x: payload.first.id,
-                y: payload.second.id,
-            },
-            {
-                id: 0,
-                pointType: 'icon',
-                icon: {
-                    src: '/images/next.png',
-                    anchor: [20, 4],
-                    opacity: 0, scale: 1,
-                    rotation,
-                },
-                showTitle: false,
-            },
-        );
-        state.layer.getSource().addFeature(featureGraphArrow);
+        // const dx = parseFloat(y[1]) - parseFloat(x[1]);
+        // const dy = parseFloat(y[2]) - parseFloat(x[2]);
+        // const rotation = ((Math.atan2(dy, dx) * -180) / Math.PI) - 7;
+        //
+        // const featureGraphArrow = createOLFeature(
+        //     `graph-arrow-${payload.first.id}-${payload.second.id}`,
+        //     payload.second.geometry,
+        //     {
+        //         id: `graph-arrow-${payload.first.id}-${payload.second.id}`,
+        //         title: `graph-arrow-${payload.first.id}-${payload.second.id}`,
+        //         x: payload.first.id,
+        //         y: payload.second.id,
+        //     },
+        //     {
+        //         id: 0,
+        //         pointType: 'icon',
+        //         icon: {
+        //             src: '/images/next.png',
+        //             anchor: [20, 4],
+        //             opacity: 0, scale: 1,
+        //             rotation,
+        //         },
+        //         showTitle: false,
+        //     },
+        // );
+        // state.layer.getSource().addFeature(featureGraphArrow);
 
     },
 

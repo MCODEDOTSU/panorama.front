@@ -9,45 +9,59 @@
 
         <!-- Список слоёв -->
         <div class="grid-data">
+
             <div class="row row-header">
                 <div class="col-6">Наименование</div>
                 <div class="col-3">Геотип</div>
                 <!--div class="col-3">Родительский слой</div-->
                 <div class="col-3">Включен в модуль</div>
             </div>
+
             <div class="row row-body" v-for="layer in layerState.layers">
+
                 <div class="col-6">
                     <label class="title">{{ layer.title }}</label>
                     <label class="description" v-html="layer.description"></label>
                     <div class="actions">
+
                         <button class="btn-info" data-toggle="modal" data-target="#singleLayerModal"
                                 @click="editLayer(layer)">Изменить
                         </button>
-                        <button :test-tag="layer.title + `_delete`"
-                                class="btn-danger" data-toggle="modal" data-target="#sureModal"
+
+                        <button class="btn-info"
+                                @click="copyLayer(layer)">Дублировать
+                        </button>
+
                         <button :test-tag="layer.title + '_delete'"
                                 class="btn-danger" data-toggle="modal" data-target="#sureModal"
                                 @click="setSureModalContent(layer)">Удалить
                         </button>
+
                     </div>
                 </div>
+
                 <div class="col-3">
                     <label class="title">{{ getGeometryTypeTitle(layer.geometry_type) }}</label>
                 </div>
+
                 <!--div class="col-3">
                     <label class="title" v-if="layer.parent">{{ layer.parent.title }}</label>
                     <label class="title" v-else>-</label>
                 </div-->
+
                 <div class="col-3">
                     <label class="title">{{ layer.module.title }}</label>
                 </div>
+
             </div>
+
             <div class="row row-footer">
                 <div class="col-6">Наименование</div>
                 <div class="col-3">Геотип</div>
                 <!--div class="col-3">Родительский слой</div-->
                 <div class="col-3">Включен в модуль</div>
             </div>
+
         </div>
         <!-- конец Список слоёв -->
 
@@ -63,6 +77,7 @@
     import {Action, State} from 'vuex-class';
 
     import LayerState from '@/store/modules/administrator/layer/types';
+    import ConstructorState from '@/store/modules/administrator/constructor/types';
 
     import SingleLayer from '@/views/administrator/layers/SingleLayer.vue';
     import SureModal from '@/components/common/SureModal.vue';
@@ -83,8 +98,11 @@
         @Action public styleEditorSetDefaultStyle: any;
         @Action public administratorConstructorGetByLayer: any;
         @Action public administratorConstructorUnsetSingle: any;
+        @Action public administratorLayerUpdate: any;
+        @Action public administratorConstructorUpdate: any;
 
         @State('administratorLayer') public layerState: LayerState;
+        @State('administratorConstructor') public constructorState: ConstructorState;
 
         public async created() {
             await this.administratorLayerGetAll();
@@ -121,6 +139,17 @@
             // Сбрасываем значение карты
             this.setMapCenterDefault();
 
+        }
+
+        /**
+         * Создать дубликат слоя
+         */
+        public async copyLayer(layer) {
+            this.layerState.layer = Object.assign({}, layer, { id: 0 });
+            await this.administratorLayerUpdate();
+            await this.administratorConstructorGetByLayer({layerId: layer.id});
+            this.constructorState.isTableExists = false;
+            this.administratorConstructorUpdate({ layerId: this.layerState.layer.id });
         }
 
         /**

@@ -4,7 +4,8 @@
         <div class="geom-data manager">
 
             <!-- Компонент Карты -->
-            <ol-map :editor="true" v-on:selected="onSelected" v-on:modifyend="onModifyend"
+            <ol-map :editor="true" :modifyElement="elementState.element"
+                    v-on:selected="onSelected" v-on:modifyend="onModifyend"
                     v-on:drawend="onDrawend"></ol-map>
 
             <!-- Список слоев и элементов -->
@@ -53,21 +54,48 @@
         @State('managerLayer') public layerState!: LayerState;
         @State('managerElement') public elementState!: ElementState;
 
+        // Слои
+        @Action public managerLayerSetSingle: any;
+
         // Карта
-        @Action public setMapInteraction: any;
+        @Action public setInteraction: any;
         @Action public addFeatureToMap: any;
         @Action public addFeaturesArrowToMap: any;
 
         // Элементы
         @Action public managerElementUpdateGeometry: any;
         @Action public managerMagicElementUpdate: any;
+        @Action public managerElementSetSingle: any;
+        @Action public managerElementGetByLayer: any;
 
         /**
          * Кликнули по Элементу на карте
          * @param e
          */
-        public onSelected(e) {
+        public async onSelected(e) {
 
+            if (this.elementState.magicElement.active === true) {
+                return;
+            }
+
+            let element;
+            if (this.layerState.layer.id === e.layer_id) {
+                element = this.elementState.elements.find((element) => {
+                    return element.id === e.id;
+                });
+            } else {
+                const layer = this.layerState.layers.find((layer) => {
+                    return layer.id === e.layer_id;
+                });
+                this.managerLayerSetSingle({ layer });
+                await this.managerElementGetByLayer({layerId: this.layerState.layer.id});
+                element = this.elementState.elements.find((element) => {
+                    return element.id === e.id;
+                });
+            }
+
+            this.managerElementSetSingle({ element });
+            this.setInteraction({ mode: 'modify' });
         }
 
         /**
@@ -76,6 +104,7 @@
          */
         public onModifyend(e) {
             this.managerElementUpdateGeometry({id: e.properties.id, geometry: e.geom});
+            this.elementState.element.geometry = e.geom;
             this.elementState.elements = this.elementState.elements.map((element) => {
                 if (element.id === e.properties.id) {
                     element.geometry = e.geom;
@@ -98,7 +127,7 @@
                 this.managerElementUpdateGeometry({id: this.elementState.element.id, geometry: e.geom});
 
                 // Меняем режим работы с картой
-                this.setMapInteraction({mode: ''});
+                this.setInteraction({ mode: 'modify' });
 
                 this.addFeatureToMap({
                     id: this.elementState.element.id,
@@ -106,12 +135,12 @@
                     geom: this.elementState.element.geometry,
                     property: {
                         id: this.elementState.element.id,
+                        layer_id: this.elementState.element.layer_id,
                         title: this.elementState.element.title,
                         description: this.elementState.element.description,
                         lenght: this.elementState.element.length,
                         area: this.elementState.element.area,
                         perimeter: this.elementState.element.perimeter,
-                        revision: 3,
                     },
                 });
 
@@ -122,6 +151,14 @@
                     }
                     return element;
                 });
+
+                // Добавляем элемент как отмеченный в хранилие
+                let checkedList = JSON.parse(localStorage.getItem('elementState.checked'));
+                if (checkedList === null) {
+                    checkedList = [];
+                }
+                checkedList.push(this.elementState.element.id);
+                localStorage.setItem('elementState.checked', JSON.stringify(checkedList));
 
             } else {
 
@@ -144,6 +181,7 @@
                     geom: this.elementState.magicElement.element.geometry,
                     property: {
                         id: this.elementState.magicElement.element.id,
+                        layer_id: this.elementState.magicElement.element.layer_id,
                         title: this.elementState.magicElement.element.title.replace('%i', i.toString()),
                         description: this.elementState.magicElement.element.description,
                         lenght: this.elementState.magicElement.element.length,
@@ -162,9 +200,11 @@
                 localStorage.setItem('elementState.checked', JSON.stringify(checkedList));
 
                 // Рисуем стрелочку до предыдущего элемента
-                if (previous.id !== 0) {
-                    this.addFeaturesArrowToMap({ first: previous, second: this.elementState.magicElement.element });
+                if (previous !== undefined && previous.id !== 0) {
+                    this.addFeaturesArrowToMap({first: previous, second: this.elementState.magicElement.element});
                 }
+
+                this.setInteraction({ mode: this.layerState.layer.geometry_type });
 
             }
 

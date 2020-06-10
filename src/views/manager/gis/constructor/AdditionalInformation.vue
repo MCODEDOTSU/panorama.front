@@ -143,6 +143,8 @@
         @Provide() public layers = [];
         @Provide() public search = '';
 
+        @Inject('validator') private $validator: any;
+
         public async created() {
             const res = await axios.get(`${baseUrlAPI}manager/layer/contractor/get`);
             this.layers = res.data;
@@ -175,7 +177,7 @@
          * Получаем наименование предыдущего элемента
          */
         get resolvedPreviousElement() {
-            return this.elementState.element.previous.element === null ? '' :
+            return (this.elementState.element.previous === undefined || this.elementState.element.previous.element === null) ? '' :
                 this.elementState.element.previous.element.title;
         }
 
@@ -191,8 +193,6 @@
             });
             return result;
         }
-
-        @Inject('validator') private $validator: any;
 
     }
 </script>

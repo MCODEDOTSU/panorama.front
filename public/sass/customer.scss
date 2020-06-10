@@ -416,8 +416,9 @@ footer {
         top: 102px;
         left: 10px;
         font-size: 12px;
-        width: 30px;
         text-align: center;
+        overflow: hidden;
+        width: 28px;
     }
 
     #map {
@@ -428,6 +429,7 @@ footer {
 
         .ol-control {
             position: absolute;
+            background: none;
 
             &.ol-attribution {
                 bottom: 0;
@@ -459,6 +461,7 @@ footer {
                     -webkit-border-radius: 50% !important;
                     -moz-border-radius: 50% !important;
                     border-radius: 50% !important;
+                    line-height: 0;
                     @include box-shadow(0 0 10px rgba(0, 0, 0, 0.1));
                     &:hover {
                         background: $second-hover;

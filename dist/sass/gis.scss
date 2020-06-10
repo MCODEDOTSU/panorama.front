@@ -63,11 +63,31 @@
             }
         }
 
-        .btn-add-element {
+        .btn-delete-element {
             position: absolute;
             top: 0;
             right: 0;
+            width: 30px;
+            i {
+                margin: 19px 0 0;
+            }
+        }
 
+        .btn-add-element {
+            position: absolute;
+            top: 0;
+            right: 30px;
+            width: 30px;
+            i {
+                margin: 19px 0 0;
+            }
+        }
+
+        .btn-magic-element {
+            position: absolute;
+            top: 0;
+            right: 60px;
+            width: 30px;
             i {
                 margin: 19px 0 0;
             }
@@ -277,7 +297,6 @@
             @include transition(all 0.5s ease-out);
         }
 
-
     }
 
     .nav-tabs {
@@ -426,6 +445,21 @@
                 }
             }
         }
+    }
+
+    .elements-list {
+        .scroll-container {
+            height: calc(100vh - 104px);
+            .scrollbar {
+                height: calc(100vh - 104px);
+            }
+        }
+    }
+
+    .alert {
+        margin: 16px 0;
+        font-size: 13px;
+        padding: 8px 12px;
     }
 
 }

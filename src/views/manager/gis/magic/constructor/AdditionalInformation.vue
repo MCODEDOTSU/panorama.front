@@ -155,6 +155,8 @@
         @Provide() public layers = [];
         @Provide() public search = '';
 
+        @Inject('validator') private $validator: any;
+
         public async created() {
             const res = await axios.get(`${baseUrlAPI}manager/layer/contractor/get`);
             this.layers = res.data;
@@ -204,6 +206,5 @@
             return result;
         }
 
-        @Inject('validator') private $validator: any;
     }
 </script>

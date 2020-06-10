@@ -1,9 +1,10 @@
 import {arrayIndexOf} from '@/domain/services/common/ArrayActions';
 import {updateOLFeatureStyle} from '@/domain/services/ol/FeatureService';
+import {createOLStyle} from '@/domain/services/ol/StyleService';
 import Map from 'ol/Map';
 import View from 'ol/View';
-import {Tile as TileLayer} from 'ol/layer';
-import {OSM as OSMSource} from 'ol/source';
+import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
+import {Cluster as ClusterSource, OSM as OSMSource, Vector as VectorSource} from 'ol/source';
 // @ts-ignore
 import {Select, Draw} from 'ol/interaction';
 // @ts-ignore
@@ -34,12 +35,12 @@ export const initOLMap = (longitude: number, latitude: number, zoom: number, sel
 
     return new Map({
         layers: [
-            new TileLayer({ source: new OSMSource() }),
+            new TileLayer({source: new OSMSource()}),
         ],
         target: selector ? selector : 'map',
         controls: defaultControls().extend([mousePositionControl]),
         view: new View({
-            center: transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857' ),
+            center: transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857'),
             zoom,
         }),
     });
@@ -47,13 +48,11 @@ export const initOLMap = (longitude: number, latitude: number, zoom: number, sel
 };
 
 /**
- * Создание интерактивного слоя для выделения элементов на карте
- * @param action
+ * Создать новый OpenLayer слой
  */
-export const createOLSelectInteraction = (action: any) => {
-    const selectSingleClick = new Select();
-    selectSingleClick.on('select', action);
-    return selectSingleClick;
+export const createOLLayer = () => {
+    const source = new VectorSource({});
+    return new VectorLayer({source});
 };
 
 /**
@@ -82,15 +81,6 @@ export const updateOLElementStyle = (layer: any, styles: any) => {
             updateOLFeatureStyle(feature, styles[i]);
         }
     });
-};
-
-export const createOLDraw = (mode: any, layer: any, action: any) => {
-    if (mode === '') {
-        return;
-    }
-    const draw = new Draw({ source: layer.getSource(), type: mode });
-    draw.on('drawend', action);
-    return draw;
 };
 
 /**
