@@ -9,6 +9,7 @@ export default interface MapState {
         selectorMapContainer: string;
     };
     map: any;
+    source: any;
     layer: any;
     styles: IStyle[];
     interaction: IInteraction;

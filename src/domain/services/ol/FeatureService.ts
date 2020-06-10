@@ -16,24 +16,24 @@ export const createOLFeature = (id: string, geom: string, property: any, style?:
         dataProjection: 'EPSG:4326',
         featureProjection: 'EPSG:3857',
     });
-    if (style) {
-        const olStyle = createOLStyle(style, property.title);
-        feature.setStyle(olStyle);
-    }
+    // if (style) {
+    //     const olStyle = createOLStyle(style, property.title);
+    //     feature.setStyle(olStyle);
+    // }
     feature.setProperties(property);
     feature.setId(id);
     return feature;
 };
 
-/**
- * Обновить стиль геообъекта
- * @param feature
- * @param style
- */
-export const updateOLFeatureStyle = (feature: any, style: any) => {
-    const olStyle = createOLStyle(style, feature.get('title'));
-    feature.setStyle(olStyle);
-};
+// /**
+//  * Обновить стиль геообъекта
+//  * @param feature
+//  * @param style
+//  */
+// export const updateOLFeatureStyle = (feature: any, style: any) => {
+//     const olStyle = createOLStyle(style, feature.get('title'));
+//     // feature.setStyle(olStyle);
+// };
 
 /**
  * Тип геометрии по координатам

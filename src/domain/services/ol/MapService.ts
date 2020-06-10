@@ -1,10 +1,10 @@
 import {arrayIndexOf} from '@/domain/services/common/ArrayActions';
-import {updateOLFeatureStyle} from '@/domain/services/ol/FeatureService';
+// import {updateOLFeatureStyle} from '@/domain/services/ol/FeatureService';
 import {createOLStyle} from '@/domain/services/ol/StyleService';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
-import {Cluster as ClusterSource, OSM as OSMSource, Vector as VectorSource} from 'ol/source';
+import {Cluster, OSM as OSMSource, Vector as VectorSource} from 'ol/source';
 // @ts-ignore
 import {Select, Draw} from 'ol/interaction';
 // @ts-ignore
@@ -15,6 +15,9 @@ import {createStringXY} from 'ol/coordinate';
 import {transform} from 'ol/proj';
 // @ts-ignore
 import {defaults as defaultControls} from 'ol/control';
+
+
+import {Circle as CircleStyle, Fill, Stroke, Style, Text} from 'ol/style';
 
 /**
  * Создание OpenLayer Карты
@@ -48,6 +51,35 @@ export const initOLMap = (longitude: number, latitude: number, zoom: number, sel
 };
 
 /**
+ * Создать новый OpenLayer Source
+ */
+export const createOLSource = () => {
+    return new VectorSource({});
+};
+
+/**
+ * Создать новый OpenLayer Source
+ */
+export const createOLClusterLayer = (source) => {
+
+    const defaultClusterStyle = {
+        id: 0,
+        showTitle: true,
+        font: {fill: {color: '#ffffff'}, font: '16px Calibri, sans-serif', textBaseline: 'middle'},
+        pointType: 'shape',
+        shape: {fill: {color: '#a42038', opacity: 10}, stroke: {color: '#ffffff', opacity: 0, width: 1}, points: 11, radius: 16, rotation: 0},
+    };
+
+    return new VectorLayer({
+        source: new Cluster({distance: 100, source}),
+        style: (feature) => {
+            const size = feature.get('features').length;
+            return createOLStyle(defaultClusterStyle, size.toString());
+        },
+    });
+};
+
+/**
  * Создать новый OpenLayer слой
  */
 export const createOLLayer = () => {
@@ -60,27 +92,28 @@ export const createOLLayer = () => {
  * @param layer
  * @param styles
  */
-export const updateOLFeaturesStyle = (layer: any, styles: any) => {
-    layer.getSource().forEachFeature((feature) => {
-        const i = arrayIndexOf(styles, feature.get('layer_id'));
-        if (i !== -1) {
-            updateOLFeatureStyle(feature, styles[i]);
-        }
-    });
-};
+export const updateOLClusterLayerStyle = (layer: any, styles: any) => {
 
-/**
- * Обновить стиль элемента карты
- * @param layer
- * @param styles
- */
-export const updateOLElementStyle = (layer: any, styles: any) => {
-    layer.getSource().forEachFeature((feature) => {
-        const i = arrayIndexOf(styles, feature.get('layer_id'));
-        if (i !== -1) {
-            updateOLFeatureStyle(feature, styles[i]);
+    const defaultClusterStyle = {
+        id: 0,
+        showTitle: true,
+        font: {fill: {color: '#ffffff'}, font: '16px Calibri, sans-serif', textBaseline: 'middle'},
+        pointType: 'shape',
+        shape: {fill: {color: '#a42038', opacity: 10}, stroke: {color: '#ffffff', opacity: 0, width: 1}, points: 11, radius: 16, rotation: 0},
+    };
+
+    layer.setStyle((feature) => {
+        const size = feature.get('features').length;
+        if (size === 1) {
+            const properties = feature.get('features')[0].getProperties();
+            const style = styles.find((s) => {
+                return s.id === properties.layer_id;
+            });
+            return style ? createOLStyle(style, properties.title) : createOLStyle(defaultClusterStyle, properties.title);
         }
+        return createOLStyle(defaultClusterStyle, size.toString());
     });
+
 };
 
 /**

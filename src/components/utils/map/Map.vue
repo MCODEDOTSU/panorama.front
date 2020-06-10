@@ -17,7 +17,13 @@
     import {WKT} from 'ol/format';
     // @ts-ignore
     import {Select, Modify, Draw} from 'ol/interaction';
-    import {initOLMap, createOLLayer, createOLCluster} from '@/domain/services/ol/MapService';
+    import {initOLMap, createOLSource, createOLClusterLayer, createOLLayer} from '@/domain/services/ol/MapService';
+
+    import Feature from 'ol/Feature';
+    import Point from 'ol/geom/Point';
+    import {Cluster, OSM, Vector as VectorSource} from 'ol/source';
+    import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
+    import {Circle as CircleStyle, Fill, Stroke, Style, Text} from 'ol/style';
 
     @Component({
         components: {},
@@ -38,8 +44,13 @@
         @Emit()
         public selected(e: any) {
             if (e.selected.length !== 0) {
-                return e.selected[0].getProperties();
+                const clusterFeature = e.selected[0].getProperties();
+                if (clusterFeature.features.length === 1) {
+                    return clusterFeature.features[0].getProperties();
+                }
             }
+            this.mapState.interaction.select.getFeatures().clear();
+            return false;
         }
 
         /**
@@ -47,7 +58,7 @@
          */
         @Emit()
         public modifyend(e: any) {
-            const feature = this.mapState.layer.getSource().getFeatureById(this.modifyElement.id);
+            const feature = this.mapState.source.getFeatureById(this.modifyElement.id);
             return {
                 properties: feature.getProperties(),
                 geom: (new WKT()).writeFeature(feature, {
@@ -70,7 +81,7 @@
                 }),
             };
             // TODO: надо бы прикончить нанесеный объек, но выходит ошибка
-            // this.mapState.layer.getSource().removeFeature(e.feature);
+            // this.mapState.source.removeFeature(e.feature);
         }
 
         /**
@@ -110,15 +121,13 @@
                 this.getMapCenter();
             });
 
-            // Создание слоев карты
-            const layer = createOLLayer();
+            const source = createOLSource();
+
+            const layer = createOLClusterLayer(source);
+
             map.addLayer(layer);
 
-            // Создание Кластеризации
-            // const clusterLayer = createOLCluster(layer.getSource());
-            // map.addLayer(clusterLayer, this.mapState.styles);
-
-            this.createMap({map, layer});
+            this.createMap({map, source, layer});
         }
 
         /**
@@ -135,7 +144,7 @@
 
             if (this.mapState.interaction.mode === 'modify') {
                 if (this.mapState.interaction.select.getFeatures().getLength() === 0) {
-                    const feature = this.mapState.layer.getSource().getFeatureById(this.modifyElement.id);
+                    const feature = this.mapState.source.getFeatureById(this.modifyElement.id);
                     this.mapState.interaction.select.getFeatures().push(feature);
                 }
                 this.mapState.interaction.draw = new Modify({features: this.mapState.interaction.select.getFeatures()});
@@ -143,7 +152,7 @@
                 this.mapState.map.addInteraction(this.mapState.interaction.draw);
             } else {
                 this.mapState.interaction.draw = new Draw({
-                    source: this.mapState.layer.getSource(),
+                    source: this.mapState.source,
                     type: this.mapState.interaction.mode,
                 });
                 this.mapState.interaction.draw.on('drawend', this.drawend);

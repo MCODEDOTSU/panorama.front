@@ -74,7 +74,7 @@
          */
         public async onSelected(e) {
 
-            if (this.elementState.magicElement.active === true) {
+            if (e === false || this.elementState.magicElement.active === true) {
                 return;
             }
 

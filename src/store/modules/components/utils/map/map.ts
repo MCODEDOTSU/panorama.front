@@ -4,9 +4,9 @@ import RootState from '@/store/types';
 import Vue from 'vue';
 // @ts-ignore
 import {transform} from 'ol/proj';
-import {focusOfFeature, focusOLFeatures, updateOLFeaturesStyle} from '@/domain/services/ol/MapService';
-import {createOLFeature, updateOLFeatureStyle} from '@/domain/services/ol/FeatureService';
-import {arrayIndexOf} from '@/domain/services/common/ArrayActions';
+import {focusOfFeature, focusOLFeatures, updateOLClusterLayerStyle} from '@/domain/services/ol/MapService';
+// import {createOLFeature, updateOLFeatureStyle} from '@/domain/services/ol/FeatureService';
+import {createOLFeature} from '@/domain/services/ol/FeatureService';
 
 export const state: MapState = {
     map: false,
@@ -16,6 +16,7 @@ export const state: MapState = {
         zoom: 17,
         selectorMapContainer: 'map',
     },
+    source: false,
     layer: false,
     styles: [],
     interaction: {mode: 'select', draw: false, select: false},
@@ -69,6 +70,7 @@ export const actions: ActionTree<MapState, RootState> = {
      */
     createMap({}, payload) {
         state.map = payload.map;
+        state.source = payload.source;
         state.layer = payload.layer;
     },
 
@@ -89,7 +91,7 @@ export const actions: ActionTree<MapState, RootState> = {
      */
     setMapStyles({}, payload) {
         state.styles = payload.styles;
-        updateOLFeaturesStyle(state.layer, state.styles);
+        updateOLClusterLayerStyle(state.layer, state.styles);
     },
 
     /**
@@ -114,12 +116,12 @@ export const actions: ActionTree<MapState, RootState> = {
                 return;
             }
             const feature = createOLFeature(payload.id, payload.geom, payload.property, payload.style);
-            state.layer.getSource().addFeature(feature);
+            state.source.addFeature(feature);
         } else {
             const feature = createOLFeature(payload.id, payload.geom, payload.property, state.styles.find((item) => {
                 return item.id === payload.layer_id;
             }));
-            state.layer.getSource().addFeature(feature);
+            state.source.addFeature(feature);
         }
     },
 
@@ -128,20 +130,20 @@ export const actions: ActionTree<MapState, RootState> = {
      * @param payload
      */
     removeFeatureFromMap({}, payload) {
-        const feature = state.layer.getSource().getFeatureById(payload.id);
+        const feature = state.source.getFeatureById(payload.id);
         if (feature) {
-            state.layer.getSource().removeFeature(feature);
+            state.source.removeFeature(feature);
         }
     },
 
     updateFeatureTitle({}, payload) {
-        const feature = state.layer.getSource().getFeatureById(payload.id);
-        feature.set('title', payload.title);
-        if (feature) {
-            updateOLFeatureStyle(feature, state.styles.find((item) => {
-                return item.id === payload.layer_id;
-            }));
-        }
+        // const feature = state.source.getFeatureById(payload.id);
+        // feature.set('title', payload.title);
+        // if (feature) {
+        //     updateOLFeatureStyle(feature, state.styles.find((item) => {
+        //         return item.id === payload.layer_id;
+        //     }));
+        // }
     },
 
     /**
@@ -178,7 +180,7 @@ export const actions: ActionTree<MapState, RootState> = {
                 id: 0, stroke: {color: '#a42038', width: 1},
             },
         );
-        state.layer.getSource().addFeature(featureGraph);
+        state.source.addFeature(featureGraph);
 
         x = /^POINT\(([\d\.]+)\s([\d\.]+)\)$/.exec(payload.first.geometry);
         y = /^POINT\(([\d\.]+)\s([\d\.]+)\)$/.exec(payload.second.geometry);
@@ -211,7 +213,7 @@ export const actions: ActionTree<MapState, RootState> = {
         //         showTitle: false,
         //     },
         // );
-        // state.layer.getSource().addFeature(featureGraphArrow);
+        // state.source.addFeature(featureGraphArrow);
 
     },
 
@@ -220,13 +222,13 @@ export const actions: ActionTree<MapState, RootState> = {
      * @param payload
      */
     removeFeaturesArrowFromMap({}, payload) {
-        const featureGraph = state.layer.getSource().getFeatureById(`graph-${payload.first.id}-${payload.second.id}`);
+        const featureGraph = state.source.getFeatureById(`graph-${payload.first.id}-${payload.second.id}`);
         if (featureGraph) {
-            state.layer.getSource().removeFeature(featureGraph);
+            state.source.removeFeature(featureGraph);
         }
-        const featureGraphArrow = state.layer.getSource().getFeatureById(`graph-arrow-${payload.first.id}-${payload.second.id}`);
+        const featureGraphArrow = state.source.getFeatureById(`graph-arrow-${payload.first.id}-${payload.second.id}`);
         if (featureGraphArrow) {
-            state.layer.getSource().removeFeature(featureGraphArrow);
+            state.source.removeFeature(featureGraphArrow);
         }
     },
 
@@ -235,7 +237,7 @@ export const actions: ActionTree<MapState, RootState> = {
      * @param payload
      */
     focusOfFeature({}, payload) {
-        const feature = state.layer.getSource().getFeatureById(payload.id);
+        const feature = state.source.getFeatureById(payload.id);
         if (feature) {
             focusOfFeature(state.map, feature);
         }
@@ -249,7 +251,7 @@ export const actions: ActionTree<MapState, RootState> = {
         const features = [];
         // Находим объекты по каждому ИД
         payload.ids.forEach((id) => {
-            const feature = state.layer.getSource().getFeatureById(id);
+            const feature = state.source.getFeatureById(id);
             if (feature) {
                 features.push(feature);
             }

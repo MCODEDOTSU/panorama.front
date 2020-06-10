@@ -121,6 +121,7 @@ export const createOLStyle = (style: IStyle, title?: string) => {
 
         styleProperties = Object.assign({}, styleProperties, {
             text: new Text(fontProperties),
+            cursor: 'pointer',
         });
 
     }
