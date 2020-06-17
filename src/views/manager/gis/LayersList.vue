@@ -6,8 +6,9 @@
             <h2>Картографические слои</h2>
 
             <div class="search-panel">
-                <input type="text" name="element-search" placeholder="поиск элементов по имени или описанию" />
-                <button><i class="fa fa-search"></i></button>
+                <input type="text" name="element-search" placeholder="поиск элементов по имени или описанию"
+                       v-model="search" v-on:keyup.enter="searchInit"/>
+                <button @click="searchInit"><i class="fa fa-search"></i></button>
             </div>
 
         </div>
@@ -34,6 +35,7 @@
 
     import {Component, Provide, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
+    import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
 
     import LayerState from '@/store/modules/manager/layer/types';
 
@@ -51,6 +53,8 @@
         // Карта
         @Action public setMapStyles: any;
 
+        @Provide() public search = '';
+
         public async created() {
             await this.managerLayerGetByContractor();
             this.setMapStyles({ styles: this.layerState.styles });
@@ -58,6 +62,17 @@
             const layer = JSON.parse(localStorage.getItem('layerState.layer'));
             if (layer !== null) {
                 this.managerLayerSetSingle({ layer });
+            }
+        }
+
+        /**
+         * Активировать поиск
+         */
+        private searchInit() {
+            if (this.search.length < 3) {
+                ErrorNotifier.notifyWithCustomMessage('Для поиска введите минимум три символа');
+            } else {
+                this.elementState.search = this.search;
             }
         }
 

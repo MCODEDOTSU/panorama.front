@@ -14,7 +14,10 @@
                 <layers-list v-if="layerState.layer.id === 0"></layers-list>
 
                 <elements-list
-                        v-else-if="elementState.element.id === 0 && elementState.magicElement.active === false"></elements-list>
+                        v-else-if="elementState.element.id === 0 && elementState.magicElement.active === false && elementState.search === ''"></elements-list>
+
+                <search-elements-list
+                        v-else-if="elementState.element.id === 0 && elementState.magicElement.active === false"></search-elements-list>
 
                 <single-element v-else-if="elementState.magicElement.active === false"></single-element>
 
@@ -42,6 +45,7 @@
     import OlMap from '@/components/utils/map/Map.vue';
     import LayersList from '@/views/manager/gis/LayersList.vue';
     import ElementsList from '@/views/manager/gis/ElementsList.vue';
+    import SearchElementsList from '@/views/manager/gis/SearchElementsList.vue';
     import SingleElement from '@/views/manager/gis/SingleElement.vue';
     import MagicElement from '@/views/manager/gis/magic/MagicElement.vue';
     import SearchAddress from '@/views/manager/gis/SearchAddress.vue';
@@ -49,7 +53,7 @@
     import SureModal from '@/components/common/SureModal.vue';
 
     @Component({
-        components: {OlMap, LayersList, ElementsList, SingleElement, MagicElement, SureModal, SearchAddress},
+        components: {OlMap, LayersList, ElementsList, SearchElementsList, SingleElement, MagicElement, SureModal, SearchAddress},
     })
 
     export default class Gis extends Vue {
@@ -99,7 +103,6 @@
          * @param e
          */
         public onModifyend(e) {
-            console.log(e);
             this.managerElementUpdateGeometry({id: e.properties.id, geometry: e.geom});
             this.elementState.element.geometry = e.geom;
             this.elementState.elements = this.elementState.elements.map((element) => {

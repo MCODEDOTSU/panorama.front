@@ -25,15 +25,17 @@ export const state: ElementState = {
         },
     },
     elements: [],
+    magicElement: {
+        active: false,
+        index: 1,
+    },
+    // Параметры пагинации и поиска элементов
     paginator: {
         count: 0,
         current: 1,
         limit: 50,
     },
-    magicElement: {
-        active: false,
-        index: 1,
-    },
+    search: '',
 };
 
 export const actions: ActionTree<ElementState, RootState> = {
@@ -69,7 +71,32 @@ export const actions: ActionTree<ElementState, RootState> = {
      */
     async managerElementGetCountByLayer({}, payload) {
         try {
-            const res = await axios.get(`${baseUrlAPI}manager/element/count/${payload.layerId}`);
+            const res = await axios.get(`${baseUrlAPI}manager/element/layer/count/${payload.layerId}`);
+            state.paginator.count = Math.ceil(res.data / state.paginator.limit);
+        } catch {
+            ErrorNotifier.notify();
+        }
+    },
+
+    /**
+     * Получить элементы по поиску (пагинация)
+     */
+    async managerElementGetLimitBySearch({}, payload) {
+        try {
+            state.elements = [];
+            const res = await axios.get(`${baseUrlAPI}manager/element/search/${state.search}/${state.paginator.limit}/${state.paginator.current - 1}`);
+            state.elements = res.data;
+        } catch {
+            ErrorNotifier.notify();
+        }
+    },
+
+    /**
+     * Получить количество элементов по поиску
+     */
+    async managerElementGetCountBySearch({}, payload) {
+        try {
+            const res = await axios.get(`${baseUrlAPI}manager/element/search/count/${state.search}`);
             state.paginator.count = Math.ceil(res.data / state.paginator.limit);
         } catch {
             ErrorNotifier.notify();

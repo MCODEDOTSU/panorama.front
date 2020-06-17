@@ -9,21 +9,26 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from 'vue-property-decorator';
+    import {Component, Prop, Vue, Inject} from 'vue-property-decorator';
 
     @Component
     export default class OneFromManyField extends Vue {
 
         @Prop() private field: any;
 
+        // TODO: this error is ignored. check if there is another possibility to get rid of this
+        // @ts-ignore
+        @Inject('validator') private $validator: any;
+
         get resolvedValue() {
-            if (this.field.value) {
-                return this.field.value;
+            if (!this.field.value) {
+                this.field.value = this.field.options.default;
             }
-            return this.field.options.default;
+            return this.field.value;
         }
 
         set resolvedValue(value) {
+            debugger;
             this.field.value = value;
         }
     }

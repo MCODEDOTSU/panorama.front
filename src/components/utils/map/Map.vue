@@ -80,8 +80,10 @@
         @Emit()
         public modifyend(e: any) {
             const feature = e.features.getArray()[0];
+            let properties = feature.getProperties();
+            properties = properties.id === undefined ? properties.features[0].getProperties() : properties;
             return {
-                properties: feature.getProperties().features[0].getProperties(),
+                properties,
                 geom: (new WKT()).writeFeature(feature, {
                     dataProjection: "EPSG:4326",
                     featureProjection: "EPSG:3395",

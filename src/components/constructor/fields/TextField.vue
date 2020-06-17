@@ -21,6 +21,10 @@
 
         @Prop() private field: any;
 
+        // TODO: this error is ignored. check if there is another possibility to get rid of this
+        // @ts-ignore
+        @Inject('validator') private $validator: any;
+
         /**
          * Правила валидации
          */

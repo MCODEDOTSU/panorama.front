@@ -68,6 +68,10 @@
 
         @Prop() private field: any;
 
+        // TODO: this error is ignored. check if there is another possibility to get rid of this
+        // @ts-ignore
+        @Inject('validator') private $validator: any;
+
         @Watch('field.value', {deep: true})
         public onChangeFieldValue() {
             this.selectedElementTitle = this.field.value !== null ? this.field.value.title : '';

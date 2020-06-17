@@ -33,8 +33,9 @@
             </div>
 
             <div class="search-panel">
-                <input type="text" name="element-search" placeholder="поиск элементов по имени или описанию" />
-                <button><i class="fa fa-search"></i></button>
+                <input type="text" name="element-search" placeholder="поиск элементов по имени или описанию"
+                       v-model="search" v-on:keyup.enter="searchInit"/>
+                <button @click="searchInit"><i class="fa fa-search"></i></button>
             </div>
 
         </div>
@@ -47,7 +48,7 @@
 
                     <li class="element-item" v-for="(element, i) in elementState.elements" :key="element.id">
 
-                        <!-- Строка со слоем -->
+                        <!-- Строка с Элементом -->
                         <span class="element-item-content">
 
                             <div v-if="element.geometry" @click="selectElement(i)" class="btn-checked element-item-select"
@@ -123,7 +124,7 @@
     import {Component, Provide, Vue, Prop, Watch} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import {baseUrlAPI} from '@/globals';
-    import axios from 'axios';
+    import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
 
     import LayerState from '@/store/modules/manager/layer/types';
     import ElementState from '@/store/modules/manager/element/types';
@@ -155,10 +156,10 @@
         @Action public removeFeatureFromMap: any;
         @Action public removeFeaturesArrowFromMap: any;
         @Action public focusOfFeature: any;
-        @Action public focusOfFeatures: any;
         @Action public setInteraction: any;
 
         @Provide() public checkedAll = false;
+        @Provide() public search = '';
 
         // Интерфейсы
         @Action public setSureModal: any;
@@ -166,6 +167,7 @@
         public async mounted() {
 
             // Пагинация
+            this.elementState.paginator.current = 1;
             this.managerElementGetCountByLayer({ layerId: this.layerState.layer.id });
 
             // Запоминаем выбранный слой
@@ -232,7 +234,7 @@
          */
         public async selectElement(i) {
 
-            const checked = this.elementState.elements[i].checked === true ? false : true;
+            const checked = !this.elementState.elements[i].checked;
             const element = Object.assign({}, this.elementState.elements[i], { checked: true });
 
             if (checked === true) {
@@ -454,6 +456,17 @@
 
                 },
             });
+        }
+
+        /**
+         * Активировать поиск
+         */
+        private searchInit() {
+            if (this.search.length < 3) {
+                ErrorNotifier.notifyWithCustomMessage('Для поиска введите минимум три символа');
+            } else {
+                this.elementState.search = this.search;
+            }
         }
 
         get resolvedDeleteAllButtonShow() {

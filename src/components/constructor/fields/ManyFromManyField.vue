@@ -14,13 +14,18 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
+
+    import {Component, Prop, Vue, Inject} from 'vue-property-decorator';
     import TableField from '@/domain/entities/constructor/TableField';
 
     @Component
     export default class ManyFromManyField extends Vue {
 
         @Prop() private field: TableField;
+
+        // TODO: this error is ignored. check if there is another possibility to get rid of this
+        // @ts-ignore
+        @Inject('validator') private $validator: any;
 
         get resolvedValue() {
             if (this.field.value) {

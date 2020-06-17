@@ -137,6 +137,7 @@ export const focusOfFeature = (map: any, feature: any) => {
     if (extent[0] === extent[2] && extent[1] === extent[3]) {
         map.getView().animate({
             center: ([(extent[0] + extent[2]) / 2, (extent[1] + extent[3]) / 2]),
+            zoom: 18,
             duration: 300,
         });
     } else {

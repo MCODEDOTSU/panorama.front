@@ -52,7 +52,7 @@
 
 <script lang="ts">
 
-    import {Component, Prop, Provide, Vue} from 'vue-property-decorator';
+    import {Component, Prop, Provide, Vue, Inject} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
     import TableField from '@/domain/entities/constructor/TableField';
@@ -68,6 +68,10 @@
         @Provide() public uploadsErrors = [];
 
         @Prop() private field: any;
+
+        // TODO: this error is ignored. check if there is another possibility to get rid of this
+        // @ts-ignore
+        @Inject('validator') private $validator: any;
 
         public selectFiles() {
             // @ts-ignore

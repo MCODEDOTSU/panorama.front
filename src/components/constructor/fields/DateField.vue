@@ -7,7 +7,7 @@
 
 <script lang="ts">
 
-    import {Component, Prop, Provide, Vue} from 'vue-property-decorator';
+    import {Component, Prop, Provide, Vue, Inject} from 'vue-property-decorator';
     import Datepicker from 'vuejs-datepicker';
     import {ru} from 'vuejs-datepicker/dist/locale';
 
@@ -15,12 +15,17 @@
         components: {Datepicker},
     })
     export default class DateField extends Vue {
+
         @Prop() private field: any;
         @Provide() private ru: any = ru;
 
         @Provide() private disabledDates = {
             ranges: this.getDisabledDates(),
         };
+
+        // TODO: this error is ignored. check if there is another possibility to get rid of this
+        // @ts-ignore
+        @Inject('validator') private $validator: any;
 
         public getDisabledDates() {
             const ranges = [];
