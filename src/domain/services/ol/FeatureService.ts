@@ -14,7 +14,7 @@ export const createOLFeature = (id: string, geom: string, property: any, style?:
     const format = new WKT();
     const feature = format.readFeature(geom, {
         dataProjection: 'EPSG:4326',
-        featureProjection: 'EPSG:3857',
+        featureProjection: 'EPSG:3395',
     });
     // if (style) {
     //     const olStyle = createOLStyle(style, property.title);

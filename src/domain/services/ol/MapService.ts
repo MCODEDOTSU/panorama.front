@@ -4,7 +4,9 @@ import {createOLStyle} from '@/domain/services/ol/StyleService';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
-import {Cluster, OSM as OSMSource, Vector as VectorSource} from 'ol/source';
+import {Cluster, OSM as OSMSource, Vector as VectorSource, XYZ} from 'ol/source';
+// @ts-ignore
+import {createXYZ} from 'ol/tilegrid';
 // @ts-ignore
 import {Select, Draw} from 'ol/interaction';
 // @ts-ignore
@@ -12,10 +14,11 @@ import {MousePosition} from 'ol/control';
 // @ts-ignore
 import {createStringXY} from 'ol/coordinate';
 // @ts-ignore
-import {transform} from 'ol/proj';
+import {transform, get as projGet, transformExtent} from 'ol/proj';
+// @ts-ignore
+import {register as proj4Register} from 'ol/proj/proj4';
 // @ts-ignore
 import {defaults as defaultControls} from 'ol/control';
-
 
 import {Circle as CircleStyle, Fill, Stroke, Style, Text} from 'ol/style';
 
@@ -26,7 +29,13 @@ import {Circle as CircleStyle, Fill, Stroke, Style, Text} from 'ol/style';
  * @param zoom
  * @param selector
  */
-export const initOLMap = (longitude: number, latitude: number, zoom: number, selector?: string) => {
+export const initOLMap = (longitude: number, latitude: number, zoom: number, tiles: [], selector?: string) => {
+
+    // @ts-ignore
+    proj4.defs('EPSG:3395', '+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs');
+    // @ts-ignore
+    proj4Register(proj4);
+    projGet('EPSG:3395').setExtent([-20037508.342789244, -20037508.342789244, 20037508.342789244, 20037508.342789244]);
 
     const mousePositionControl = new MousePosition({
         coordinateFormat: createStringXY(4),
@@ -37,14 +46,14 @@ export const initOLMap = (longitude: number, latitude: number, zoom: number, sel
     });
 
     return new Map({
-        layers: [
-            new TileLayer({source: new OSMSource()}),
-        ],
+        layers: tiles,
         target: selector ? selector : 'map',
         controls: defaultControls().extend([mousePositionControl]),
         view: new View({
-            center: transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857'),
+            center: transform([longitude, latitude], 'EPSG:4326', 'EPSG:3395'),
+            projection: 'EPSG:3395',
             zoom,
+            extent: transformExtent([-180, -80, 180, 80], 'EPSG:4326', 'EPSG:3395')
         }),
     });
 

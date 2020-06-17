@@ -1,6 +1,7 @@
 <template>
     <div class="single-element" ref="single-element">
-        <h2>
+
+        <div class="header">
 
             <div v-if="isChanged || isStart" title="Вернуться к списку элементов" class="btn"
                  @click="setSureModalContent()"
@@ -11,7 +12,7 @@
                 <i class="fa fa-angle-left"></i>
             </div>
 
-            Шаблон
+            <h2>Шаблон</h2>
 
             <div v-if="!isStart" class="btn btn-action btn-update-element"
                  title="Запустить создание цепочки элементов" @click="start()">
@@ -23,7 +24,7 @@
                 <i class="fa fa-stop"></i>
             </div>
 
-        </h2>
+        </div>
 
         <div>
             <additional-group-tabs></additional-group-tabs>

@@ -13,4 +13,5 @@ export default interface MapState {
     layer: any;
     styles: IStyle[];
     interaction: IInteraction;
+    tiles: any;
 }

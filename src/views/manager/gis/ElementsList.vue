@@ -1,13 +1,16 @@
 <template>
     <div class="elements-list" ref="elements-list">
 
-        <h2>
+        <div class="header">
+
             <div title="Вернуться к списку слоёв" class="btn" @click="getLayersList()">
                 <i class="fa fa-angle-left"></i>
             </div>
             <div @click="selectLayer()" class="btn-checked" v-bind:class="{checked: checkedAll}"
                  title="Отобразить все элементы на карте"></div>
-            {{ layerState.layer.title }}
+
+
+            <h2>{{ layerState.layer.title }}</h2>
 
             <!-- Кнопка "Создать Несколько Элементов" -->
             <div class="btn btn-action btn-magic-element"
@@ -29,11 +32,16 @@
                 <i class="fas fa-trash"></i>
             </div>
 
-        </h2>
+            <div class="search-panel">
+                <input type="text" name="element-search" placeholder="поиск элементов по имени или описанию" />
+                <button><i class="fa fa-search"></i></button>
+            </div>
 
-        <div class="scroll-container">
+        </div>
 
-            <vue-scrollbar class="scrollbar scrollbar-min" ref="Scrollbar">
+        <div class="scroll-container" v-bind:class="{ pages: elementState.paginator.count > 1 }">
+
+            <vue-scrollbar class="scrollbar scrollbar-min" ref="scrollbar">
 
                 <ul class="data-list elements-list">
 
@@ -79,12 +87,40 @@
 
         </div>
 
+        <!-- Пагинация -->
+
+        <div class="pages-container" v-if="elementState.paginator.count > 20">
+
+            <span class="page" v-for="i in elementState.paginator.count" :key="i"
+                  v-bind:class="{ current: i === elementState.paginator.current,
+                  delimiter:  ((elementState.paginator.count - i) === 3) || ((elementState.paginator.current - i) === 3)}"
+                  v-if="(i <= 3) || (Math.abs(elementState.paginator.current - i) <= 3) || ((elementState.paginator.count - i) <= 3)">
+
+                <label v-if="((elementState.paginator.count - i) === 3) || ((elementState.paginator.current - i) === 3)">...</label>
+                <label v-else-if="i === elementState.paginator.current">{{ i }}</label>
+                <button v-else @click="elementState.paginator.current = i">{{ i }}</button>
+
+            </span>
+
+        </div>
+
+        <div class="pages-container" v-else-if="elementState.paginator.count > 1">
+
+            <span class="page" v-for="i in elementState.paginator.count" :key="i"
+                  v-bind:class="{ current: i === elementState.paginator.current }">
+
+                <button @click="elementState.paginator.current = i">{{ i }}</button>
+
+            </span>
+
+        </div>
+
     </div>
 </template>
 
 <script lang="ts">
 
-    import {Component, Provide, Vue, Prop} from 'vue-property-decorator';
+    import {Component, Provide, Vue, Prop, Watch} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import {baseUrlAPI} from '@/globals';
     import axios from 'axios';
@@ -99,7 +135,8 @@
         @State('managerElement') public elementState!: ElementState;
 
         // Элементы
-        @Action public managerElementGetByLayer: any;
+        @Action public managerElementGetLimitByLayer: any;
+        @Action public managerElementGetCountByLayer: any;
         @Action public managerElementSetSingle: any;
         @Action public managerElementUnsetSingle: any;
         @Action public managerElementUpdate: any;
@@ -127,10 +164,30 @@
         @Action public setSureModal: any;
 
         public async mounted() {
+
+            // Пагинация
+            this.managerElementGetCountByLayer({ layerId: this.layerState.layer.id });
+
+            // Запоминаем выбранный слой
             localStorage.setItem('layerState.layer', JSON.stringify(this.layerState.layer));
-            await this.managerElementGetByLayer({layerId: this.layerState.layer.id});
+
+            // Получаем список элементов
+            await this.managerElementGetLimitByLayer({ layerId: this.layerState.layer.id });
+
             // Отмечаем выбраннные в прошлый раз элементы
             this.localStorageCheckedElements();
+
+        }
+
+        @Watch('elementState.paginator.current')
+        public async onChangeCurrentPage() {
+            await this.managerElementGetLimitByLayer({ layerId: this.layerState.layer.id });
+            // Отмечаем выбраннные в прошлый раз элементы
+            this.localStorageCheckedElements();
+            // Скроллим вверх
+            this.$nextTick(() => {
+                this.$refs.scrollbar.scrollToY(0);
+            });
         }
 
         /**
@@ -299,6 +356,7 @@
                     lenght: element.lenght,
                     area: element.area,
                     perimeter: element.perimeter,
+                    revision: 3,
                 },
             });
 

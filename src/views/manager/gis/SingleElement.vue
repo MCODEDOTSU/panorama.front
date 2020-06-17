@@ -1,6 +1,7 @@
 <template>
     <div class="single-element" ref="single-element">
-        <h2>
+
+        <div class="header">
 
             <div v-if="isChanged"  title="Вернуться к списку элементов" class="btn" @click="setSureModalContent()"
                  data-toggle="modal" data-target="#sureModal">
@@ -10,14 +11,14 @@
                 <i class="fa fa-angle-left"></i>
             </div>
 
-            {{ elementState.element.title }}
+            <h2>{{ elementState.element.title }}</h2>
 
             <div class="btn btn-action btn-update-element"
                  title="Сохранить элемент" @click="update()">
                 <i class="fa fa-floppy-o"></i>
             </div>
 
-        </h2>
+        </div>
 
         <div>
             <additional-group-tabs></additional-group-tabs>
@@ -124,6 +125,7 @@
                     length: element.length,
                     area: element.area,
                     perimeter: element.perimeter,
+                    revision: 3,
                 },
             });
 

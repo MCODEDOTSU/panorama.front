@@ -25,6 +25,11 @@ export const state: ElementState = {
         },
     },
     elements: [],
+    paginator: {
+        count: 0,
+        current: 1,
+        limit: 50,
+    },
     magicElement: {
         active: false,
         index: 1,
@@ -38,8 +43,34 @@ export const actions: ActionTree<ElementState, RootState> = {
      */
     async managerElementGetByLayer({}, payload) {
         try {
+            state.elements = [];
             const res = await axios.get(`${baseUrlAPI}manager/element/layer/${payload.layerId}`);
             state.elements = res.data;
+        } catch {
+            ErrorNotifier.notify();
+        }
+    },
+
+    /**
+     * Получить элементы слоя (пагинация)
+     */
+    async managerElementGetLimitByLayer({}, payload) {
+        try {
+            state.elements = [];
+            const res = await axios.get(`${baseUrlAPI}manager/element/layer/${payload.layerId}/${state.paginator.limit}/${state.paginator.current - 1}`);
+            state.elements = res.data;
+        } catch {
+            ErrorNotifier.notify();
+        }
+    },
+
+    /**
+     * Получить количество элементов слоя
+     */
+    async managerElementGetCountByLayer({}, payload) {
+        try {
+            const res = await axios.get(`${baseUrlAPI}manager/element/count/${payload.layerId}`);
+            state.paginator.count = Math.ceil(res.data / state.paginator.limit);
         } catch {
             ErrorNotifier.notify();
         }

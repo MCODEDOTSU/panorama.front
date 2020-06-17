@@ -11,15 +11,16 @@ import {createOLFeature} from '@/domain/services/ol/FeatureService';
 export const state: MapState = {
     map: false,
     properties: {
-        longitude: 48.0360,
-        latitude: 46.3538,
-        zoom: 17,
+        longitude: 48.0335,
+        latitude: 46.3550,
+        zoom: 11,
         selectorMapContainer: 'map',
     },
     source: false,
     layer: false,
     styles: [],
     interaction: {mode: 'select', draw: false, select: false},
+    tiles: {},
 };
 
 export const actions: ActionTree<MapState, RootState> = {
@@ -33,7 +34,7 @@ export const actions: ActionTree<MapState, RootState> = {
         state.properties.latitude = payload.latitude ? payload.latitude : state.properties.latitude;
         state.properties.zoom = payload.zoom ? payload.zoom : state.properties.zoom;
         if (state.map !== false) {
-            state.map.getView().setCenter(transform([state.properties.longitude, state.properties.latitude], 'EPSG:4326', 'EPSG:3857'));
+            state.map.getView().setCenter(transform([state.properties.longitude, state.properties.latitude], 'EPSG:4326', 'EPSG:3395'));
             state.map.getView().setZoom(state.properties.zoom);
         }
     },
@@ -44,9 +45,9 @@ export const actions: ActionTree<MapState, RootState> = {
     setMapCenterDefault() {
         state.properties.longitude = 48.0360;
         state.properties.latitude = 46.3538;
-        state.properties.zoom = 17;
+        state.properties.zoom = 18;
         if (state.map !== false) {
-            state.map.getView().setCenter(transform([state.properties.longitude, state.properties.latitude], 'EPSG:4326', 'EPSG:3857'));
+            state.map.getView().setCenter(transform([state.properties.longitude, state.properties.latitude], 'EPSG:4326', 'EPSG:3395'));
             state.map.getView().setZoom(state.properties.zoom);
         }
     },
@@ -57,7 +58,7 @@ export const actions: ActionTree<MapState, RootState> = {
      */
     getMapCenter({}, payload) {
         if (state.map !== false) {
-            const coordinaties = transform(state.map.getView().getCenter(), 'EPSG:3857', 'EPSG:4326');
+            const coordinaties = transform(state.map.getView().getCenter(), 'EPSG:3395', 'EPSG:4326');
             state.properties.longitude = coordinaties[0];
             state.properties.latitude = coordinaties[1];
             state.properties.zoom = state.map.getView().getZoom();

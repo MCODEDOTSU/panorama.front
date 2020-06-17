@@ -1,10 +1,176 @@
+#mouse-position {
+    position: absolute;
+    bottom: 10px;
+    left: 64px;
+    font-size: 12px;
+    line-height: 1;
+}
+
+#current-zoom {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    font-size: 12px;
+    line-height: 1;
+    text-align: center;
+    overflow: hidden;
+    width: 28px;
+    padding: 0 0 0 16px;
+
+    &:before {
+        content: "\f002";
+        position: absolute;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 12px;
+        vertical-align: middle;
+        top: 0;
+        left: 0;
+        line-height: 1;
+    }
+}
+
+#search-address-form {
+    position: absolute;
+    top: 72px;
+    left: 52px;
+    width: 256px;
+    padding: 0 32px 0 0;
+
+    input {
+        background: #ffffff;
+        border: 1px solid #a42038;
+        font-size: 16px;
+        line-height: 30px;
+        width: 100%;
+        padding: 0 8px;
+    }
+
+    button {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+        padding: 0;
+        margin: 0;
+        text-align: center;
+        position: absolute;
+        border: none;
+        top: 0;
+        right: 0;
+        background: $second;
+
+        &:hover {
+            background: $second-hover;
+        }
+
+        i {
+            margin: 0;
+        }
+    }
+}
+
+#layers {
+
+    position: fixed;
+    top: 156px;
+    left: 10px;
+
+    button {
+
+        padding: 0;
+        margin: 0;
+        width: 32px;
+        height: 32px;
+        background: $second;
+        color: $white;
+        cursor: pointer;
+        text-align: center;
+        line-height: 32px;
+        border: none;
+
+        i {
+            margin: 0;
+        }
+
+        &:hover {
+            background: $second-hover;
+        }
+    }
+
+    ul {
+        font-size: 12px;
+        margin: 1px 0 0 0;
+
+        button {
+            width: 120px;
+            height: auto;
+            text-align: left;
+            padding: 4px 8px 6px;
+            line-height: 1;
+        }
+    }
+
+}
+
+#map {
+
+    width: 100%;
+    height: calc(100vh - 56px);
+    position: relative;
+    cursor: grab;
+
+    .ol-control {
+        position: absolute;
+        background: none;
+
+        &.ol-attribution {
+            bottom: 0;
+            right: 0;
+
+            ul {
+                margin: 0;
+                font-size: 12px;
+            }
+
+            button, .btn {
+                display: none;
+            }
+        }
+
+        &.ol-zoom {
+            top: 16px;
+            left: 10px;
+            padding: 0;
+            margin: 0;
+
+            button, .btn {
+                background: $second;
+                color: $white;
+                border: none;
+                width: 32px;
+                height: 32px;
+                display: block;
+                margin: 0 0 10px;
+                cursor: pointer;
+                line-height: 0;
+                @include box-shadow(0 0 10px rgba(0, 0, 0, 0.1));
+                &:hover {
+                    background: $second-hover;
+                }
+            }
+        }
+    }
+
+    .ol-hidden {
+        display: none;
+    }
+}
+
 .manager-geom-data-container {
+
     .geom-data {
         height: calc(100vh - 56px);
     }
-    #map {
-        height: calc(100vh - 56px);
-    }
+
 }
 
 .geom-data-list {
@@ -17,7 +183,8 @@
     overflow: auto;
     @include box-shadow(0px 0px 50px rgba(0, 0, 0, 0.25));
 
-    h2 {
+    .header {
+
         font-size: 16px;
         box-sizing: border-box;
         background: $second;
@@ -25,9 +192,20 @@
         font-weight: 400;
         margin: 0;
         line-height: 3;
-        padding: 0 20px;
+        padding: 0 0 0 20px;
         width: 100%;
         max-width: 100%;
+
+        h2 {
+            font-size: 14px;
+            font-weight: 400;
+            margin: 0;
+            line-height: 48px;
+            vertical-align: top;
+            width: 190px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
 
         button, .btn {
             color: $white;
@@ -103,6 +281,43 @@
                 margin: 14px 0 0;
             }
         }
+
+        .search-panel {
+            display: block;
+            height: 32px;
+            margin-left: -20px;
+            position: relative;
+
+            input {
+                font-size: 16px;
+                line-height: 2;
+                border: none;
+                width: 100%;
+                padding: 0 40px 0 8px;
+                vertical-align: top;
+                margin-top: -1px;
+            }
+
+            button {
+                position: absolute;
+                top: -1px;
+                right: 0;
+                width: 32px;
+                height: 32px;
+                color: $second;
+                background: none;
+
+                i {
+                    margin: 0;
+                    font-size: 12px;
+                }
+
+                &:hover {
+                    color: $second-hover;
+                }
+            }
+        }
+
     }
 
     .data-list {
@@ -449,9 +664,59 @@
 
     .elements-list {
         .scroll-container {
-            height: calc(100vh - 104px);
+
+            height: calc(100vh - 136px);
             .scrollbar {
-                height: calc(100vh - 104px);
+                height: calc(100vh - 136px);
+            }
+
+            &.pages {
+                height: calc(100vh - 168px);
+                .scrollbar {
+                    height: calc(100vh - 168px);
+                }
+            }
+        }
+    }
+
+    .pages-container {
+        display: block;
+        width: 100%;
+        height: 32px;
+        background: $second;
+        padding: 0 8px;
+        text-align: right;
+
+        span {
+
+            display: inline-block;
+            vertical-align: top;
+
+            label {
+                margin: 0;
+                padding: 0 4px;
+                cursor: default;
+                display: inline-block;
+                color: $white;
+                line-height: 32px;
+                font-size: 12px;
+            }
+
+            button {
+                background: none;
+                cursor: pointer;
+                border: none;
+                color: $white;
+                line-height: 32px;
+                font-size: 12px;
+                padding: 0 4px;
+                &:hover {
+                    background: $second-hover;
+                }
+            }
+
+            &.current {
+                opacity: 0.3;
             }
         }
     }

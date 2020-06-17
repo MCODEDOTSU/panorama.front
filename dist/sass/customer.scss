@@ -407,18 +407,32 @@ footer {
     #mouse-position {
         position: absolute;
         bottom: 10px;
-        left: 10px;
+        left: 64px;
         font-size: 12px;
+        line-height: 1;
     }
 
     #current-zoom {
         position: absolute;
-        top: 102px;
+        bottom: 10px;
         left: 10px;
         font-size: 12px;
+        line-height: 1;
         text-align: center;
         overflow: hidden;
         width: 28px;
+        padding: 0 0 0 16px;
+
+        &:before {
+            content: "\f002";
+            position: absolute;
+            font: normal normal normal 14px/1 FontAwesome;
+            font-size: 12px;
+            vertical-align: middle;
+            top: 0;
+            left: 0;
+            line-height: 1;
+        }
     }
 
     #map {
@@ -449,6 +463,8 @@ footer {
             &.ol-zoom {
                 top: 16px;
                 left: 10px;
+                padding: 0;
+                margin: 0;
 
                 button, .btn {
                     background: $second;
@@ -459,9 +475,6 @@ footer {
                     display: block;
                     margin: 0 0 10px;
                     cursor: pointer;
-                    -webkit-border-radius: 50% !important;
-                    -moz-border-radius: 50% !important;
-                    border-radius: 50% !important;
                     line-height: 0;
                     @include box-shadow(0 0 10px rgba(0, 0, 0, 0.1));
                     &:hover {
@@ -602,6 +615,88 @@ footer {
             margin: -4px 0 0 0;
         }
     }
+}
+
+.search-address-form {
+    position: absolute;
+    top: 72px;
+    left: 52px;
+    width: 256px;
+    padding: 0 32px 0 0;
+
+    input {
+        background: #ffffff;
+        border: 1px solid #a42038;
+        font-size: 16px;
+        line-height: 30px;
+        width: 100%;
+        padding: 0 8px;
+    }
+
+    button {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+        padding: 0;
+        margin: 0;
+        text-align: center;
+        position: absolute;
+        border: none;
+        top: 0;
+        right: 0;
+        background: $second;
+
+        &:hover {
+            background: $second-hover;
+        }
+
+        i {
+            margin: 0;
+        }
+    }
+}
+
+#layers {
+
+    position: fixed;
+    top: 156px;
+    left: 10px;
+
+    button {
+
+        padding: 0;
+        margin: 0;
+        width: 32px;
+        height: 32px;
+        background: $second;
+        color: $white;
+        cursor: pointer;
+        text-align: center;
+        line-height: 32px;
+        border: none;
+
+        i {
+            margin: 0;
+        }
+
+        &:hover {
+            background: $second-hover;
+        }
+    }
+
+    ul {
+        font-size: 12px;
+        margin: 1px 0 0 0;
+
+        button {
+            width: 120px;
+            height: auto;
+            text-align: left;
+            padding: 4px 8px 6px;
+            line-height: 1;
+        }
+    }
+
 }
 
 .include-list {

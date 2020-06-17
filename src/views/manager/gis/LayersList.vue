@@ -1,7 +1,16 @@
 <template>
     <div class="layers-list" ref="layers-list">
 
-        <h2>Картографические слои</h2>
+        <div class="header">
+
+            <h2>Картографические слои</h2>
+
+            <div class="search-panel">
+                <input type="text" name="element-search" placeholder="поиск элементов по имени или описанию" />
+                <button><i class="fa fa-search"></i></button>
+            </div>
+
+        </div>
 
         <ul class="data-list layers-list">
             <li class="layer-item" v-for="(layer, i) in layerState.layers" :key="layer.id">

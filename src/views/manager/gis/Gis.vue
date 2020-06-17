@@ -26,10 +26,12 @@
 
         <sure-modal></sure-modal>
 
+        <search-address></search-address>
+
     </div>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 
     import {Component, Provide, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
@@ -42,11 +44,12 @@
     import ElementsList from '@/views/manager/gis/ElementsList.vue';
     import SingleElement from '@/views/manager/gis/SingleElement.vue';
     import MagicElement from '@/views/manager/gis/magic/MagicElement.vue';
+    import SearchAddress from '@/views/manager/gis/SearchAddress.vue';
 
     import SureModal from '@/components/common/SureModal.vue';
 
     @Component({
-        components: {OlMap, LayersList, ElementsList, SingleElement, MagicElement, SureModal},
+        components: {OlMap, LayersList, ElementsList, SingleElement, MagicElement, SureModal, SearchAddress},
     })
 
     export default class Gis extends Vue {
@@ -66,7 +69,7 @@
         @Action public managerElementUpdateGeometry: any;
         @Action public managerMagicElementUpdate: any;
         @Action public managerElementSetSingle: any;
-        @Action public managerElementGetByLayer: any;
+        @Action public managerElementById: any;
 
         /**
          * Кликнули по Элементу на карте
@@ -78,24 +81,17 @@
                 return;
             }
 
-            let element;
-            if (this.layerState.layer.id === e.layer_id) {
-                element = this.elementState.elements.find((element) => {
-                    return element.id === e.id;
-                });
-            } else {
-                const layer = this.layerState.layers.find((layer) => {
-                    return layer.id === e.layer_id;
-                });
-                this.managerLayerSetSingle({ layer });
-                await this.managerElementGetByLayer({layerId: this.layerState.layer.id});
-                element = this.elementState.elements.find((element) => {
-                    return element.id === e.id;
+            await this.managerElementById({id: e.id});
+            this.setInteraction({mode: 'modify'});
+
+            if (this.layerState.layer.id !== e.layer_id) {
+                this.managerLayerSetSingle({
+                    layer: this.layerState.layers.find((layer) => {
+                        return layer.id === e.layer_id;
+                    })
                 });
             }
 
-            this.managerElementSetSingle({ element });
-            this.setInteraction({ mode: 'modify' });
         }
 
         /**
@@ -103,6 +99,7 @@
          * @param e
          */
         public onModifyend(e) {
+            console.log(e);
             this.managerElementUpdateGeometry({id: e.properties.id, geometry: e.geom});
             this.elementState.element.geometry = e.geom;
             this.elementState.elements = this.elementState.elements.map((element) => {
@@ -127,7 +124,7 @@
                 this.managerElementUpdateGeometry({id: this.elementState.element.id, geometry: e.geom});
 
                 // Меняем режим работы с картой
-                this.setInteraction({ mode: 'modify' });
+                this.setInteraction({mode: 'modify'});
 
                 this.addFeatureToMap({
                     id: this.elementState.element.id,
@@ -141,6 +138,7 @@
                         lenght: this.elementState.element.length,
                         area: this.elementState.element.area,
                         perimeter: this.elementState.element.perimeter,
+                        revision: 3,
                     },
                 });
 
@@ -204,7 +202,7 @@
                     this.addFeaturesArrowToMap({first: previous, second: this.elementState.magicElement.element});
                 }
 
-                this.setInteraction({ mode: this.layerState.layer.geometry_type });
+                this.setInteraction({mode: this.layerState.layer.geometry_type});
 
             }
 
