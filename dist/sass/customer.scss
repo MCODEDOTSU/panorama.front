@@ -1,0 +1,374 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body, html {
+    height: 100vh;
+    width: 100%;
+    font-family: $font-default;
+    font-size: 16px;
+    color: $black;
+    background: $white;
+    line-height: 1.5;
+}
+
+body {
+    a {
+        color: $first;
+        text-decoration: none;
+        @include transition(all 0.5s ease-out);
+        &:focus, &:hover {
+            text-decoration: none;
+        }
+    }
+    ul,
+    ol {
+        list-style: none;
+    }
+    button, .btn {
+        @include transition(all 0.5s ease-out);
+    }
+}
+
+.no-gutters {
+    margin: 0;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 0 20px 10px;
+    p {
+        margin: 0;
+        text-align: left;
+        font-size: 16px;
+        color: $first;
+        line-height: 1.5;
+        &.pink {
+            color: $second;
+        }
+    }
+    a {
+        color: $first;
+        &:hover {
+            opacity: 0.75;
+        }
+    }
+}
+
+#app {
+    height: 100vh;
+    width: 100%;
+    > div {
+        height: 100vh;
+        width: 100%;
+        overflow: auto;
+    }
+    .notifications {
+        padding-top: 5px;
+        .notification-wrapper {
+            overflow: inherit;
+            .vue-notification {
+                background: $light-green;
+                border-left: 5px solid $green;
+                color: $black;
+                @include box-shadow(0px 0px 40px 0px rgba(0, 0, 0, 0.25));
+            }
+        }
+    }
+}
+
+.home {
+    background: $white;
+    .main {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -175px 0 0 -250px;
+        animation: animation-opacity 3s ease-out 0s 1;
+        .logo {
+            display: block;
+            width: 300px;
+            height: 150px;
+            background: url("/images/panorama.png") no-repeat;
+            background-size: cover;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin: 52px 0 0;
+        }
+        input {
+            display: inline-block;
+            vertical-align: middle;
+            border: 1px solid $first;
+            width: 190px;
+            margin: 0 10px 0 0;
+        }
+        button, .btn {
+            display: inline-block;
+            vertical-align: middle;
+            border: 1px solid $second-hover;
+            background: $second;
+            width: 100px;
+            text-transform: lowercase;
+            font-size: 16px;
+            padding: 5px 0 7px;
+            position: relative;
+
+            &:hover {
+                background: $second-hover;
+            }
+
+            .fa-spin {
+                position: absolute;
+                display: inline-block;
+                margin: 0;
+                top: 10px;
+                right: -35px;
+                left: auto;
+                color: $second-hover;
+            }
+        }
+    }
+}
+
+.frontend-container {
+    h1 {
+        margin: 0 auto;
+        text-align: center;
+    }
+    .content {
+        padding: 20px 0;
+    }
+    .grid-data {
+        margin: 40px 0 0;
+        .row-header, .row-footer {
+            .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {
+                padding: 20px 10px;
+                font-weight: 700;
+                text-align: center;
+                background: $gray-100;
+                border: 1px solid $gray-200;
+                border-right: none;
+                &:last-child {
+                    border-right: 1px solid $gray-200;
+                }
+            }
+        }
+        .row-body {
+            .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {
+                padding: 10px;
+                border: 1px solid $gray-200;
+                border-right: none;
+                border-bottom: none;
+                &:last-child {
+                    border-right: 1px solid $gray-200;
+                }
+            }
+            &:hover {
+                .actions {
+                    opacity: 1;
+                    @include transition(opacity 0.1s ease-out);
+                }
+            }
+        }
+        label {
+            display: block;
+            line-height: 1;
+            font-size: 12px;
+            &.title {
+                font-size: 14px;
+                margin: 0 0 20px 0;
+            }
+            &.description {
+                font-style: italic;
+            }
+        }
+        p {
+            margin-bottom: 8px;
+        }
+    }
+}
+
+.login {
+
+    overflow: hidden;
+    height: 100vh;
+    position: relative;
+    background: $white;
+    background: url('/sass/images/background.jpg') no-repeat;
+    background-attachment: fixed;
+    color: $white;
+    @include background-size(cover);
+
+    &:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(22, 65, 148, 0.6);
+    }
+
+    .cst-login-form {
+        margin: 150px auto;
+        padding: 50px;
+        width: 450px;
+        position: relative;
+        z-index: 2;
+        overflow: hidden;
+        border: 1px solid $first;
+
+        input {
+            margin-bottom: 20px;
+            @include border-radius(0);
+        }
+
+        button, .btn {
+            background: $white;
+            color: $black;
+            @include border-radius(0);
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+        }
+
+        &:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(22, 65, 148, 0.8);
+        }
+
+        &:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: $white;
+            background: url('/sass/images/background.jpg') no-repeat;
+            background-attachment: fixed;
+            filter: blur(4px);
+            @include background-size(cover);
+        }
+    }
+
+    .version {
+        position: fixed;
+        bottom: 10px;
+        right: 16px;
+        color: #ffffff;
+    }
+}
+
+.include-list {
+    .checkbox {
+        display: inline-block;
+        width: 50%;
+        margin: 0 -4px 20px 0;
+    }
+    .checkbox-awesome {
+        width: 64px;
+        height: 32px;
+        background: $gray-300;
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0 16px 0 0;
+        position: relative;
+        cursor: pointer;
+        @include box-shadow(inset 2px 2px 10px 0px rgba(0, 0, 0, 0.1));
+        @include transition(background 0.5s ease-out);
+        &:after {
+            content: "";
+            width: 28px;
+            height: 28px;
+            background: $white;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            @include transition(left 0.5s ease-out);
+            @include box-shadow(2px 2px 4px 0px rgba(0, 0, 0, 0.1));
+        }
+        &:hover {
+            background: $gray-200;
+        }
+    }
+    .checked {
+        .checkbox-awesome {
+            background: $green;
+            &:after {
+                left: auto;
+                right: 2px;
+            }
+            &:hover {
+                background: $light-green;
+            }
+        }
+    }
+}
+
+.quillWrapper {
+    .ql-snow {
+        &.ql-toolbar {
+            padding: 0 !important;
+            border: 1px solid $gray-400 !important;
+            .ql-formats {
+                margin: 0 !important;
+            }
+
+            .ql-picker {
+                width: 26px !important;
+                height: 26px !important;
+                top: 0;
+            }
+
+            button {
+
+                width: 26px !important;
+                height: 26px !important;
+
+                svg {
+                    width: 22px !important;
+                    height: 22px !important;
+                    padding: 2px !important;
+                    right: auto !important;
+                }
+            }
+        }
+        &.ql-container {
+            border: 1px solid $gray-400 !important;
+        }
+        .ql-color-picker {
+            .ql-picker-label {
+                svg {
+                    width: 22px !important;
+                    height: 22px !important;
+                    padding: 2px !important;
+                    right: auto !important;
+                }
+            }
+            &.ql-expanded {
+                .ql-picker-options {
+                    right: 0 !important;
+                }
+            }
+        }
+    }
+    .ql-editor {
+        font-size: 14px;
+        padding: 8px;
+        line-height: 1.2;
+        background: $white;
+    }
+}

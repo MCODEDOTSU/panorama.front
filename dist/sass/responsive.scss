@@ -1,0 +1,54 @@
+@media only screen and (max-width: 1200px) {
+    .files-uploader {
+        .file-item-extension {
+            .image {
+                height: 115px;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 990px) {
+    .files-uploader {
+        .file-item-extension {
+            width: 50%;
+            .image {
+                height: 136px;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .home {
+        .main {
+            margin-top: 40px;
+            width: 300px;
+            .form-group {
+                margin: 0;
+            }
+            input {
+                width: 100%;
+                margin: 20px 0 0;
+            }
+            button {
+                width: 100%;
+                margin: 20px 0 0;
+            }
+        }
+    }
+    footer {
+        position: static;
+        margin: 40px 0 0;
+        p {
+            font-size: 14px;
+        }
+    }
+}
+@media only screen and (max-width: 480px) {
+    footer {
+        p {
+            font-size: 12px;
+        }
+    }
+}

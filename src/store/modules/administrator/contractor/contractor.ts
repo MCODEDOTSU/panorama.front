@@ -33,7 +33,7 @@ export const actions: ActionTree<ContractorState, RootState> = {
      */
     async administratorContractorGetAll() {
         try {
-            const res = await axios.get(`${baseUrlAPI}manager/contractor`);
+            const res = await axios.get(`${baseUrlAPI}contractor`);
             state.contractors = res.data;
         } catch {
             ErrorNotifier.notify();
@@ -45,7 +45,7 @@ export const actions: ActionTree<ContractorState, RootState> = {
      */
     async administratorContractorGetById({}, payload) {
         try {
-            const res = await axios.get(`${baseUrlAPI}manager/contractor/${payload.id}`);
+            const res = await axios.get(`${baseUrlAPI}contractor/${payload.id}`);
             state.contractor = Object.assign({}, res.data);
         } catch {
             ErrorNotifier.notify();
@@ -58,11 +58,11 @@ export const actions: ActionTree<ContractorState, RootState> = {
     async administratorContractorUpdate() {
         try {
             if (state.contractor.id !== 0) {
-                const res = await axios.put(`${baseUrlAPI}manager/contractor/${state.contractor.id}`, state.contractor);
+                const res = await axios.put(`${baseUrlAPI}contractor/${state.contractor.id}`, state.contractor);
                 SuccessNotifier.notify('Данные сохранены', `Контрагент "${state.contractor.name}" изменен`);
                 state.contractors = editUpdatedItem(state.contractors, res.data);
             } else {
-                const res = await axios.post(`${baseUrlAPI}manager/contractor`, state.contractor);
+                const res = await axios.post(`${baseUrlAPI}contractor`, state.contractor);
                 SuccessNotifier.notify('Данные сохранены', `Контрагент "${state.contractor.name}" создан`);
                 state.contractors.push(res.data);
             }
@@ -78,7 +78,7 @@ export const actions: ActionTree<ContractorState, RootState> = {
     async administratorContractorDelete() {
         try {
             if (state.contractor.id !== 0) {
-                const res = await axios.delete(`${baseUrlAPI}manager/contractor/${state.contractor.id}`);
+                const res = await axios.delete(`${baseUrlAPI}contractor/${state.contractor.id}`);
                 SuccessNotifier.notify('Данные удалены', `Контрагент "${state.contractor.name}" удален`);
                 state.contractors = removeDeletedItem(state.contractors, state.contractor);
             }
@@ -123,7 +123,7 @@ export const actions: ActionTree<ContractorState, RootState> = {
      */
     async administratorContractorAttachToModule(context, payload) {
         try {
-            const res = await axios.get(`${baseUrlAPI}manager/contractor/${payload.parent}/attach/module/${payload.item}`);
+            const res = await axios.get(`${baseUrlAPI}contractor/${payload.parent}/attach/module/${payload.item}`);
             SuccessNotifier.notify('', 'Модуль подключен к контрагенту');
         } catch {
             ErrorNotifier.notify();
@@ -137,7 +137,7 @@ export const actions: ActionTree<ContractorState, RootState> = {
      */
     async administratorContractorDetachToModule(context, payload) {
         try {
-            const res = await axios.get(`${baseUrlAPI}manager/contractor/${payload.parent}/detach/module/${payload.item}`);
+            const res = await axios.get(`${baseUrlAPI}contractor/${payload.parent}/detach/module/${payload.item}`);
             SuccessNotifier.notify('', 'Модуль отключен от контрагента');
         } catch {
             ErrorNotifier.notify();
@@ -154,7 +154,7 @@ export const actions: ActionTree<ContractorState, RootState> = {
         formData.append('file', payload.file);
 
         try {
-            const res = await axios.post(`${baseUrlAPI}manager/contractor/upload`, formData, {
+            const res = await axios.post(`${baseUrlAPI}contractor/upload`, formData, {
                 headers: {'Content-Type': 'multipart/form-data'},
             });
             state.contractor.logo = `${baseUrl}${res.data.filename}`;
