@@ -30,7 +30,7 @@ export const actions: ActionTree<UserState, RootState> = {
      */
     async administratorUserGetAllByContractor({}, payload) {
         try {
-            const res = await axios.get(`${baseUrlAPI}manager/user/${payload.contractorId}`);
+            const res = await axios.get(`${baseUrlAPI}user/${payload.contractorId}`);
             state.users = res.data;
         } catch {
             ErrorNotifier.notify();
@@ -43,11 +43,11 @@ export const actions: ActionTree<UserState, RootState> = {
     async administratorUserUpdate() {
         try {
             if (state.user.id !== 0) {
-                const res = await axios.put(`${baseUrlAPI}manager/user`, state.user);
+                const res = await axios.put(`${baseUrlAPI}user`, state.user);
                 SuccessNotifier.notify('Данные сохранены', `Пользователь "${state.user.email}" изменен`);
                 state.users = editUpdatedItem(state.users, state.user);
             } else {
-                const res = await axios.post(`${baseUrlAPI}manager/user`, state.user);
+                const res = await axios.post(`${baseUrlAPI}user`, state.user);
                 SuccessNotifier.notify('Данные сохранены', `Пользователь "${state.user.email}" создан`);
                 state.users.push(state.user);
             }
@@ -62,7 +62,7 @@ export const actions: ActionTree<UserState, RootState> = {
     async administratorUserDelete() {
         try {
             if (state.user.id !== 0) {
-                const res = await axios.delete(`${baseUrlAPI}manager/user/${state.user.id}`);
+                const res = await axios.delete(`${baseUrlAPI}user/${state.user.id}`);
                 SuccessNotifier.notify('Данные удалены', `Пользователь "${state.user.email}" удален`);
                 state.users = removeDeletedItem(state.users, state.user);
             }
@@ -107,7 +107,7 @@ export const actions: ActionTree<UserState, RootState> = {
         formData.append('file', payload.file);
 
         try {
-            const res = await axios.post(`${baseUrlAPI}manager/user/upload`, formData, {
+            const res = await axios.post(`${baseUrlAPI}user/upload`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
             state.user.photo = `${baseUrl}${res.data.filename}`;
