@@ -6,15 +6,13 @@ import SuccessNotifier from '@/domain/util/notifications/SuccessNotifier';
 import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
 import {editUpdatedItem, removeDeletedItem} from '@/domain/services/common/UpdateItemService';
 import UserState from '@/store/modules/administrator/user/types';
+import IAddress from '@/domain/interfaces/IAddress';
 
 
 export const state: UserState = {
     user: {
         id: 0,
         email: '',
-        firstname: '',
-        lastname: '',
-        middlename: '',
         post: '',
         photo: '',
         role: 'admin',
@@ -86,9 +84,6 @@ export const actions: ActionTree<UserState, RootState> = {
         state.user = {
             id: 0,
             email: '',
-            firstname: '',
-            lastname: '',
-            middlename: '',
             post: '',
             photo: '',
             password: '',

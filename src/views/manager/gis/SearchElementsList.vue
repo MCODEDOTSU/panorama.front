@@ -144,10 +144,11 @@
         @Action public removeFeatureFromMap: any;
         @Action public removeFeaturesArrowFromMap: any;
         @Action public focusOfFeature: any;
+        @Action public focusOfFeatures: any;
         @Action public setInteraction: any;
 
         @Provide() public checkedAll = false;
-        @Provide() public search = '';
+        @Provide() public search:string = '';
 
         // Интерфейсы
         @Action public setSureModal: any;
@@ -175,6 +176,7 @@
             this.localStorageCheckedElements();
             // Скроллим вверх
             this.$nextTick(() => {
+                // @ts-ignore
                 this.$refs.scrollbar.scrollToY(0);
             });
         }

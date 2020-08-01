@@ -2,10 +2,11 @@
     <div class="manager-container content">
 
         <h1>Пользователи контрагента "{{ contractorState.contractor.name }}"</h1>
-        <button data-toggle="modal" data-target="#singleUserModal" @click="createUser()" class="btn btn-info">
+
+        <b-button v-b-modal.singleUserModal @click="createUser" variant="info">
             <i class="fas fa-plus-circle"></i>
             Создать нового
-        </button>
+        </b-button>
 
         <button @click="$router.go(-1)" class="btn btn-info btn-right">
             <i class="fas fa-arrow-circle-left"></i>
@@ -14,21 +15,45 @@
 
         <!-- Список пользователей -->
         <div class="grid-data">
+
             <div class="row row-header">
-                <div class="col-12">Адрес электронной почты (логин)</div>
+                <div class="col-6">ФИО</div>
+                <div class="col-3">Email (логин)</div>
+                <div class="col-3">Должность</div>
             </div>
+
             <div class="row row-body" v-for="user in userState.users">
-                <div class="col-12">
-                    <label class="title">{{ user.email }}</label>
+
+                <div class="col-6">
+                    <label class="title">{{ user.person ? `${user.person.lastname} ${user.person.firstname} ${user.person.middlename}` : '' }}</label>
                     <div class="actions">
-                        <button class="btn-info" data-toggle="modal" data-target="#singleUserModal" @click="administratorUserSetSingle(user)">Изменить</button>
+
+                        <b-button v-b-modal.singleUserModal @click="administratorUserSetSingle(user)" variant="info">
+                            Изменить
+                        </b-button>
+
                         <button class="btn-danger"data-toggle="modal" data-target="#sureModal" @click="setSureModalContent(user)">Удалить</button>
+
                     </div>
                 </div>
+
+                <div class="col-3">
+
+                    <label class="title">{{ user.email }}</label>
+                </div>
+
+                <div class="col-3">
+                    <label class="title">{{ user.post }}</label>
+                </div>
+
             </div>
+
             <div class="row row-footer">
-                <div class="col-12">Адрес электронной почты (логин)</div>
+                <div class="col-6">ФИО</div>
+                <div class="col-3">Email (логин)</div>
+                <div class="col-3">Должность</div>
             </div>
+
         </div>
         <!-- конец Список пользователей -->
 

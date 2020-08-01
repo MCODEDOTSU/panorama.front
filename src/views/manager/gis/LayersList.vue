@@ -38,6 +38,7 @@
     import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
 
     import LayerState from '@/store/modules/manager/layer/types';
+    import ElementState from '@/store/modules/manager/element/types';
 
     @Component({
         components: {},
@@ -45,6 +46,7 @@
     export default class LayersList extends Vue {
 
         @State('managerLayer') public layerState!: LayerState;
+        @State('managerElement') public elementState!: ElementState;
 
         // Слои
         @Action public managerLayerGetByContractor: any;

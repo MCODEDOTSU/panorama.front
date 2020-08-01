@@ -14,5 +14,5 @@ export default interface ElementState {
         current: number;
         limit: number;
     },
-    search: '',
+    search: string,
 }

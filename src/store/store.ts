@@ -8,6 +8,7 @@ import createPersistedState from 'vuex-persistedstate';
 import {administratorModule} from '@/store/modules/administrator/module/module';
 import {administratorLayer} from '@/store/modules/administrator/layer/layer';
 import {administratorContractor} from '@/store/modules/administrator/contractor/contractor';
+import {administratorPerson} from '@/store/modules/administrator/person/person';
 import {administratorUser} from '@/store/modules/administrator/user/user';
 import {administratorConstructor} from '@/store/modules/administrator/constructor/constructor';
 import {styleEditor} from '@/store/modules/administrator/styleEditor/styleEditor';
@@ -44,6 +45,7 @@ export default new Vuex.Store<RootState>({
         administratorModule,
         administratorLayer,
         administratorContractor,
+        administratorPerson,
         administratorUser,
         administratorConstructor,
         styleEditor,

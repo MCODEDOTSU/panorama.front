@@ -32,6 +32,9 @@
                             <router-link class="nav-link dropdown-item" to="/administrator/contractors" tag="a">
                                 Контрагенты
                             </router-link>
+                            <router-link class="nav-link dropdown-item" to="/administrator/persons" tag="a">
+                                Физические Лица
+                            </router-link>
                             <router-link class="nav-link dropdown-item" to="/administrator/modules" tag="a">Модули
                             </router-link>
                             <router-link test-tag="manager-layers-link" class="nav-link dropdown-item" to="/administrator/layers" tag="a">Слои

@@ -21,17 +21,17 @@
 
                     <div class="row bg">
                         <div class="col-3">Фамилия:</div>
-                        <div class="col-9">{{ userState.user.lastname }}</div>
+                        <div class="col-9">{{ userState.user.person ? userState.user.person.lastname : '-' }}</div>
                     </div>
 
                     <div class="row">
                         <div class="col-3">Имя:</div>
-                        <div class="col-9">{{ userState.user.firstname }}</div>
+                        <div class="col-9">{{ userState.user.person ? userState.user.person.firstname : '-' }}</div>
                     </div>
 
                     <div class="row bg">
                         <div class="col-3">Отчество:</div>
-                        <div class="col-9">{{ userState.user.middlename }}</div>
+                        <div class="col-9">{{ userState.user.person ? userState.user.person.middlename : '-' }}</div>
                     </div>
 
                 </div>

@@ -14,7 +14,7 @@
                 </div>
             </div>
         </div>
-        <footer>
+        <footer class="app-footer">
             <div class="copyright">
                 <p>Все права защищены © <span v-html="date.getFullYear()"></span></p>
                 <p><a href="https://cityskills.ru/" title="Центр Муниципальных Компетенций">Центр Муниципальных

@@ -10,9 +10,6 @@ export const state: UserState = {
     user: {
         id: 0,
         email: '',
-        firstname: '',
-        lastname: '',
-        middlename: '',
         post: '',
         photo: '',
         role: 'admin',
@@ -81,9 +78,6 @@ export const actions: ActionTree<UserState, RootState> = {
             state.user = {
                 id: 0,
                 email: '',
-                firstname: '',
-                lastname: '',
-                middlename: '',
                 post: '',
                 photo: '',
                 role: 'admin',
