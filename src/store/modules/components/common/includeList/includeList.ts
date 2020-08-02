@@ -21,11 +21,13 @@ export const actions: ActionTree<IncludeListState, RootState> = {
         payload.list.forEach((item) => {
 
             const findItem = arrayFindFirst(item[payload.key], payload.parent);
+            const findChildItem = arrayFindFirst(item[payload.key], payload.availableAsChild);
 
             state.list.push({
                 id: item.id,
                 title: item.title,
                 checked: (findItem !== false),
+                validByParent: (findChildItem !== false),
             });
         });
 

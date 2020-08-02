@@ -16,6 +16,7 @@
                     <form>
                         <include-list></include-list>
                     </form>
+                    <p><span class="parent-assigned-module">*</span> Данный модуль присвоен на основе родительского контрагента</p>
                 </div>
             </div>
         </div>
@@ -35,7 +36,7 @@
     @Component({
         components: {IncludeList},
     })
-    export default class SingleContractor extends Vue {
+    export default class ContractorModules extends Vue {
 
         @Action public administratorModuleGetAll: any;
         @Action public setIncludeList: any;
@@ -53,6 +54,7 @@
                 list: this.moduleState.modules,
                 key: 'contractors',
                 parent: this.contractorState.contractor.id,
+                availableAsChild: this.contractorState.contractor.parent_id, // Доступ от родительского контрагента
             });
             this.setIncludeListActions({
                 attach: this.administratorContractorAttachToModule,
