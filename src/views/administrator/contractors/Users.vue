@@ -18,8 +18,9 @@
 
             <div class="row row-header">
                 <div class="col-6">ФИО</div>
-                <div class="col-3">Email (логин)</div>
-                <div class="col-3">Должность</div>
+                <div class="col-2">Email (логин)</div>
+                <div class="col-2">Должность</div>
+                <div class="col-2">Контрагент</div>
             </div>
 
             <div class="row row-body" v-for="user in userState.users">
@@ -37,21 +38,26 @@
                     </div>
                 </div>
 
-                <div class="col-3">
+                <div class="col-2">
 
                     <label class="title">{{ user.email }}</label>
                 </div>
 
-                <div class="col-3">
+                <div class="col-2">
                     <label class="title">{{ user.post }}</label>
+                </div>
+
+                <div class="col-2">
+                    <label class="title">{{ user.contractor.name }}</label>
                 </div>
 
             </div>
 
             <div class="row row-footer">
                 <div class="col-6">ФИО</div>
-                <div class="col-3">Email (логин)</div>
-                <div class="col-3">Должность</div>
+                <div class="col-2">Email (логин)</div>
+                <div class="col-2">Должность</div>
+                <div class="col-2">Контрагент</div>
             </div>
 
         </div>
