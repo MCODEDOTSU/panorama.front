@@ -12,4 +12,5 @@ export default interface IContractor {
     modules?: IModule[];
     edited?: boolean;
     childElsVisibility?: boolean;
+    parent_id?: number;
 }

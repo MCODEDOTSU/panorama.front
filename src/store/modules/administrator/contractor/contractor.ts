@@ -22,6 +22,7 @@ export const state: ContractorState = {
             street: '',
         },
         logo: '',
+        parent_id: 0,
     },
     contractors: [],
 };

@@ -80,6 +80,18 @@
                                    v-model="resolvedBuild">
                         </div>
 
+                        <div class="form-group">
+                            <label for="singleLayerModuleId">Родительский контрагент</label>
+                            <select id="singleLayerModuleId"
+                                    class="form-control"
+                                    v-model="contractorState.contractor.parent_id">
+                                <option v-for="contractor in parentContractors" :value="contractor.id"
+                                        :title="contractor.name">
+                                    {{ contractor.name }}
+                                </option>
+                            </select>
+                        </div>
+
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -107,6 +119,7 @@
 
         @Action public administratorContractorUpdate: any;
         @Action public administratorContractorUploadLogo: any;
+        @Action public getParentContractors: any;
 
         @State('administratorContractor') public contractorState: ContractorState;
 
@@ -171,6 +184,18 @@
 
         public deleteLogo() {
             this.contractorState.contractor.logo = '';
+        }
+
+        get parentContractors() {
+            let parentContractors = [];
+
+            this.contractorState.contractors.map(parentContractor => {
+                if (parentContractor.id !== this.contractorState.contractor.id) {
+                    parentContractors.push(parentContractor);
+                }
+            });
+
+            return parentContractors;
         }
 
     }
