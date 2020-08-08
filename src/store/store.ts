@@ -26,7 +26,7 @@ import {map} from '@/store/modules/components/utils/map/map';
 import {fileuploader} from '@/store/modules/components/utils/fileuploader/fileuploader';
 
 // constructor
-
+import {directoryForConstructor} from '@/store/modules/administrator/constructor/directory/directory';
 
 Vue.use(Vuex);
 
@@ -60,6 +60,9 @@ export default new Vuex.Store<RootState>({
         sureModal,
         map,
         fileuploader,
+
+        // constructor
+        directoryForConstructor,
 
     },
 
