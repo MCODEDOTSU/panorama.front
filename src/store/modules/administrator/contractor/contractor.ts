@@ -166,6 +166,16 @@ export const actions: ActionTree<ContractorState, RootState> = {
 
     },
 
+    async detachParentContractor({state}, payload) {
+        try {
+            const res = await axios.post(`${baseUrlAPI}contractor/detach_parent_contractor`, payload);
+            SuccessNotifier.notify('', 'Родительский контрагент удален');
+            state.contractor.parent_id = null;
+        } catch {
+            ErrorNotifier.notify();
+        }
+    },
+
 };
 
 export const administratorContractor: Module<ContractorState, RootState> = {

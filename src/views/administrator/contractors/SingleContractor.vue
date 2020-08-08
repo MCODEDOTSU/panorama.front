@@ -80,16 +80,28 @@
                                    v-model="resolvedBuild">
                         </div>
 
-                        <div class="form-group">
-                            <label for="singleLayerModuleId">Родительский контрагент</label>
-                            <select id="singleLayerModuleId"
-                                    class="form-control"
-                                    v-model="contractorState.contractor.parent_id">
-                                <option v-for="contractor in parentContractors" :value="contractor.id"
-                                        :title="contractor.name">
-                                    {{ contractor.name }}
-                                </option>
-                            </select>
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="singleLayerModuleId">Родительский контрагент</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-10">
+                                <select id="singleLayerModuleId"
+                                        class="form-control"
+                                        v-model="contractorState.contractor.parent_id">
+                                    <option v-for="contractor in parentContractors" :value="contractor.id"
+                                            :title="contractor.name">
+                                        {{ contractor.name }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-2" v-if="contractorState.contractor.parent_id">
+                                <a href="javascript: void(0);" title="Удалить"
+                                   @click="detachParentContractor(contractorState.contractor)">Удалить</a>
+                            </div>
+
                         </div>
 
                     </form>
@@ -119,7 +131,7 @@
 
         @Action public administratorContractorUpdate: any;
         @Action public administratorContractorUploadLogo: any;
-        @Action public getParentContractors: any;
+        @Action public detachParentContractor: any;
 
         @State('administratorContractor') public contractorState: ContractorState;
 
@@ -168,6 +180,21 @@
             this.contractorState.contractor.address.build = build;
         }
 
+        get parentContractors() {
+            let parentContractors = [];
+
+            this.contractorState.contractors.map(parentContractor => {
+                if ((parentContractor.id !== this.contractorState.contractor.id
+                    && parentContractor.parent_id == null)
+                    || parentContractor.id == this.contractorState.contractor.parent_id
+                ) {
+                    parentContractors.push(parentContractor);
+                }
+            });
+
+            return parentContractors;
+        }
+
         public getLogoSrc() {
             return (this.contractorState.contractor.logo === '' || this.contractorState.contractor.logo === null) ?
                 '/images/empty.jpg' : this.contractorState.contractor.logo;
@@ -186,17 +213,11 @@
             this.contractorState.contractor.logo = '';
         }
 
-        get parentContractors() {
-            let parentContractors = [];
+        // private removeParentContractor() {
+        //
+        //     console.log("delete parent contractor")
+        // }
 
-            this.contractorState.contractors.map(parentContractor => {
-                if (parentContractor.id !== this.contractorState.contractor.id) {
-                    parentContractors.push(parentContractor);
-                }
-            });
-
-            return parentContractors;
-        }
 
     }
 </script>
