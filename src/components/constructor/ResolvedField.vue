@@ -8,6 +8,7 @@
         <many-from-many-field :field="field" v-if="field.type === 'many_from_many_field'"/>
         <doc-field :field="field" v-if="field.type === 'doc_field'"/>
         <link-field :field="field" v-if="field.type === 'link_field'"/>
+        <directory-field :field="field" v-if="field.type === 'directory_field'"/>
     </div>
 </template>
 
@@ -23,9 +24,10 @@
     import ManyFromManyField from '@/components/constructor/fields/ManyFromManyField.vue';
     import DocField from '@/components/constructor/fields/DocField.vue';
     import LinkField from '@/components/constructor/fields/LinkField.vue';
+    import DirectoryField from '@/components/constructor/fields/DirectoryField.vue';
 
     @Component({
-        components: {ManyFromManyField, OneFromManyField, TextField, LongTextField, NumberField, DateField, DocField, LinkField},
+        components: {ManyFromManyField, OneFromManyField, TextField, LongTextField, NumberField, DateField, DocField, LinkField, DirectoryField},
     })
     export default class ResolvedField extends Vue {
         @Prop() private field: any;

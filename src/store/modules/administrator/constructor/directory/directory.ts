@@ -12,6 +12,7 @@ export const state: DirectoryState = {
         title: '',
     },
     directories: [],
+    entities: [],
 };
 
 export const actions: ActionTree<DirectoryState, RootState> = {
@@ -19,6 +20,14 @@ export const actions: ActionTree<DirectoryState, RootState> = {
         try {
             const res = await axios.get(`${baseUrlAPI}directory`);
             state.directories = res.data;
+        } catch {
+            ErrorNotifier.notify();
+        }
+    },
+
+    async getAllDirectoryEntities({}, payload) {
+        try {
+            const res = await axios.get(`${baseUrlAPI}directory/entities/${payload}`);
         } catch {
             ErrorNotifier.notify();
         }
