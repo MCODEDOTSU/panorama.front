@@ -249,6 +249,9 @@
                     tableField.options.min = 1;
                     tableField.options.max = 100;
                     break;
+                case 'directory_field':
+                    tableField.options.linkedDirectory = '';
+                    break;
                 default:
                     tableField.options = {};
                     break;

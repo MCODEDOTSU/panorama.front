@@ -5,8 +5,8 @@
                 <div class="alert alert-info">Связанный справочник</div>
             </div>
             <div class="col-6 col">
-                <select id="singleUserRole" class="form-control" v-model="directoryState.directory">
-                    <option value="directories" v-for="directory in directoryState.directories">{{ directory.name }}</option>
+                <select id="singleUserRole" class="form-control" v-model="tableField.options.linkedDirectory">
+                    <option :value="directory.name" v-for="directory in directoryState.directories">{{ directory.name }}</option>
                 </select>
             </div>
         </div>

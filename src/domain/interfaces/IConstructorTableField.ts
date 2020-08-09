@@ -21,4 +21,5 @@ interface IOptions {
     minDate?: string; // Минимальная дата для выбора поля date_field
     maxDate?: string; // Максимальная дата для выбора поля date_field
     layers?: any; // Поле для выбора связанных слоёв
+    linkedDirectory?: string; // Поле для хранения связанного справочника
 }
