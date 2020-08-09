@@ -183,10 +183,10 @@
         get parentContractors() {
             let parentContractors = [];
 
-            this.contractorState.contractors.map(parentContractor => {
+            this.contractorState.contractors.map((parentContractor) => {
                 if ((parentContractor.id !== this.contractorState.contractor.id
                     && parentContractor.parent_id == null)
-                    || parentContractor.id == this.contractorState.contractor.parent_id
+                    || parentContractor.id === this.contractorState.contractor.parent_id
                 ) {
                     parentContractors.push(parentContractor);
                 }
@@ -212,12 +212,5 @@
         public deleteLogo() {
             this.contractorState.contractor.logo = '';
         }
-
-        // private removeParentContractor() {
-        //
-        //     console.log("delete parent contractor")
-        // }
-
-
     }
 </script>

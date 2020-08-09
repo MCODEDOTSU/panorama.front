@@ -60,6 +60,7 @@
                             <option value="many_from_many_field">Многие из многих</option>
                             <option value="doc_field">Загрузка документа</option>
                             <option value="link_field">Ссылка на геоэлемент</option>
+                            <option value="directory_field">Ссылка на справочник</option>
                         </select>
                     </div>
                     <div class="col-3 col col-title">
@@ -125,6 +126,10 @@
                     <builder-number-field v-if="tableField.type === 'number_field'"
                                           :tableField="tableField"
                     ></builder-number-field>
+
+                    <builder-directory-field v-if="tableField.type === 'directory_field'"
+                                          :tableField="tableField"
+                    ></builder-directory-field>
                 </div>
 
                 <hr>
@@ -154,6 +159,7 @@
     import BuilderLinkField from '@/views/administrator/layers/constructor/BuilderLinkField.vue';
     import BuilderLongTextField from '@/views/administrator/layers/constructor/BuilderLongTextField.vue';
     import BuilderNumberField from '@/views/administrator/layers/constructor/BuilderNumberField.vue';
+    import BuilderDirectoryField from '@/views/administrator/layers/constructor/BuilderDirectoryField.vue';
 
     @Component({
         components: {
@@ -165,6 +171,7 @@
             BuilderManyFromManyField,
             BuilderDocField,
             BuilderLinkField,
+            BuilderDirectoryField,
         },
     })
     export default class ResolvedField extends Vue {
