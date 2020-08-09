@@ -2,7 +2,7 @@
     <div>
         <div class="col-6 col">
             <select id="singleUserRole" class="form-control" v-model="field.value">
-                <option :value="entity" v-for="entity in directoryState.entities">{{ entity }}</option>
+                <option :value="entity.id" v-for="entity in directoryState.entities">{{ entity.value }}</option>
             </select>
         </div>
     </div>

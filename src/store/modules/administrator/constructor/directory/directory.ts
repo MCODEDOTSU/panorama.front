@@ -28,6 +28,7 @@ export const actions: ActionTree<DirectoryState, RootState> = {
     async getAllDirectoryEntities({}, payload) {
         try {
             const res = await axios.get(`${baseUrlAPI}directory/entities/${payload}`);
+            state.entities = res.data;
         } catch {
             ErrorNotifier.notify();
         }
