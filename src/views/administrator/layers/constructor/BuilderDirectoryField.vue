@@ -5,7 +5,7 @@
                 <div class="alert alert-info">Связанный справочник</div>
             </div>
             <div class="col-6 col">
-                <select id="singleUserRole" class="form-control" v-model="tableField.options.linkedDirectory">
+                <select id="singleUserRole" class="form-control" v-model="defaultLinkedDirectory">
                     <option :value="directory.name" v-for="directory in directoryState.directories">{{ directory.name }}</option>
                 </select>
             </div>
@@ -30,6 +30,14 @@
 
         public created() {
             this.getAllDirectories();
+        }
+
+        get defaultLinkedDirectory() {
+            if (this.tableField.options.linkedDirectory !== "") {
+                return this.tableField.options.linkedDirectory;
+            }
+
+            return this.directoryState.directories[0].name;
         }
     }
 
