@@ -39,6 +39,10 @@
 
             return this.directoryState.directories[0].name;
         }
+
+        set defaultLinkedDirectory(value: string) {
+            this.tableField.options.linkedDirectory = value;
+        }
     }
 
 </script>
