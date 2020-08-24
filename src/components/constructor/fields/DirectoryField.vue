@@ -17,10 +17,11 @@
     @Component
     export default class DirectoryField extends Vue {
 
-        @Prop() private field: any;
         @State('directoryForConstructor') public directoryState: DirectoryState;
 
-        @Action getAllDirectoryEntities;
+        @Action public getAllDirectoryEntities;
+
+        @Prop() private field: any;
 
         // @ts-ignore
         @Inject('validator') private $validator: any;

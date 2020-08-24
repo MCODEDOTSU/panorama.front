@@ -94,9 +94,7 @@
     import UserState from '@/store/modules/administrator/user/types';
     import Form from 'bootstrap-vue/esm/mixins/form';
 
-    @Component({
-        components: {Form}
-    })
+    @Component({ components: { Form } })
     export default class SingleUser extends Vue {
 
         @Action public administratorUserUpdate: any;

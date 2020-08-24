@@ -13,6 +13,6 @@ export default interface ElementState {
         count: number;
         current: number;
         limit: number;
-    },
-    search: string,
+    };
+    search: string;
 }

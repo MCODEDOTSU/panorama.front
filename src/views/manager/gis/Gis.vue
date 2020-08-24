@@ -36,21 +36,21 @@
 
 <script lang='ts'>
 
-    import {Component, Provide, Vue} from "vue-property-decorator";
-    import {Action, State} from "vuex-class";
+    import {Component, Provide, Vue} from 'vue-property-decorator';
+    import {Action, State} from 'vuex-class';
 
-    import LayerState from "@/store/modules/manager/layer/types";
-    import ElementState from "@/store/modules/manager/element/types";
+    import LayerState from '@/store/modules/manager/layer/types';
+    import ElementState from '@/store/modules/manager/element/types';
 
-    import OlMap from "@/components/utils/map/Map.vue";
-    import LayersList from "@/views/manager/gis/LayersList.vue";
-    import ElementsList from "@/views/manager/gis/ElementsList.vue";
-    import SearchElementsList from "@/views/manager/gis/SearchElementsList.vue";
-    import SingleElement from "@/views/manager/gis/SingleElement.vue";
-    import MagicElement from "@/views/manager/gis/magic/MagicElement.vue";
-    import SearchAddress from "@/views/manager/gis/SearchAddress.vue";
+    import OlMap from '@/components/utils/map/Map.vue';
+    import LayersList from '@/views/manager/gis/LayersList.vue';
+    import ElementsList from '@/views/manager/gis/ElementsList.vue';
+    import SearchElementsList from '@/views/manager/gis/SearchElementsList.vue';
+    import SingleElement from '@/views/manager/gis/SingleElement.vue';
+    import MagicElement from '@/views/manager/gis/magic/MagicElement.vue';
+    import SearchAddress from '@/views/manager/gis/SearchAddress.vue';
 
-    import SureModal from "@/components/common/SureModal.vue";
+    import SureModal from '@/components/common/SureModal.vue';
 
     @Component({
         components: {
@@ -61,14 +61,14 @@
             SingleElement,
             MagicElement,
             SureModal,
-            SearchAddress
+            SearchAddress,
         },
     })
 
     export default class Gis extends Vue {
 
-        @State("managerLayer") public layerState!: LayerState;
-        @State("managerElement") public elementState!: ElementState;
+        @State('managerLayer') public layerState!: LayerState;
+        @State('managerElement') public elementState!: ElementState;
 
         // Слои
         @Action public managerLayerSetSingle: any;
@@ -95,13 +95,13 @@
             }
 
             await this.managerElementById({id: e.id});
-            this.setInteraction({mode: "modify"});
+            this.setInteraction({mode: 'modify'});
 
             if (this.layerState.layer.id !== e.layer_id) {
                 this.managerLayerSetSingle({
                     layer: this.layerState.layers.find((layer) => {
                         return layer.id === e.layer_id;
-                    })
+                    }),
                 });
             }
 
@@ -136,7 +136,7 @@
                 this.managerElementUpdateGeometry({id: this.elementState.element.id, geometry: e.geom});
 
                 // Меняем режим работы с картой
-                this.setInteraction({mode: "modify"});
+                this.setInteraction({mode: 'modify'});
 
                 this.addFeatureToMap({
                     id: this.elementState.element.id,
@@ -163,12 +163,12 @@
                 });
 
                 // Добавляем элемент как отмеченный в хранилие
-                let checkedList = JSON.parse(localStorage.getItem("elementState.checked"));
+                let checkedList = JSON.parse(localStorage.getItem('elementState.checked'));
                 if (checkedList === null) {
                     checkedList = [];
                 }
                 checkedList.push(this.elementState.element.id);
-                localStorage.setItem("elementState.checked", JSON.stringify(checkedList));
+                localStorage.setItem('elementState.checked', JSON.stringify(checkedList));
 
             } else {
 
@@ -192,7 +192,7 @@
                     property: {
                         id: this.elementState.magicElement.element.id,
                         layer_id: this.elementState.magicElement.element.layer_id,
-                        title: this.elementState.magicElement.element.title.replace("%i", i.toString()),
+                        title: this.elementState.magicElement.element.title.replace('%i', i.toString()),
                         description: this.elementState.magicElement.element.description,
                         lenght: this.elementState.magicElement.element.length,
                         area: this.elementState.magicElement.element.area,
@@ -202,12 +202,12 @@
                 });
 
                 // Добавляем элемент как отмеченный в хранилие
-                let checkedList = JSON.parse(localStorage.getItem("elementState.checked"));
+                let checkedList = JSON.parse(localStorage.getItem('elementState.checked'));
                 if (checkedList === null) {
                     checkedList = [];
                 }
                 checkedList.push(this.elementState.magicElement.element.id);
-                localStorage.setItem("elementState.checked", JSON.stringify(checkedList));
+                localStorage.setItem('elementState.checked', JSON.stringify(checkedList));
 
                 // Рисуем стрелочку до предыдущего элемента
                 if (previous !== undefined && previous.id !== 0) {

@@ -148,7 +148,7 @@
         @Action public setInteraction: any;
 
         @Provide() public checkedAll = false;
-        @Provide() public search:string = '';
+        @Provide() public search: string = '';
 
         // Интерфейсы
         @Action public setSureModal: any;
@@ -273,7 +273,6 @@
             const layer = this.layerState.layers.find((layer) => {
                 return layer.id === element.layer_id;
             });
-            debugger;
             this.setInteraction({ mode: (element.geometry !== null ? 'modify' : layer.geometry_type) });
 
         }
@@ -417,30 +416,6 @@
             // });
         }
 
-        /**
-         * Активировать поиск
-         */
-        private async searchInit() {
-            if (this.search.length < 3) {
-
-                ErrorNotifier.notifyWithCustomMessage('Для поиска введите минимум три символа');
-
-            } else {
-
-                this.elementState.search = this.search;
-
-                // Пагинация
-                this.elementState.paginator.current = 1;
-                this.managerElementGetCountBySearch();
-
-                // Получаем список элементов
-                await this.managerElementGetLimitBySearch();
-
-                // Отмечаем выбраннные в прошлый раз элементы
-                this.localStorageCheckedElements();
-            }
-        }
-
         get resolvedDeleteAllButtonShow() {
             return (this.elementState.elements.filter((element) => {
                 return (element.checked === true);
@@ -490,6 +465,30 @@
                 });
             }
             localStorage.setItem('elementState.checked', JSON.stringify(checkedList));
+        }
+
+        /**
+         * Активировать поиск
+         */
+        private async searchInit() {
+            if (this.search.length < 3) {
+
+                ErrorNotifier.notifyWithCustomMessage('Для поиска введите минимум три символа');
+
+            } else {
+
+                this.elementState.search = this.search;
+
+                // Пагинация
+                this.elementState.paginator.current = 1;
+                this.managerElementGetCountBySearch();
+
+                // Получаем список элементов
+                await this.managerElementGetLimitBySearch();
+
+                // Отмечаем выбраннные в прошлый раз элементы
+                this.localStorageCheckedElements();
+            }
         }
 
     }

@@ -124,7 +124,6 @@
 
         @Action public administratorPersonUpdate: any;
         @Action public administratorPersonUploadLogo: any;
-        //administratorPersonUpdate
 
         @State('administratorPerson') public personState: PersonState;
 

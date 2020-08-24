@@ -28,7 +28,6 @@
         }
 
         set resolvedValue(value) {
-            debugger;
             this.field.value = value;
         }
     }

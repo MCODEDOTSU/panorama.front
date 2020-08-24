@@ -181,7 +181,7 @@
         }
 
         get parentContractors() {
-            let parentContractors = [];
+            const parentContractors = [];
 
             this.contractorState.contractors.map((parentContractor) => {
                 if ((parentContractor.id !== this.contractorState.contractor.id

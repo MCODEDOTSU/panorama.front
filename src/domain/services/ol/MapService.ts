@@ -29,7 +29,7 @@ import {Circle as CircleStyle, Fill, Stroke, Style, Text} from 'ol/style';
  * @param zoom
  * @param selector
  */
-export const initOLMap = (longitude: number, latitude: number, zoom: number, tiles: [], selector?: string) => {
+export const initOLMap = (longitude: number, latitude: number, zoom: number, tiles: any, selector?: string) => {
 
     // @ts-ignore
     proj4.defs('EPSG:3395', '+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs');
@@ -53,7 +53,7 @@ export const initOLMap = (longitude: number, latitude: number, zoom: number, til
             center: transform([longitude, latitude], 'EPSG:4326', 'EPSG:3395'),
             projection: 'EPSG:3395',
             zoom,
-            extent: transformExtent([-180, -80, 180, 80], 'EPSG:4326', 'EPSG:3395')
+            extent: transformExtent([-180, -80, 180, 80], 'EPSG:4326', 'EPSG:3395'),
         }),
     });
 

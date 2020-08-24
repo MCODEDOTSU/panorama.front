@@ -22,18 +22,19 @@
 
     @Component
     export default class BuilderDirectoryField extends Vue {
-        @Prop() private tableField: TableField;
 
         @State('directoryForConstructor') public directoryState: DirectoryState;
 
-        @Action getAllDirectories;
+        @Action public getAllDirectories;
+
+        @Prop() private tableField: TableField;
 
         public created() {
             this.getAllDirectories();
         }
 
         get defaultLinkedDirectory() {
-            if (this.tableField.options.linkedDirectory !== "") {
+            if (this.tableField.options.linkedDirectory !== '') {
                 return this.tableField.options.linkedDirectory;
             }
 

@@ -461,23 +461,6 @@
         }
 
         /**
-         * Активировать поиск
-         */
-        private searchInit() {
-            if (this.search.length < 3) {
-                ErrorNotifier.notifyWithCustomMessage('Для поиска введите минимум три символа');
-            } else {
-                this.elementState.search = this.search;
-            }
-        }
-
-        get resolvedDeleteAllButtonShow() {
-            return (this.elementState.elements.filter((element) => {
-                return (element.checked === true);
-            }).length !== 0);
-        }
-
-        /**
          * Выделить Элементы из локального харнилища
          */
         public localStorageCheckedElements() {
@@ -520,6 +503,23 @@
                 });
             }
             localStorage.setItem('elementState.checked', JSON.stringify(checkedList));
+        }
+
+        get resolvedDeleteAllButtonShow() {
+            return (this.elementState.elements.filter((element) => {
+                return (element.checked === true);
+            }).length !== 0);
+        }
+
+        /**
+         * Активировать поиск
+         */
+        private searchInit() {
+            if (this.search.length < 3) {
+                ErrorNotifier.notifyWithCustomMessage('Для поиска введите минимум три символа');
+            } else {
+                this.elementState.search = this.search;
+            }
         }
 
     }

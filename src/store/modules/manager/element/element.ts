@@ -84,7 +84,8 @@ export const actions: ActionTree<ElementState, RootState> = {
     async managerElementGetLimitBySearch({}, payload) {
         try {
             state.elements = [];
-            const res = await axios.get(`${baseUrlAPI}manager/element/search/${state.search}/${state.paginator.limit}/${state.paginator.current - 1}`);
+            const res =
+                await axios.get(`${baseUrlAPI}manager/element/search/${state.search}/${state.paginator.limit}/${state.paginator.current - 1}`);
             state.elements = res.data;
         } catch {
             ErrorNotifier.notify();
