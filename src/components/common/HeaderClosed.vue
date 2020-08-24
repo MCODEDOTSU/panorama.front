@@ -61,7 +61,9 @@
                             {{ userState.user.contractor.name }}
                         </label>
                         <label class="person-name">
-                            {{ userState.user.lastname }} {{ userState.user.firstname }} {{ userState.user.middlename }}
+                            {{ userState.user.person ? userState.user.person.lastname : '-' }}
+                            {{ userState.user.person ? userState.user.person.firstname : '-' }}
+                            {{ userState.user.person ? userState.user.person.middlename : '-' }}
                         </label>
                         <label class="person-post">
                             {{ userState.user.post }}

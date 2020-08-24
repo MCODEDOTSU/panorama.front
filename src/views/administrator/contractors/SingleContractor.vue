@@ -86,10 +86,12 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-10">
+
+                            <div class="col-12">
                                 <select id="singleLayerModuleId"
                                         class="form-control"
                                         v-model="contractorState.contractor.parent_id">
+                                    <option value="null" title="Нет родительского контрагента">-</option>
                                     <option v-for="contractor in parentContractors" :value="contractor.id"
                                             :title="contractor.name">
                                         {{ contractor.name }}
@@ -97,10 +99,10 @@
                                 </select>
                             </div>
 
-                            <div class="col-2" v-if="contractorState.contractor.parent_id">
-                                <a href="javascript: void(0);" title="Удалить"
-                                   @click="detachParentContractor(contractorState.contractor)">Удалить</a>
-                            </div>
+                            <!--<div class="col-1 actions" v-if="contractorState.contractor.parent_id">-->
+                                <!--<a href="javascript: void(0);" title="Удалить" class="btn btn-danger circle-btn"-->
+                                   <!--@click="detachParentContractor(contractorState.contractor)"><i class="fa fa-minus"></i></a>-->
+                            <!--</div>-->
 
                         </div>
 
@@ -131,7 +133,7 @@
 
         @Action public administratorContractorUpdate: any;
         @Action public administratorContractorUploadLogo: any;
-        @Action public detachParentContractor: any;
+        // @Action public detachParentContractor: any;
 
         @State('administratorContractor') public contractorState: ContractorState;
 

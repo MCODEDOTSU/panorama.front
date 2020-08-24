@@ -33,7 +33,7 @@
                     <img :src="getPhotoSrc()" class="photo" @click="$refs.photo.click()"/>
                     <input type="file" ref="photo" class="form-control-file" @change="uploadPhoto"
                            accept="image/jpeg,image/png,image/gif"/>
-                    <button v-if="this.userState.user.photo !== '' && this.userState.user.photo !== null" @click="deletePhoto()">
+                    <button v-if="userState.user.photo !== '' && userState.user.photo !== null" @click="deletePhoto()">
                         &times;
                     </button>
                 </div>
@@ -41,10 +41,14 @@
                 <div class="form-group right-group">
 
                     <div class="form-group">
-                        <label for="singleUserPerson">Физическое лицо</label>
-                        <input type="text" id="singleUserPerson"
-                               class="form-control"
-                               v-model="userState.user.person_id">
+                        <awesome-selector title="Физическое лицо" id="singleUserPerson"
+                                          :list="resolvedPersons"
+                                          v-model="resolvedPerson" v-on:onchange="personChange">
+                        </awesome-selector>
+                        <!--<input type="text" id="singleUserPerson"-->
+                               <!--class="form-control"-->
+                               <!--v-model="userState.user.person_id">-->
+
                     </div>
 
                     <div class="form-group">
@@ -91,16 +95,24 @@
 
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
+    import PersonState from '@/store/modules/administrator/person/types';
     import UserState from '@/store/modules/administrator/user/types';
     import Form from 'bootstrap-vue/esm/mixins/form';
+    import AwesomeSelector from '@/components/utils/awesomeSelector/AwesomeSelector.vue'
 
-    @Component({ components: { Form } })
+    @Component({ components: { Form, AwesomeSelector } })
     export default class SingleUser extends Vue {
 
         @Action public administratorUserUpdate: any;
         @Action public administratorUserUploadPhoto: any;
+        @Action public administratorPersonGetAll: any;
 
         @State('administratorUser') public userState: UserState;
+        @State('administratorPerson') public personState: PersonState;
+
+        private created() {
+            this.administratorPersonGetAll();
+        }
 
         public getPhotoSrc() {
             return (this.userState.user.photo === '' || this.userState.user.photo === null) ? '/images/social.png' : this.userState.user.photo;
@@ -119,6 +131,11 @@
             this.userState.user.photo = '';
         }
 
+        public personChange(item) {
+            this.userState.user.person_id = item.id !== 0 ? item.id : null;
+            this.resolvedPerson = item;
+        }
+
         public save() {
             this.administratorUserUpdate();
             // @ts-ignore
@@ -128,6 +145,35 @@
         public close() {
             // @ts-ignore
             this.$bvModal.hide('singleUserModal');
+        }
+
+        get resolvedPersons() {
+            return this.personState.persons.map((item) => {
+                return {
+                    id: item.id,
+                    title: `${item.lastname} ${item.firstname} ${item.middlename}`
+                };
+            });
+        }
+
+        get resolvedPerson() {
+            return (this.userState.user.person === null || this.userState.user.person === undefined) ? {
+                    id: 0,
+                    title: ''
+                } : {
+                    id: this.userState.user.person.id,
+                    title: `${this.userState.user.person.lastname} ${this.userState.user.person.firstname} ${this.userState.user.person.middlename}`
+                };
+        }
+
+        set resolvedPerson(item) {
+            const title = item.title.split(' ');
+            this.userState.user.person = item.id !== 0 ? {
+                id: item.id,
+                firstname: title[1] !== undefined ? title[1] : '',
+                lastname: title[0] !== undefined ? title[0] : '',
+                middlename: title[2] !== undefined ? title[2] : '',
+            } : null;
         }
 
     }
