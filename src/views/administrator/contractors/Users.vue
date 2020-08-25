@@ -102,7 +102,6 @@
 
         public async created() {
             await this.administratorContractorGetById({ id: this.$route.params.id });
-            console.log(this.userState.users);
         }
 
         /**

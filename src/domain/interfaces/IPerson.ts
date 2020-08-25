@@ -5,9 +5,9 @@ export default interface IPerson {
     firstname: string;
     lastname: string;
     middlename: string;
-    date_of_birth: string;
-    address_id: number | undefined;
+    date_of_birth?: string;
+    address_id?: number | undefined;
     address?: IAddress;
-    phones: string;
-    note: string;
+    phones?: string;
+    note?: string;
 }

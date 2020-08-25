@@ -56,26 +56,22 @@
 
         @Prop() private id: string;
 
-        @Prop() private list: {
+        @Prop() private list: Array<{
             id: any;
             title: string;
-        }[];
+        }>;
 
-        @Prop() public value: {
+        @Prop() private value: {
             id: number;
             title: string;
         };
 
-        @Provide() public search = '';
+        @Provide() private search = '';
 
         @Emit()
         public onchange(value: any) {
             return value;
         }
-
-        // private created() {
-        //     console.log(this.value);
-        // }
 
         private clean() {
             this.resolveValue = {
@@ -86,6 +82,7 @@
 
         private select(item) {
             this.resolveValue = item;
+            // @ts-ignore
             this.$bvModal.hide('awesomeSelectorList');
         }
 

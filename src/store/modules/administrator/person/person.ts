@@ -60,7 +60,7 @@ export const actions: ActionTree<PersonState, RootState> = {
     async administratorPersonUpdate() {
         try {
             if (state.person.id !== 0) {
-                const res = await axios.put(`${baseUrlAPI}person`, state.person);
+                const res = await axios.put(`${baseUrlAPI}person/${state.person.id}`, state.person);
                 SuccessNotifier.notify('Данные сохранены', `Физическое Лицо "${state.person.lastname} ${state.person.firstname}" изменено`);
                 state.persons = editUpdatedItem(state.persons, res.data);
             } else {

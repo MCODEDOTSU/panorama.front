@@ -98,7 +98,7 @@
     import PersonState from '@/store/modules/administrator/person/types';
     import UserState from '@/store/modules/administrator/user/types';
     import Form from 'bootstrap-vue/esm/mixins/form';
-    import AwesomeSelector from '@/components/utils/awesomeSelector/AwesomeSelector.vue'
+    import AwesomeSelector from '@/components/utils/awesomeSelector/AwesomeSelector.vue';
 
     @Component({ components: { Form, AwesomeSelector } })
     export default class SingleUser extends Vue {
@@ -110,7 +110,7 @@
         @State('administratorUser') public userState: UserState;
         @State('administratorPerson') public personState: PersonState;
 
-        private created() {
+        public created() {
             this.administratorPersonGetAll();
         }
 
@@ -151,7 +151,7 @@
             return this.personState.persons.map((item) => {
                 return {
                     id: item.id,
-                    title: `${item.lastname} ${item.firstname} ${item.middlename}`
+                    title: `${item.lastname} ${item.firstname} ${item.middlename}`,
                 };
             });
         }
@@ -159,10 +159,10 @@
         get resolvedPerson() {
             return (this.userState.user.person === null || this.userState.user.person === undefined) ? {
                     id: 0,
-                    title: ''
+                    title: '',
                 } : {
                     id: this.userState.user.person.id,
-                    title: `${this.userState.user.person.lastname} ${this.userState.user.person.firstname} ${this.userState.user.person.middlename}`
+                    title: `${this.userState.user.person.lastname} ${this.userState.user.person.firstname} ${this.userState.user.person.middlename}`,
                 };
         }
 
@@ -173,7 +173,12 @@
                 firstname: title[1] !== undefined ? title[1] : '',
                 lastname: title[0] !== undefined ? title[0] : '',
                 middlename: title[2] !== undefined ? title[2] : '',
-            } : null;
+            } : {
+                id: 0,
+                firstname: '',
+                lastname: '',
+                middlename: '',
+            };
         }
 
     }

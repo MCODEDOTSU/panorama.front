@@ -109,7 +109,7 @@
 
 <script lang="ts">
 
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Provide, Component, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
 
     import PersonState from '@/store/modules/administrator/person/types';
@@ -126,6 +126,8 @@
         @Action public administratorPersonUploadLogo: any;
 
         @State('administratorPerson') public personState: PersonState;
+
+        @Provide() private ru: any = ru;
 
         get resolvedCity() {
             if (this.personState.person.address  === null) {

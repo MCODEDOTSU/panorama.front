@@ -7,6 +7,9 @@ import Vue from 'vue';
 import DatatableFactory from './components/utils/datatable/VueJsDatatable/index';
 Vue.use(DatatableFactory);
 
+import VueTableDynamic from 'vue-table-dynamic';
+Vue.use(VueTableDynamic);
+
 /* Vue validation */
 import VeeValidate, { Validator } from 'vee-validate';
 import ru from 'vee-validate/dist/locale/ru';

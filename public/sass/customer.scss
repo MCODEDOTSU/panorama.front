@@ -428,3 +428,28 @@ body {
         }
     }
 }
+
+.v-table-dynamic {
+    margin: 16px 0;
+
+    .v-table-tools {
+        margin: 0 0 8px;
+
+        .tools-search {
+            width: 100%;
+        }
+    }
+
+    .btn {
+        font-size: 12px;
+        line-height: 1;
+        padding: 0 4px 1px;
+        margin: 0 4px 0 0;
+        opacity: .3;
+        text-transform: lowercase;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+}

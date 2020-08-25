@@ -9,46 +9,17 @@
         </b-button>
 
         <!-- Список физических лиц -->
-
-        <div class="grid-data">
-
-            <div class="row row-header">
-                <div class="col-3">Фамилия</div>
-                <div class="col-3">Имя</div>
-                <div class="col-3">Отчество</div>
-                <div class="col-1">Дата рождения</div>
-                <div class="col-1">Телефоны</div>
-                <div class="col-1">Заметка</div>
-            </div>
-
-            <div class="row row-body" v-for="person in personState.persons">
-                <div class="col-3">
-                    <label class="title">{{ person.lastname }}</label>
-                    <div class="actions">
-                        <b-button v-b-modal.singlePersonModal @click="administratorPersonSetSingle(person)" variant="info">
-                            Изменить
-                        </b-button>
-                        <button class="btn-danger" data-toggle="modal" data-target="#sureModal" @click="setSureModalContent(person)">Удалить</button>
-                    </div>
-                </div>
-                <div class="col-3"><label class="title">{{ person.firstname }}</label></div>
-                <div class="col-3"><label class="title">{{ person.middlename }}</label></div>
-                <div class="col-1"><label class="title">{{ person.date_of_birth }}</label></div>
-                <div class="col-1"><label class="title">{{ person.phones }}</label></div>
-                <div class="col-1"><label class="title">{{ person.note }}</label></div>
-            </div>
-
-            <div class="row row-footer">
-                <div class="col-3">Фамилия</div>
-                <div class="col-3">Имя</div>
-                <div class="col-3">Отчество</div>
-                <div class="col-1">Дата рождения</div>
-                <div class="col-1">Телефоны</div>
-                <div class="col-1">Заметка</div>
-            </div>
-
-        </div>
-        <!-- конец Список контрагентов -->
+        <vue-table-dynamic :params="persons" ref="table">
+            <template v-slot:column-7="{ props }">
+                <b-button v-b-modal.singlePersonModal @click="personSetSingle(props.cellData)" variant="info">
+                    Изменить
+                </b-button>
+                <button class="btn btn-danger" data-toggle="modal" data-target="#sureModal" @click="setSureModalContent(props.cellData)">
+                    Удалить
+                </button>
+            </template>
+        </vue-table-dynamic>
+        <!-- конец Список физических лиц -->
 
         <single-person></single-person>
 
@@ -59,16 +30,16 @@
 
 <script lang="ts">
 
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Watch, Provide, Component, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-
+    import {arrayFindFirst} from '@/domain/services/common/ArrayActions';
     import PersonState from '@/store/modules/administrator/person/types';
 
     import SinglePerson from '@/views/administrator/persons/SinglePerson.vue';
     import SureModal from '@/components/common/SureModal.vue';
 
     @Component({
-        components: {SinglePerson, SureModal},
+        components: {SinglePerson, SureModal },
     })
     export default class Persons extends Vue {
 
@@ -80,15 +51,43 @@
 
         @State('administratorPerson') public personState: PersonState;
 
+        @Provide() public persons = {
+            data: [ ],
+            header: 'row', stripe: true, enableSearch: true,
+            sort: [0, 1, 2, 3, 4, 5, 6],
+        };
+
+        @Watch('personState.persons', {deep: true})
+        public onPersons() {
+            this.persons.data = [ ['Фамилия', 'Имя', 'Отчество', 'Дата Рождения', 'Адрес', 'Телефоны', 'Заметка', ''] ];
+            this.personState.persons.forEach((item) => {
+                this.persons.data.push([
+                    item.lastname, item.firstname, item.middlename, item.date_of_birth,
+                    `${item.address.city} ${item.address.street} ${item.address.build}`,
+                    item.phones, item.note, item.id.toString(),
+                ]);
+            });
+        }
+
         public async created() {
             await this.administratorPersonGetAll();
         }
 
         /**
-         * Выкинуть окно: "Вы уверены, что хотите удалить?"
-         * @param person
+         * Выбрать физическое лицо для изменения
+         * @param personId
          */
-        public setSureModalContent(person: any) {
+        public personSetSingle(personId: any) {
+            const person = arrayFindFirst(this.personState.persons, parseInt(personId, 10));
+            this.administratorPersonSetSingle(person);
+        }
+
+        /**
+         * Выкинуть окно: "Вы уверены, что хотите удалить?"
+         * @param personId
+         */
+        public setSureModalContent(personId: any) {
+            const person = arrayFindFirst(this.personState.persons, parseInt(personId, 10));
             this.setSureModal({
                 title: 'Удалить физическое лицо?',
                 text: `Вы уверены, что хотите удалить физическое лицо "${person.lastname} ${person.firstname}" из системы?`,
