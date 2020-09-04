@@ -35,7 +35,7 @@ body {
     margin: 0;
 }
 
-footer {
+.app-footer {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -370,5 +370,86 @@ footer {
         padding: 8px;
         line-height: 1.2;
         background: $white;
+    }
+}
+
+.awesome-selector-dialog {
+
+    .awesome-selector-item {
+
+        a {
+            display: block;
+            padding: 8px;
+            border-top: 1px solid $gray-400;
+        }
+
+        &:first-child {
+
+            a {
+                border-top: none;
+            }
+        }
+    }
+
+    .awesome-selector-search {
+        margin: 0 0 16px;
+        position: relative;
+
+        input {
+            width: 100%;
+            padding: 2px 8px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .btn-clean-search {
+            background: none;
+            color: $black;
+            width: 32px;
+            height: 32px;
+            position: absolute;
+            top: 0;
+            right: 0;
+            text-align: center;
+            font-size: 14px;
+            line-height: 32px;
+            padding: 0;
+            border: none;
+            margin: 0;
+
+            i {
+                margin: 0;
+            }
+
+            &:hover {
+                background: none;
+                opacity: 0.75;
+            }
+        }
+    }
+}
+
+.v-table-dynamic {
+    margin: 16px 0;
+
+    .v-table-tools {
+        margin: 0 0 8px;
+
+        .tools-search {
+            width: 100%;
+        }
+    }
+
+    .btn {
+        font-size: 12px;
+        line-height: 1;
+        padding: 0 4px 1px;
+        margin: 0 4px 0 0;
+        opacity: .3;
+        text-transform: lowercase;
+
+        &:hover {
+            opacity: 1;
+        }
     }
 }

@@ -8,8 +8,13 @@
             Создать
         </b-button>
 
+        <button @click="excelExport" class="btn btn-info">
+            <i class="fa fa-floppy-o"></i>
+            Выгрузить в Excel
+        </button>
+
         <!-- Список физических лиц -->
-        <vue-table-dynamic :params="persons" ref="table">
+        <vue-table-dynamic :params="persons" ref="personsTable">
             <template v-slot:column-7="{ props }">
                 <b-button v-b-modal.singlePersonModal @click="personSetSingle(props.cellData)" variant="info">
                     Изменить
@@ -33,8 +38,9 @@
     import {Watch, Provide, Component, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
     import {arrayFindFirst} from '@/domain/services/common/ArrayActions';
+    import axios from 'axios';
+    import {baseUrl, baseUrlAPI} from '@/globals';
     import PersonState from '@/store/modules/administrator/person/types';
-
     import SinglePerson from '@/views/administrator/persons/SinglePerson.vue';
     import SureModal from '@/components/common/SureModal.vue';
 
@@ -96,6 +102,25 @@
                     await this.administratorPersonDelete();
                     this.administratorPersonUnsetSingle();
                 },
+            });
+        }
+
+        public excelExport() {
+
+            const personsTable: HTMLElement = this.$refs.personsTable as HTMLElement;
+
+            if(!personsTable || !personsTable.tableData || !personsTable.tableData.activatedRows) {
+                return;
+            }
+
+            let data = personsTable.tableData.activatedRows.map((row) => {
+                return row.cells.map((cell, index) => {
+                    return (index + 1) < row.cells.length ? cell.data : false
+                });
+            });
+
+            axios.post(`${baseUrlAPI}export/excel`, { data }).then((response) => {
+                window.open(`${baseUrl}${response.data}`);
             });
         }
 

@@ -10,4 +10,6 @@ export default interface IPerson {
     address?: IAddress;
     phones?: string;
     note?: string;
+    post?: string;
+    photo?: string;
 }

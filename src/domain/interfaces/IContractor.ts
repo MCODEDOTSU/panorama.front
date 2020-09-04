@@ -7,7 +7,8 @@ export default interface IContractor {
     full_name: string;
     inn: string;
     kpp: string;
-    address: IAddress;
+    address_id: number;
+    address?: IAddress;
     logo: string;
     modules?: IModule[];
     edited?: boolean;

@@ -1,7 +1,7 @@
 import {ActionTree, Module} from 'vuex';
 import RootState from '@/store/types';
 import axios from 'axios';
-import {baseUrlAPI} from '@/globals';
+import {baseUrl, baseUrlAPI} from '@/globals';
 import SuccessNotifier from '@/domain/util/notifications/SuccessNotifier';
 import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
 import {editUpdatedItem, removeDeletedItem} from '@/domain/services/common/UpdateItemService';
@@ -14,14 +14,21 @@ export const state: PersonState = {
         lastname: '',
         middlename: '',
         date_of_birth: '',
-        address_id: 0,
         phones: '',
         note: '',
+        post: '',
+        photo: '',
+        address_id: 0,
         address: {
             id: 0,
             build: '',
             city: '',
-            region: '',
+            district: '',
+            region_id: 0,
+            region: {
+                id: 0,
+                name: '',
+            },
             street: '',
         },
     },
@@ -107,17 +114,45 @@ export const actions: ActionTree<PersonState, RootState> = {
             lastname: '',
             middlename: '',
             date_of_birth: '',
-            address_id: 0,
             phones: '',
             note: '',
+            post: '',
+            photo: '',
+            address_id: 0,
             address: {
                 id: 0,
                 build: '',
                 city: '',
-                region: '',
+                district: '',
+                region_id: 0,
+                region: {
+                    id: 0,
+                    name: '',
+                },
                 street: '',
             },
         };
+    },
+
+    /**
+     * Загрузка фотографии
+     * @param payload
+     */
+    async administratorPersonUploadPhoto({}, payload) {
+
+        const formData = new FormData();
+        formData.append('file', payload.file);
+
+        try {
+            const res = await axios.post(`${baseUrlAPI}person/upload`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            state.person.photo = `${baseUrl}${res.data.filename}`;
+            SuccessNotifier.notify('Загрузка завершена', `Изображение "${payload.file.name}" загружено на сервер`);
+        } catch {
+            ErrorNotifier.notify();
+        }
+
     },
 
 };

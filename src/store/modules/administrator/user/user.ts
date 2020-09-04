@@ -92,27 +92,6 @@ export const actions: ActionTree<UserState, RootState> = {
         };
     },
 
-    /**
-     * Загрузка фотографии
-     * @param payload
-     */
-    async administratorUserUploadPhoto({}, payload) {
-
-        const formData = new FormData();
-        formData.append('file', payload.file);
-
-        try {
-            const res = await axios.post(`${baseUrlAPI}user/upload`, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
-            state.user.photo = `${baseUrl}${res.data.filename}`;
-            SuccessNotifier.notify('Загрузка завершена', `Изображение "${payload.file.name}" загружено на сервер`);
-        } catch {
-            ErrorNotifier.notify();
-        }
-
-    },
-
 };
 
 export const administratorUser: Module<UserState, RootState> = {

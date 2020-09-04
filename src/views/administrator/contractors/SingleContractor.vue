@@ -147,7 +147,7 @@
 
         set resolvedCity(city: string) {
             if (this.contractorState.contractor.address  === null) {
-                this.contractorState.contractor.address = { id: 0, city: '', street: '', build: '', region: ''};
+                this.contractorState.contractor.address = { id: 0, city: '', street: '', build: '', region_id: 0 };
             }
             this.contractorState.contractor.address.city = city;
         }
@@ -162,7 +162,7 @@
 
         set resolvedStreet(street: string) {
             if (this.contractorState.contractor.address  === null) {
-                this.contractorState.contractor.address = { id: 0, city: '', street: '', build: '', region: ''};
+                this.contractorState.contractor.address = { id: 0, city: '', street: '', build: '', region_id: 0 };
             }
             this.contractorState.contractor.address.street = street;
         }
@@ -177,7 +177,7 @@
 
         set resolvedBuild(build: string) {
             if (this.contractorState.contractor.address  === null) {
-                this.contractorState.contractor.address = { id: 0, city: '', street: '', build: '', region: ''};
+                this.contractorState.contractor.address = { id: 0, city: '', street: '', build: '', region_id: 0 };
             }
             this.contractorState.contractor.address.build = build;
         }

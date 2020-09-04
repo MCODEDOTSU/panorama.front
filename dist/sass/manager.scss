@@ -127,6 +127,42 @@ button, .btn {
             border-right: none;
         }
 
+        &.circle-btn {
+            -webkit-border-radius: 50% !important;
+            -moz-border-radius: 50% !important;
+            border-radius: 50% !important;
+            width: 32px;
+            height: 32px;
+            line-height: 32px;
+            text-align: center;
+            padding: 0;
+            color: $white;
+            background: $black;
+            margin: 3px 0;
+
+            &:hover {
+                color: $white;
+            }
+
+            i {
+                margin: 0;
+            }
+
+            &.btn-info {
+                background: $first;
+                &:hover {
+                    background: $first-hover;
+                }
+            }
+
+            &.btn-danger {
+                background: $red;
+                &:hover {
+                    background: $red-hover;
+                }
+            }
+        }
+
     }
 }
 

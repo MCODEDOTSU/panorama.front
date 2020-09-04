@@ -29,15 +29,6 @@
                     в систему
                 </div>
 
-                <div class="form-group file-upload">
-                    <img :src="getPhotoSrc()" class="photo" @click="$refs.photo.click()"/>
-                    <input type="file" ref="photo" class="form-control-file" @change="uploadPhoto"
-                           accept="image/jpeg,image/png,image/gif"/>
-                    <button v-if="userState.user.photo !== '' && userState.user.photo !== null" @click="deletePhoto()">
-                        &times;
-                    </button>
-                </div>
-
                 <div class="form-group right-group">
 
                     <div class="form-group">
@@ -45,17 +36,6 @@
                                           :list="resolvedPersons"
                                           v-model="resolvedPerson" v-on:onchange="personChange">
                         </awesome-selector>
-                        <!--<input type="text" id="singleUserPerson"-->
-                               <!--class="form-control"-->
-                               <!--v-model="userState.user.person_id">-->
-
-                    </div>
-
-                    <div class="form-group">
-                        <label for="singleUserPost">Занимаемая должность</label>
-                        <input type="text" id="singleUserPost"
-                               class="form-control"
-                               v-model="userState.user.post">
                     </div>
 
                 </div>
@@ -104,7 +84,6 @@
     export default class SingleUser extends Vue {
 
         @Action public administratorUserUpdate: any;
-        @Action public administratorUserUploadPhoto: any;
         @Action public administratorPersonGetAll: any;
 
         @State('administratorUser') public userState: UserState;
@@ -112,23 +91,6 @@
 
         public created() {
             this.administratorPersonGetAll();
-        }
-
-        public getPhotoSrc() {
-            return (this.userState.user.photo === '' || this.userState.user.photo === null) ? '/images/social.png' : this.userState.user.photo;
-        }
-
-        public uploadPhoto() {
-            const $fileInput: HTMLInputElement = (this.$refs.photo as HTMLInputElement);
-            if (!$fileInput || !$fileInput.files || $fileInput.files.length === 0) {
-                return;
-            }
-            const file = $fileInput.files[0];
-            this.administratorUserUploadPhoto({file});
-        }
-
-        public deletePhoto() {
-            this.userState.user.photo = '';
         }
 
         public personChange(item) {
