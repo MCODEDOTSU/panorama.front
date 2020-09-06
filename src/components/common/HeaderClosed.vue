@@ -66,7 +66,7 @@
                             {{ userState.user.person ? userState.user.person.middlename : '-' }}
                         </label>
                         <label class="person-post">
-                            {{ userState.user.post }}
+                            {{ userState.user.person ? userState.user.person.post : '-' }}
                         </label>
                     </li>
                     <li class="nav-item active">

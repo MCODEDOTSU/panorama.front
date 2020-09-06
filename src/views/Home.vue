@@ -5,9 +5,9 @@
             <div class="main">
                 <a href="/" title="Панорама" class="logo"></a>
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Email" v-model="region.email">
+                    <input type="text" class="form-control" placeholder="Email" v-model="user.email">
                     <input type="password" class="form-control" placeholder="Пароль" v-on:keyup.enter="login"
-                           v-model="region.password">
+                           v-model="user.password">
                     <button id="login" @click="login" class="btn btn-lg btn-primary btn-block">
                         Войти <i class="fas fa-circle-notch fa-spin" v-show="isLoad"></i>
                     </button>

@@ -14,7 +14,7 @@
         </button>
 
         <!-- Список физических лиц -->
-        <vue-table-dynamic :params="persons" ref="personsTable">
+        <vue-table-dynamic :params="persons" v-on:cell-click="showSinglePersonModal" ref="personsTable">
             <template v-slot:column-7="{ props }">
                 <b-button v-b-modal.singlePersonModal @click="personSetSingle(props.cellData)" variant="info">
                     Изменить
@@ -89,6 +89,27 @@
         }
 
         /**
+         * Окно изменения физического лица
+         */
+        public showSinglePersonModal(rowIndex, columnIndex, data) {
+
+            if (columnIndex === 7) {
+                return;
+            }
+
+            const personsTable: HTMLElement = this.$refs.personsTable as HTMLElement;
+            if (!personsTable) {
+                return;
+            }
+
+            // @ts-ignore
+            const id = personsTable.tableData.rows[rowIndex].cells[7].data;
+            this.personSetSingle(id);
+            // @ts-ignore
+            this.$bvModal.show('singlePersonModal');
+        }
+
+        /**
          * Выкинуть окно: "Вы уверены, что хотите удалить?"
          * @param personId
          */
@@ -105,17 +126,27 @@
             });
         }
 
+        /**
+         * Export to EXCEL
+         */
         public excelExport() {
 
             const personsTable: HTMLElement = this.$refs.personsTable as HTMLElement;
-
-            if(!personsTable || !personsTable.tableData || !personsTable.tableData.activatedRows) {
+            if (!personsTable) {
                 return;
             }
 
-            let data = personsTable.tableData.activatedRows.map((row) => {
+            // @ts-ignore
+            const td = personsTable.tableData;
+
+            if (!td || !td.activatedRows) {
+                return;
+            }
+
+            // @ts-ignore
+            const data = td.activatedRows.map((row) => {
                 return row.cells.map((cell, index) => {
-                    return (index + 1) < row.cells.length ? cell.data : false
+                    return (index + 1) < row.cells.length ? cell.data : false;
                 });
             });
 

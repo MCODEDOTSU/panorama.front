@@ -42,9 +42,9 @@
                 <div class="col-9">{{ userState.user.contractor.name }}</div>
             </div>
 
-            <div class="row bg" v-if="userState.user.contractor">
+            <div class="row bg" v-if="userState.user.person">
                 <div class="col-3">Занимаемая должность:</div>
-                <div class="col-9">{{ userState.user.post }}</div>
+                <div class="col-9">{{ userState.user.person.post }}</div>
             </div>
 
             <div class="row" v-if="userState.user.contractor">
@@ -111,8 +111,11 @@
         }
 
         get resolvedPhotoSrc() {
-            return (this.userState.user.photo === '' || this.userState.user.photo === null) ?
-                '/images/social.png' : this.userState.user.photo;
+            if (!this.userState.user.person) {
+                return '/images/social.png';
+            }
+            return (this.userState.user.person.photo === '' || this.userState.user.person.photo === null) ?
+                '/images/social.png' : this.userState.user.person.photo;
         }
 
         get resolvedLogoSrc() {

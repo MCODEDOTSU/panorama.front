@@ -2,10 +2,11 @@
     <div class="manager-container content">
 
         <h1>Справочник контрагентов</h1>
-        <button data-toggle="modal" data-target="#singleContractorModal" @click="administratorContractorUnsetSingle" class="btn btn-info">
+
+        <b-button v-b-modal.singleContractorModal @click="administratorContractorUnsetSingle" variant="info">
             <i class="fas fa-plus-circle"></i>
-            Создать нового
-        </button>
+            Создать
+        </b-button>
 
         <!-- Список контрагентов -->
         <div class="grid-data">
@@ -20,7 +21,9 @@
                     <label class="title">{{ contractor.name }}</label>
                     <label class="description">{{ contractor.full_name }}</label>
                     <div class="actions">
-                        <button class="btn-info" data-toggle="modal" data-target="#singleContractorModal" @click="administratorContractorSetSingle(contractor)">Изменить</button>
+                        <b-button v-b-modal.singleContractorModal @click="administratorContractorSetSingle(contractor)" variant="info">
+                            Изменить
+                        </b-button>
                         <button class="btn-info" data-toggle="modal" data-target="#contractorModules" @click="administratorContractorSetSingle(contractor)">Доступные модули</button>
                         <button class="btn-info" @click="getContractorUsers(contractor)">Пользователи</button>
                         <button class="btn-danger"data-toggle="modal" data-target="#sureModal" @click="setSureModalContent(contractor)">Удалить</button>

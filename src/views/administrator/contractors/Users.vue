@@ -20,35 +20,35 @@
                 <div class="col-6">ФИО</div>
                 <div class="col-2">Email (логин)</div>
                 <div class="col-2">Должность</div>
-                <div class="col-2">Контрагент</div>
+                <div class="col-2">Роль в системе</div>
             </div>
 
             <div class="row row-body" v-for="user in userState.users">
 
                 <div class="col-6">
-                    <label class="title">{{ user.person ? `${user.person.lastname} ${user.person.firstname} ${user.person.middlename}` : '' }}</label>
+                    <label class="title">
+                        {{ user.person ? `${user.person.lastname} ${user.person.firstname} ${user.person.middlename}` : '' }}
+                    </label>
                     <div class="actions">
-
                         <b-button v-b-modal.singleUserModal @click="administratorUserSetSingle(user)" variant="info">
                             Изменить
                         </b-button>
-
                         <button class="btn-danger"data-toggle="modal" data-target="#sureModal" @click="setSureModalContent(user)">Удалить</button>
-
                     </div>
                 </div>
 
                 <div class="col-2">
-
                     <label class="title">{{ user.email }}</label>
                 </div>
 
                 <div class="col-2">
-                    <label class="title">{{ user.post }}</label>
+                    <label class="title">
+                        {{ user.person ? user.person.post : '' }}
+                    </label>
                 </div>
 
                 <div class="col-2">
-                    <label class="title">{{ user.contractor.name }}</label>
+                    <label class="title">{{ resolvedRole(user) }}</label>
                 </div>
 
             </div>
@@ -57,7 +57,7 @@
                 <div class="col-6">ФИО</div>
                 <div class="col-2">Email (логин)</div>
                 <div class="col-2">Должность</div>
-                <div class="col-2">Контрагент</div>
+                <div class="col-2">Роль в системе</div>
             </div>
 
         </div>
@@ -79,6 +79,7 @@
 
     import SingleUser from '@/views/administrator/contractors/SingleUser.vue';
     import SureModal from '@/components/common/SureModal.vue';
+    import IUser from '@/domain/interfaces/IUser';
 
     @Component({
         components: {SingleUser, SureModal},
@@ -125,6 +126,13 @@
                     this.administratorUserUnsetSingle({ contractorId: 0 });
                 },
             });
+        }
+
+        /**
+         * Роль пользователя в системе
+         */
+        public resolvedRole(user: IUser) {
+            return user.role === 'admin' ? 'Управляющий' : 'Администратор';
         }
 
     }

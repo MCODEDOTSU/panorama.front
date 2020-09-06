@@ -6,7 +6,7 @@
 
         <b-container>
 
-            <div class="modal-dialog-person">
+            <div>
 
                     <div class="row">
 
@@ -227,8 +227,7 @@
         @State('region') public regionState: RegionState;
 
         @Provide() private ru: any = ru;
-
-        @Provide() public phone = { type: 'Мобильный', value: '' };
+        @Provide() private phone = { type: 'Мобильный', value: '' };
 
         public async created() {
             await this.getRegions();
@@ -260,11 +259,11 @@
                 0 : this.personState.person.address.region_id;
         }
 
-        set resolvedRegion(region_id: number) {
+        set resolvedRegion(regionId: number) {
             if (this.personState.person.address  === null) {
                 this.personState.person.address = { id: 0, district: '', city: '', street: '', build: '', region_id: 0 };
             }
-            this.personState.person.address.region_id = region_id;
+            this.personState.person.address.region_id = regionId;
         }
 
         get resolvedDistrict() {

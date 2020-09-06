@@ -24,20 +24,11 @@
                     </select>
                 </div>
 
-                <div class="alert alert-info">
-                    Дополнительная информация о пользователе будет отображаться в его личном кабинете при входе
-                    в систему
-                </div>
-
-                <div class="form-group right-group">
-
-                    <div class="form-group">
-                        <awesome-selector title="Физическое лицо" id="singleUserPerson"
-                                          :list="resolvedPersons"
-                                          v-model="resolvedPerson" v-on:onchange="personChange">
-                        </awesome-selector>
-                    </div>
-
+                <div class="form-group">
+                    <awesome-selector title="Физическое лицо" id="singleUserPerson"
+                                      :list="resolvedPersons"
+                                      v-model="resolvedPerson" v-on:onchange="personChange">
+                    </awesome-selector>
                 </div>
 
                 <div class="alert alert-info">
