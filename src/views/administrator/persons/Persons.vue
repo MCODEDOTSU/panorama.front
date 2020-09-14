@@ -60,13 +60,14 @@
         @Provide() public persons = {
             data: [ ],
             header: 'row', stripe: true, enableSearch: true,
-            sort: [0, 1, 2, 3, 4, 5, 6],
+            sort: [0, 1, 2, 3, 4, 5, 6, 7],
         };
+        @Provide() private tableIdIndex = 7;
 
         @Watch('personState.persons', {deep: true})
         public onPersons() {
             this.persons.data = [ ['Фамилия', 'Имя', 'Отчество', 'Дата Рождения', 'Адрес', 'Телефоны', 'Заметка', ''] ];
-            this.personState.persons.forEach((item) => {
+            this.personState.persons.forEach((item, i) => {
                 this.persons.data.push([
                     item.lastname, item.firstname, item.middlename, item.date_of_birth,
                     `${item.address.city} ${item.address.street} ${item.address.build}`,
@@ -93,7 +94,7 @@
          */
         public showSinglePersonModal(rowIndex, columnIndex, data) {
 
-            if (columnIndex === 7) {
+            if (columnIndex === this.tableIdIndex) {
                 return;
             }
 
@@ -103,7 +104,7 @@
             }
 
             // @ts-ignore
-            const id = personsTable.tableData.rows[rowIndex].cells[7].data;
+            const id = personsTable.tableData.rows[rowIndex].cells[this.tableIdIndex].data;
             this.personSetSingle(id);
             // @ts-ignore
             this.$bvModal.show('singlePersonModal');
@@ -144,10 +145,11 @@
             }
 
             // @ts-ignore
-            const data = td.activatedRows.map((row) => {
-                return row.cells.map((cell, index) => {
-                    return (index + 1) < row.cells.length ? cell.data : false;
-                });
+            const data = td.activatedRows.map((row, i) => {
+                const firstCell = i === 0 ? '№ п/п' : i;
+                return [ firstCell ].concat(row.cells.map((cell, j) => {
+                    return (j + 1) < row.cells.length ? cell.data : false;
+                }));
             });
 
             axios.post(`${baseUrlAPI}export/excel`, { data }).then((response) => {

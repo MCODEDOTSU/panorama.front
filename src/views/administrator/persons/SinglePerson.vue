@@ -152,7 +152,7 @@
 
 
                     <div class="form-group">
-                        <label for="singlePersonPhones" class="title">Телефоны</label>
+                        <label class="title">Телефоны</label>
                         <textarea class="form-control" v-model="personState.person.phones"></textarea>
                         <!--<div class="awesome-textarea" v-html="personState.person.phones"></div>-->
                         <!--<div class="row">-->
