@@ -1,7 +1,8 @@
 <template>
-    <div class="manager-desktop manager">
+    <div class="manager-desktop manager" v-bind:class="{ 'left-menu-full': leftMenuState.full }">
         <notifications></notifications>
-        <header-component></header-component>
+        <top-menu></top-menu>
+        <left-menu></left-menu>
         <div class="container">
             <router-view></router-view>
         </div>
@@ -10,9 +11,14 @@
 
 <script lang="ts">
     import {Component, Provide, Vue} from 'vue-property-decorator';
-    import HeaderComponent from '@/components/common/HeaderClosed.vue';
+    import {State, Action} from 'vuex-class';
+    import TopMenu from '@/components/common/TopMenu.vue';
+    import LeftMenu from '@/components/common/LeftMenu';
+    import LeftMenuState from '@/store/modules/components/common/leftMenu/types';
     @Component({
-        components: { HeaderComponent },
+        components: {LeftMenu, TopMenu },
     })
-    export default class Desktop extends Vue { }
+    export default class Desktop extends Vue {
+        @State('leftMenu') public leftMenuState!: LeftMenuState;
+    }
 </script>

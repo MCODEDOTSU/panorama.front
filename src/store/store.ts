@@ -23,6 +23,7 @@ import {managerConstructor} from '@/store/modules/manager/constructor/constructo
 // Components
 import {sureModal} from '@/store/modules/components/common/sureModal/sureModal';
 import {includeList} from '@/store/modules/components/common/includeList/includeList';
+import {leftMenu} from '@/store/modules/components/common/leftMenu/leftMenu';
 
 import {map} from '@/store/modules/components/utils/map/map';
 import {fileuploader} from '@/store/modules/components/utils/fileuploader/fileuploader';
@@ -63,6 +64,7 @@ export default new Vuex.Store<RootState>({
         sureModal,
         map,
         fileuploader,
+        leftMenu,
 
         // constructor
         directoryForConstructor,

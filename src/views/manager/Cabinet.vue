@@ -5,16 +5,6 @@
 
         <div class="content">
 
-            <div class="row bg">
-                <div class="col-3">Адрес электронной почты:</div>
-                <div class="col-9">{{ userState.user.email }}</div>
-            </div>
-
-            <div class="row">
-                <div class="col-3">Роль пользователя:</div>
-                <div class="col-9">{{ resolvedRole }}</div>
-            </div>
-
             <div class="row">
                 <div class="col-2"><img :src="resolvedPhotoSrc" class="photo"/></div>
                 <div class="col-10">
@@ -35,6 +25,16 @@
                     </div>
 
                 </div>
+            </div>
+
+            <div class="row bg">
+                <div class="col-3">Адрес электронной почты:</div>
+                <div class="col-9">{{ userState.user.email }}</div>
+            </div>
+
+            <div class="row">
+                <div class="col-3">Роль пользователя:</div>
+                <div class="col-9">{{ resolvedRole }}</div>
             </div>
 
             <div class="row" v-if="userState.user.contractor">
