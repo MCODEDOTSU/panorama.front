@@ -63,10 +63,11 @@
                                     <div class="form-group">
                                         <label for="singlePersonDateOfBirth">Дата рождения</label>
                                         <datepicker id="singlePersonDateOfBirth"
+                                                    format="yyyy-MM-dd"
                                                     :input-class="'form-control'"
                                                     v-model="personState.person.date_of_birth"
                                                     placeholder="Дата Рождения"
-                                                    :language="ru">
+                                                    :language="ru" :typeable="true">
                                         </datepicker>
                                     </div>
                                 </div>
@@ -150,38 +151,9 @@
 
                     </div>
 
+                    <phones></phones>
 
-                    <div class="form-group">
-                        <label class="title">Телефоны</label>
-                        <textarea class="form-control" v-model="personState.person.phones"></textarea>
-                        <!--<div class="awesome-textarea" v-html="personState.person.phones"></div>-->
-                        <!--<div class="row">-->
-                            <!--<div class="col-4">-->
-                                <!--<select v-model="phone.type" class="form-control">-->
-                                    <!--<option value="Домашний">Домашний</option>-->
-                                    <!--<option value="Городской">Городской</option>-->
-                                    <!--<option value="Рабочий">Рабочий</option>-->
-                                    <!--<option value="Мобильный">Мобильный</option>-->
-                                <!--</select>-->
-                            <!--</div>-->
-                            <!--<div class="col-6">-->
-                                <!--<input type="text" id="singlePersonPhones" class="form-control" placeholder="Телефон" v-model="phone.value">-->
-                            <!--</div>-->
-                            <!--<div class="col-2">-->
-                                <!--<button class="btn btn-default">Добавить</button>-->
-                            <!--</div>-->
-                        <!--</div>-->
-
-                    </div>
-
-                    <div class="form-group">
-                        <label for="singlePersonNotes">Примечание</label>
-                        <textarea id="singlePersonNotes"
-                                  class="form-control"
-                                  placeholder="Примечание"
-                                  v-model="personState.person.notes">
-                        </textarea>
-                    </div>
+                    <note></note>
 
             </div>
 
@@ -210,12 +182,15 @@
 
     import PersonState from '@/store/modules/administrator/person/types';
     import RegionState from '@/store/modules/region/types';
+    import UserState from '@/store/modules/user/types';
 
     import {ru} from 'vuejs-datepicker/dist/locale';
     import Datepicker from 'vuejs-datepicker';
+    import Phones from '@/views/administrator/persons/Phones.vue';
+    import Note from '@/views/administrator/persons/Note.vue';
 
     @Component({
-        components: { Datepicker },
+        components: { Datepicker, Phones, Note },
     })
     export default class SinglePerson extends Vue {
 
@@ -225,6 +200,7 @@
 
         @State('administratorPerson') public personState: PersonState;
         @State('region') public regionState: RegionState;
+        @State('user') public userState!: UserState;
 
         @Provide() private ru: any = ru;
         @Provide() private phone = { type: 'Мобильный', value: '' };
@@ -327,7 +303,7 @@
         }
 
         public save() {
-            this.administratorPersonUpdate();
+            this.administratorPersonUpdate({ username: this.userState.user.email });
             // @ts-ignore
             this.$bvModal.hide('singlePersonModal');
         }

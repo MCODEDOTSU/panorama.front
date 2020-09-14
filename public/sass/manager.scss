@@ -894,3 +894,85 @@ header {
     z-index: 9999 !important;
 }
 
+.phones-list-items {
+    width: 100%;
+    margin: 8px 0;
+
+    tbody {
+        tr {
+            &:nth-child(2n - 1) {
+                background-color: $gray-200;
+            }
+            td {
+                padding: 4px 8px;
+            }
+        }
+    }
+
+    tfoot {
+        tr {
+            td {
+                padding: 4px 8px;
+            }
+        }
+    }
+
+    .cell-type {
+        width: 180px;
+        font-weight: 700;
+    }
+
+    .cell-action {
+        width: 40px;
+
+        button {
+            width: 24px;
+            height: 24px;
+            padding: 0;
+            margin: 0;
+            line-height: 1;
+            font-size: 14px;
+            -webkit-border-radius: 50% !important;
+            -moz-border-radius: 50% !important;
+            border-radius: 50% !important;
+        }
+    }
+}
+
+.note-list-items {
+    width: 100%;
+    margin: 8px 0;
+
+    td {
+        padding: 4px 8px;
+    }
+
+    tbody {
+        tr {
+            &:nth-child(2n - 1) {
+                background-color: $gray-200;
+            }
+        }
+
+        .cell-dt {
+            width: 180px;
+            font-weight: 700;
+        }
+    }
+
+    .cell-action {
+        width: 40px;
+        button {
+            width: 24px;
+            height: 24px;
+            padding: 0;
+            margin: 0;
+            line-height: 1;
+            font-size: 14px;
+            -webkit-border-radius: 50% !important;
+            -moz-border-radius: 50% !important;
+            border-radius: 50% !important;
+        }
+    }
+}
+

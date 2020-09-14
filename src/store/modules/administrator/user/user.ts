@@ -8,7 +8,6 @@ import {editUpdatedItem, removeDeletedItem} from '@/domain/services/common/Updat
 import UserState from '@/store/modules/administrator/user/types';
 import IAddress from '@/domain/interfaces/IAddress';
 
-
 export const state: UserState = {
     user: {
         id: 0,

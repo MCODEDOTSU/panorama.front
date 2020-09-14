@@ -32,6 +32,10 @@ import VueScrollbar from 'vue2-scrollbar';
 Vue.component('vue-scrollbar', VueScrollbar);
 import 'vue2-scrollbar/dist/style/vue2-scrollbar.css';
 
+/* Маски */
+import VueTheMask from 'vue-the-mask'
+Vue.use(VueTheMask)
+
 /* Loading Jquery */
 try {
   window.$ = window.jQuery = require('jquery');

@@ -458,4 +458,24 @@ body {
             opacity: 1;
         }
     }
+
+    .table-pagination {
+
+        .page-item {
+
+            line-height: 1;
+            @include transition(all 0.2s ease-out);
+
+            &:hover {
+                background: $gray-300;
+            }
+
+            &.is-activated {
+                background: $first;
+                border-color: $first;
+                cursor: default;
+                opacity: 0.2;
+            }
+        }
+    }
 }

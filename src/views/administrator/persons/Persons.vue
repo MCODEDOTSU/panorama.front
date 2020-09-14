@@ -15,6 +15,20 @@
 
         <!-- Список физических лиц -->
         <vue-table-dynamic :params="persons" v-on:cell-click="showSinglePersonModal" ref="personsTable">
+            <template v-slot:column-5="{ props }">
+                <span v-if="props.cellData.length > 0">
+                    {{ props.cellData[0].value }}
+                </span>
+                <span v-else>-</span>
+                <span v-if="props.cellData.length > 1">, ...</span>
+            </template>
+            <template v-slot:column-6="{ props }">
+                <span v-if="props.cellData.length > 1">..., </span>
+                <span v-if="props.cellData.length > 0">
+                    {{ props.cellData[props.cellData.length - 1].value }}
+                </span>
+                <span v-else>-</span>
+            </template>
             <template v-slot:column-7="{ props }">
                 <b-button v-b-modal.singlePersonModal @click="personSetSingle(props.cellData)" variant="info">
                     Изменить
@@ -61,6 +75,9 @@
             data: [ ],
             header: 'row', stripe: true, enableSearch: true,
             sort: [0, 1, 2, 3, 4, 5, 6, 7],
+            pagination: true,
+            pageSize: 50,
+            pageSizes: []
         };
         @Provide() private tableIdIndex = 7;
 
@@ -71,7 +88,7 @@
                 this.persons.data.push([
                     item.lastname, item.firstname, item.middlename, item.date_of_birth,
                     `${item.address.city} ${item.address.street} ${item.address.build}`,
-                    item.phones, item.note, item.id.toString(),
+                    this.resolvedPhones(item.phones), this.resolvedNote(item.note), item.id.toString(),
                 ]);
             });
         }
@@ -155,6 +172,28 @@
             axios.post(`${baseUrlAPI}export/excel`, { data }).then((response) => {
                 window.open(`${baseUrl}${response.data}`);
             });
+        }
+
+        public resolvedPhones(phones) {
+            if (phones === null || phones === '') {
+                return [];
+            }
+            phones = JSON.parse(phones);
+            if (typeof phones !== 'object') {
+                phones = [ { type: 'Мобильный', value: phones } ];
+            }
+            return phones;
+        }
+
+        public resolvedNote(note) {
+            if (note === null || note === '') {
+                return [];
+            }
+            note = JSON.parse(note);
+            if (typeof note !== 'object') {
+                note = [ { dt: '', value: note } ];
+            }
+            return note;
         }
 
     }

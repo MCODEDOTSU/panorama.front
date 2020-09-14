@@ -1,6 +1,37 @@
 <template>
-    <label for="singlePersonPhones" class="title">Телефоны</label>
-    <textarea id="singlePersonPhones" class="form-control" v-model="personState.person.phones"></textarea>
+    <div class="form-group">
+        <label for="singlePersonPhones" class="title">Телефоны</label>
+        <table class="phones-list-items">
+            <tbody>
+                <tr class="item" v-for="(phone, i) in resolvedPhones">
+                    <td class="cell-type">{{ phone.type }}</td>
+                    <td class="cell-value"><a :href="`tel:${phone.value}`" :title="phone.value">{{ phone.value }}</a></td>
+                    <td class="cell-action">
+                        <button class="btn" @click="removePhone(i)">&times;</button>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="cell-type">
+                        <select v-model="phone.type" class="form-control">
+                            <option value="Домашний">Домашний</option>
+                            <option value="Рабочий">Рабочий</option>
+                            <option value="Мобильный">Мобильный</option>
+                        </select>
+                    </td>
+                    <td class="cell-value">
+                        <the-mask :mask="['#(###)###-##-##', '#(####)##-##-##']"
+                                  class="form-control" id="singlePersonPhones"
+                                  v-model="phone.value" type="text"></the-mask>
+                    </td>
+                    <td class="cell-action">
+                        <button class="btn btn-success" @click="addPhone()">+</button>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
 </template>
 
 <script lang="ts">
@@ -19,11 +50,20 @@
 
         @Provide() private phone = { type: 'Мобильный', value: '' };
 
-        set resolvedPhones(type: string, phone: string)
+        private addPhone() {
+            let phones = this.resolvedPhones;
+            phones.push(this.phone);
+            this.personState.person.phones = JSON.stringify(phones);
+        }
+
+        private removePhone(i) {
+            let phones = this.resolvedPhones;
+            phones.splice(i, 1);
+            this.personState.person.phones = JSON.stringify(phones);
+        }
+
+        set resolvedPhones(phones)
         {
-            // this.personState.phones = JSON.stringify()
-            let phones = JSON.parse(this.personState.person.phones);
-            phones.push({type, phone});
             this.personState.person.phones = JSON.stringify(phones);
         }
 
@@ -31,7 +71,11 @@
             if (this.personState.person.phones === null || this.personState.person.phones === '') {
                 return [];
             }
-            return JSON.parse(this.personState.person.phones);
+            let phones = JSON.parse(this.personState.person.phones);
+            if (typeof phones !== 'object') {
+                phones = [ { type: 'Мобильный', value: phones } ];
+            }
+            return phones;
         }
 
     }

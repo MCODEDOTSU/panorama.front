@@ -64,13 +64,23 @@ export const actions: ActionTree<PersonState, RootState> = {
     /**
      * Создать или обновить ФЛ
      */
-    async administratorPersonUpdate() {
+    async administratorPersonUpdate({}, payload) {
         try {
             if (state.person.id !== 0) {
                 const res = await axios.put(`${baseUrlAPI}person/${state.person.id}`, state.person);
                 SuccessNotifier.notify('Данные сохранены', `Физическое Лицо "${state.person.lastname} ${state.person.firstname}" изменено`);
                 state.persons = editUpdatedItem(state.persons, res.data);
             } else {
+                if (state.person.note  === null || state.person.note === '') {
+                    state.person.note = JSON.stringify([ { dt: Date.now(), value: `Запись создана (${payload.username})` } ]);
+                } else {
+                    let note = JSON.parse(state.person.note);
+                    if (typeof note !== 'object') {
+                        note = [ { dt: Date.now(), value: note } ];
+                    }
+                    note.unshift({ dt: Date.now(), value: `Запись создана (${payload.username})` });
+                    state.person.note = JSON.stringify(note);
+                }
                 const res = await axios.post(`${baseUrlAPI}person`, state.person);
                 SuccessNotifier.notify('Данные сохранены', `Создано Физическое Лицо "${state.person.lastname} ${state.person.firstname}"`);
                 state.persons.push(res.data);
