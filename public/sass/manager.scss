@@ -338,29 +338,50 @@ header {
         color: $white;
 
         li {
-            padding: 8px;
-            cursor: pointer;
 
-            &:hover {
-                background: $first-hover;
-            }
-
-            &.router-link-active {
-                background: $second;
-                cursor: default;
+            a {
+                display: block;
+                color: $white;
+                padding: 8px;
 
                 &:hover {
-                    background: $second;
+                    background: $first-hover;
                 }
+
+                &.parent {
+                    &.router-link-active {
+                        background: $second;
+                        cursor: default;
+
+                        &:hover {
+                            background: $second;
+                        }
+                    }
+                }
+
             }
 
             label {
                 margin: 0;
                 display: none;
+                cursor: pointer;
             }
 
             i {
                 margin: 0 8px 0 0;
+                width: 16px;
+            }
+
+            .sub-menu {
+                background: $first-dark;
+
+                a {
+                    padding: 8px 8px 8px 32px;
+
+                    &.router-link-active {
+                        font-weight: 700;
+                    }
+                }
             }
         }
     }

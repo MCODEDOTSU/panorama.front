@@ -223,7 +223,188 @@ header {
     }
 }
 
+.top-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 32px;
+    background: $first;
+    line-height: 1;
+    z-index: 11;
+
+    .top-menu-left {
+        display: inline-block;
+        vertical-align: middle;
+        width: 50%;
+    }
+
+    .top-menu-right {
+        display: inline-block;
+        vertical-align: middle;
+        width: 50%;
+        text-align: right;
+    }
+
+    .top-menu-item {
+
+        display: inline-block;
+        vertical-align: middle;
+        width: auto;
+        line-height: 32px;
+        color: $white;
+        margin: 0 0 0 8px;
+        font-size: 14px;
+
+        label {
+            padding: 0;
+            margin: 0;
+
+            &.nav-link {
+                cursor: pointer;
+                @include transition(opacity 0.2s ease-out);
+
+                &:hover {
+                    opacity: 0.7;
+                }
+            }
+        }
+
+        &.contractor-logo {
+            width: 24px;
+            height: 32px;
+            padding: 4px 0;
+            line-height: 1;
+
+            img {
+                @include border-radius(50%);
+                max-width: 24px;
+                height: auto;
+            }
+        }
+
+        &.contractor-name {
+            font-weight: 700;
+        }
+
+        &.person-photo {
+            width: 24px;
+            height: 32px;
+            padding: 4px 0;
+            line-height: 1;
+
+            img {
+                @include border-radius(50%);
+                max-width: 24px;
+                height: auto;
+            }
+        }
+
+        &.person-logout {
+            margin: 0 16px;
+            line-height: 1;
+        }
+
+        button {
+            color: $white;
+            margin: 0;
+
+            i {
+                margin: 0;
+            }
+
+            &:hover {
+                opacity: 0.7;
+            }
+        }
+    }
+}
+
+.left-menu {
+    position: fixed;
+    width: 36px;
+    height: calc(100vh - 32px);
+    top: 32px;
+    left: 0;
+    background: $first;
+    z-index: 11;
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        font-size: 14px;
+        line-height: 1.5;
+        color: $white;
+
+        li {
+
+            a {
+                display: block;
+                color: $white;
+                padding: 8px;
+
+                &:hover {
+                    background: $first-hover;
+                }
+
+                &.parent {
+                    &.router-link-active {
+                        background: $second;
+                        cursor: default;
+
+                        &:hover {
+                            background: $second;
+                        }
+                    }
+                }
+
+            }
+
+            label {
+                margin: 0;
+                display: none;
+                cursor: pointer;
+            }
+
+            i {
+                margin: 0 8px 0 0;
+                width: 16px;
+            }
+
+            .sub-menu {
+                background: $first-dark;
+
+                a {
+                    padding: 8px 8px 8px 32px;
+
+                    &.router-link-active {
+                        font-weight: 700;
+                    }
+                }
+            }
+        }
+    }
+
+    &.full {
+        width: 160px;
+        ul {
+            li {
+                label {
+                    display: inline-block;
+                }
+            }
+        }
+    }
+}
+
 .manager {
+
+    padding: 0 0 0 48px;
+
+    &.left-menu-full {
+        padding: 0 0 0 160px;
+    }
 
     h1 {
         margin: 0;
@@ -300,7 +481,7 @@ header {
             text-align: right;
             line-height: 1;
             opacity: 0;
-            @include transition(opacity 0.5s ease-out);
+            @include transition(opacity 0.2s ease-out);
             button, .btn {
                 background: none;
                 border: none;
@@ -892,5 +1073,87 @@ header {
 
 #layerSelectModal___BV_modal_outer_ {
     z-index: 9999 !important;
+}
+
+.phones-list-items {
+    width: 100%;
+    margin: 8px 0;
+
+    tbody {
+        tr {
+            &:nth-child(2n - 1) {
+                background-color: $gray-200;
+            }
+            td {
+                padding: 4px 8px;
+            }
+        }
+    }
+
+    tfoot {
+        tr {
+            td {
+                padding: 4px 8px;
+            }
+        }
+    }
+
+    .cell-type {
+        width: 180px;
+        font-weight: 700;
+    }
+
+    .cell-action {
+        width: 40px;
+
+        button {
+            width: 24px;
+            height: 24px;
+            padding: 0;
+            margin: 0;
+            line-height: 1;
+            font-size: 14px;
+            -webkit-border-radius: 50% !important;
+            -moz-border-radius: 50% !important;
+            border-radius: 50% !important;
+        }
+    }
+}
+
+.note-list-items {
+    width: 100%;
+    margin: 8px 0;
+
+    td {
+        padding: 4px 8px;
+    }
+
+    tbody {
+        tr {
+            &:nth-child(2n - 1) {
+                background-color: $gray-200;
+            }
+        }
+
+        .cell-dt {
+            width: 180px;
+            font-weight: 700;
+        }
+    }
+
+    .cell-action {
+        width: 40px;
+        button {
+            width: 24px;
+            height: 24px;
+            padding: 0;
+            margin: 0;
+            line-height: 1;
+            font-size: 14px;
+            -webkit-border-radius: 50% !important;
+            -moz-border-radius: 50% !important;
+            border-radius: 50% !important;
+        }
+    }
 }
 

@@ -5,11 +5,11 @@ export default interface IContractor {
     id: number;
     name: string;
     full_name: string;
-    inn: string;
-    kpp: string;
-    address_id: number;
+    inn?: string;
+    kpp?: string;
+    address_id?: number;
     address?: IAddress;
-    logo: string;
+    logo?: string;
     modules?: IModule[];
     edited?: boolean;
     childElsVisibility?: boolean;

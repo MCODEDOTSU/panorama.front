@@ -10,6 +10,8 @@ import {region} from '@/store/modules/region/region';
 import {administratorModule} from '@/store/modules/administrator/module/module';
 import {administratorLayer} from '@/store/modules/administrator/layer/layer';
 import {administratorContractor} from '@/store/modules/administrator/contractor/contractor';
+import {administratorContractorTos} from '@/store/modules/administrator/contractorTos/contractorTos';
+import {administratorContractorTszh} from '@/store/modules/administrator/contractorTszh/contractorTszh';
 import {administratorPerson} from '@/store/modules/administrator/person/person';
 import {administratorUser} from '@/store/modules/administrator/user/user';
 import {administratorConstructor} from '@/store/modules/administrator/constructor/constructor';
@@ -49,6 +51,8 @@ export default new Vuex.Store<RootState>({
         administratorModule,
         administratorLayer,
         administratorContractor,
+        administratorContractorTos,
+        administratorContractorTszh,
         administratorPerson,
         administratorUser,
         administratorConstructor,

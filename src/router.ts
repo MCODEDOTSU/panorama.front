@@ -6,6 +6,8 @@ import Manager from './views/Manager.vue';
 
 // Administrator
 import AdministratorContractors from './views/administrator/contractors/Contractors.vue';
+import AdministratorContractorsTos from './views/administrator/contractorsTos/ContractorsTos.vue';
+import AdministratorContractorsTszh from './views/administrator/contractorsTszh/ContractorsTszh.vue';
 import AdministratorPersons from './views/administrator/persons/Persons.vue';
 import AdministratorUsers from './views/administrator/contractors/Users.vue';
 import AdministratorModules from './views/administrator/modules/Modules.vue';
@@ -37,6 +39,14 @@ export default new Router({
                 {
                     path: '/administrator/contractors', name: 'administrator-contractors',
                     component: AdministratorContractors, meta: {roles: ['superadmin']},
+                },
+                {
+                    path: '/administrator/contractors/tos', name: 'administrator-contractors-tos',
+                    component: AdministratorContractorsTos, meta: {roles: ['superadmin']},
+                },
+                {
+                    path: '/administrator/contractors/tszh', name: 'administrator-contractors-tszh',
+                    component: AdministratorContractorsTszh, meta: {roles: ['superadmin']},
                 },
                 {
                     path: '/administrator/contractors/users/:id', name: 'administrator-users',
