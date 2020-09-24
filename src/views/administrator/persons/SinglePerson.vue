@@ -88,68 +88,7 @@
 
                     </div>
 
-                    <div class="row">
-
-                        <div class="col-4">
-
-                            <div class="form-group">
-                                <label for="singlePersonAddressRegion">Регион</label>
-                                <select id="singlePersonAddressRegion" class="form-control" v-model="resolvedRegion">
-                                    <option v-for="region in regionState.regions" :value="region.id">
-                                        {{ region.id < 10 ? `0${region.id}` : region.id }}: {{ region.name }}
-                                    </option>
-                                </select>
-                            </div>
-
-                        </div>
-
-                        <div class="col-4">
-
-                            <div class="form-group">
-                                <label for="singlePersonAddressDistrict">Район</label>
-                                <input type="text" id="singlePersonAddressDistrict"
-                                       class="form-control"
-                                       v-model="resolvedDistrict">
-                            </div>
-
-                        </div>
-
-                        <div class="col-4">
-
-                            <div class="form-group">
-                                <label for="singlePersonAddressCity">Город (поселок, село)</label>
-                                <input type="text" id="singlePersonAddressCity"
-                                       class="form-control"
-                                       placeholder="г. Астрахань"
-                                       v-model="resolvedCity">
-                            </div>
-
-                        </div>
-
-                        <div class="col-8">
-
-                            <div class="form-group">
-                                <label for="singlePersonAddressStreet">Улица (переулок)</label>
-                                <input type="text" id="singlePersonAddressStreet"
-                                       class="form-control"
-                                       placeholder="ул. Красная Набережная"
-                                       v-model="resolvedStreet">
-                            </div>
-
-                        </div>
-
-                        <div class="col-4">
-
-                            <div class="form-group">
-                                <label for="singlePersonAddressBuild">Дом (строение)</label>
-                                <input type="text" id="singlePersonAddressBuild"
-                                       class="form-control"
-                                       v-model="resolvedBuild">
-                            </div>
-
-                        </div>
-
-                    </div>
+                    <fias-address v-model="personState.persons.address"></fias-address>
 
                     <phones></phones>
 
@@ -186,11 +125,12 @@
 
     import {ru} from 'vuejs-datepicker/dist/locale';
     import Datepicker from 'vuejs-datepicker';
+    import FiasAddress from '@/components/utils/fiasAddress/FiasAddress.vue';
     import Phones from '@/views/administrator/persons/Phones.vue';
     import Note from '@/views/administrator/persons/Note.vue';
 
     @Component({
-        components: { Datepicker, Phones, Note },
+        components: { Datepicker, FiasAddress, Phones, Note },
     })
     export default class SinglePerson extends Vue {
 

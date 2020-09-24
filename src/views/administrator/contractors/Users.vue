@@ -8,60 +8,28 @@
             Создать нового
         </b-button>
 
+        <button @click="excelExport" class="btn btn-info">
+            <i class="fa fa-floppy-o"></i>
+            Выгрузить в Excel
+        </button>
+
         <button @click="$router.go(-1)" class="btn btn-info btn-right">
             <i class="fas fa-arrow-circle-left"></i>
             Назад
         </button>
 
-        <!-- Список пользователей -->
-        <div class="grid-data">
-
-            <div class="row row-header">
-                <div class="col-6">ФИО</div>
-                <div class="col-2">Email (логин)</div>
-                <div class="col-2">Должность</div>
-                <div class="col-2">Роль в системе</div>
-            </div>
-
-            <div class="row row-body" v-for="user in userState.users">
-
-                <div class="col-6">
-                    <label class="title">
-                        {{ user.person ? `${user.person.lastname} ${user.person.firstname} ${user.person.middlename}` : '' }}
-                    </label>
-                    <div class="actions">
-                        <b-button v-b-modal.singleUserModal @click="administratorUserSetSingle(user)" variant="info">
-                            Изменить
-                        </b-button>
-                        <button class="btn-danger"data-toggle="modal" data-target="#sureModal" @click="setSureModalContent(user)">Удалить</button>
-                    </div>
-                </div>
-
-                <div class="col-2">
-                    <label class="title">{{ user.email }}</label>
-                </div>
-
-                <div class="col-2">
-                    <label class="title">
-                        {{ user.person ? user.person.post : '' }}
-                    </label>
-                </div>
-
-                <div class="col-2">
-                    <label class="title">{{ resolvedRole(user) }}</label>
-                </div>
-
-            </div>
-
-            <div class="row row-footer">
-                <div class="col-6">ФИО</div>
-                <div class="col-2">Email (логин)</div>
-                <div class="col-2">Должность</div>
-                <div class="col-2">Роль в системе</div>
-            </div>
-
-        </div>
-        <!-- конец Список пользователей -->
+        <!-- Список -->
+        <vue-table-dynamic :params="users" v-on:cell-click="showSingleUserModal" ref="userTable">
+            <template v-slot:column-6="{ props }">
+                <b-button v-b-modal.singleUserModal @click="userSetSingle(props.cellData)" variant="info">
+                    Изменить
+                </b-button>
+                <button class="btn btn-danger" data-toggle="modal" data-target="#sureModal" @click="setSureModalContent(props.cellData)">
+                    Удалить
+                </button>
+            </template>
+        </vue-table-dynamic>
+        <!-- конец Список -->
 
         <single-user></single-user>
 
@@ -71,9 +39,11 @@
 </template>
 <script lang="ts">
 
-    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import {Component, Vue, Watch, Provide} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-
+    import {arrayFindFirst} from '@/domain/services/common/ArrayActions';
+    import axios from 'axios';
+    import {baseUrl, baseUrlAPI} from '@/globals';
     import ContractorState from '@/store/modules/administrator/contractor/types';
     import UserState from '@/store/modules/administrator/user/types';
 
@@ -96,13 +66,75 @@
         @State('administratorContractor') public contractorState: ContractorState;
         @State('administratorUser') public userState: UserState;
 
+        @Provide() public users = {
+            data: [],
+            header: 'row', stripe: true, enableSearch: true,
+            sort: [0, 1, 2, 3, 4, 5],
+            pagination: true,
+            pageSize: 50,
+            pageSizes: [],
+        };
+        @Provide() private tableIdIndex = 6;
+
+        @Watch('userState.users', {deep: true})
+        public onUsers() {
+            this.users.data = [ ['Фамилия', 'Имя', 'Отчество', 'Логин', 'Должность', 'Роль', ''] ];
+            this.userState.users.forEach((item, i) => {
+                this.users.data.push([
+                    item.person ? item.person.lastname : '',
+                    item.person ? item.person.firstname : '',
+                    item.person ? item.person.middlename : '',
+                    item.email,
+                    item.person ? item.person.post : '',
+                    this.resolvedRole(item),
+                    item.id.toString(),
+                ]);
+            });
+        }
+
         @Watch('this.$route.params.id', { immediate: true, deep: true })
         public async onContractorIdChange() {
             await this.administratorUserGetAllByContractor({ contractorId: this.$route.params.id });
         }
 
+        /**
+         * При создании компонента
+         */
         public async created() {
             await this.administratorContractorGetById({ id: this.$route.params.id });
+        }
+
+        /**
+         * Выбрать Пользователя
+         * @param userId
+         */
+        public userSetSingle(userId: any) {
+            const user = arrayFindFirst(this.userState.users, parseInt(userId, 10));
+            this.administratorUserSetSingle(user);
+        }
+
+        /**
+         * Открыть модальное окно для изменения Пользователя
+         * @param rowIndex
+         * @param columnIndex
+         * @param data
+         */
+        public showSingleUserModal(rowIndex, columnIndex, data) {
+
+            if (columnIndex === this.tableIdIndex) {
+                return;
+            }
+
+            const userTable: HTMLElement = this.$refs.userTable as HTMLElement;
+            if (!userTable) {
+                return;
+            }
+
+            // @ts-ignore
+            const id = userTable.tableData.rows[rowIndex].cells[this.tableIdIndex].data;
+            this.userSetSingle(id);
+            // @ts-ignore
+            this.$bvModal.show('singleUserModal');
         }
 
         /**
@@ -113,10 +145,11 @@
         }
 
         /**
-         * Выкинуть окно: "Вы уверены, что хотите удалить?"
-         * @param user
+         * Открыть диалог удаления ТОС
+         * @param userId
          */
-        public setSureModalContent(user: any) {
+        public setSureModalContent(userId: any) {
+            const user = arrayFindFirst(this.userState.users, parseInt(userId, 10));
             this.setSureModal({
                 title: 'Удалить пользователя?',
                 text: `Вы уверены, что хотите удалить пользователя "${user.email}" из системы?`,
@@ -125,6 +158,38 @@
                     await this.administratorUserDelete();
                     this.administratorUserUnsetSingle({ contractorId: 0 });
                 },
+            });
+        }
+
+        /**
+         * Экспорт таблицы в EXCEL
+         */
+        public excelExport() {
+
+            const userTable: HTMLElement = this.$refs.userTable as HTMLElement;
+            if (!userTable) {
+                return;
+            }
+
+            // @ts-ignore
+            const td = userTable.tableData;
+
+            if (!td || !td.activatedRows) {
+                return;
+            }
+
+            // @ts-ignore
+            const data = td.activatedRows.map((row, i) => {
+                const firstCell = i === 0 ? '№ п/п' : i;
+                return [ firstCell ].concat(row.cells.map((cell, j) => {
+                    if (j !== this.tableIdIndex) {
+                        return (j + 1) < row.cells.length ? cell.data : false;
+                    }
+                }));
+            });
+
+            axios.post(`${baseUrlAPI}export/excel`, { data }).then((response) => {
+                window.open(`${baseUrl}${response.data}`);
             });
         }
 

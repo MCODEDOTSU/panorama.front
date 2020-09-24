@@ -14,7 +14,7 @@ export const state: ContractorTszhState = {
         contractor: {
             id: 0,
             name: '',
-            full_name: ''
+            full_name: '',
         },
     },
     contractorTszhes: [],
@@ -70,7 +70,7 @@ export const actions: ActionTree<ContractorTszhState, RootState> = {
             contractor: {
                 id: 0,
                 name: '',
-                full_name: ''
+                full_name: '',
             },
         };
     },

@@ -45,7 +45,7 @@
     import SureModal from '@/components/common/SureModal.vue';
 
     @Component({
-        components: {SingleContractorTos, SureModal },
+        components: { SingleContractorTos, SureModal },
     })
     export default class ContractorsTos extends Vue {
 
@@ -58,12 +58,12 @@
         @State('administratorContractorTos') public contractorTosState: ContractorTosState;
 
         @Provide() public contractorsTos = {
-            data: [ ],
+            data: [],
             header: 'row', stripe: true, enableSearch: true,
             sort: [0, 1, 2, 3, 4, 5, 6],
             pagination: true,
             pageSize: 50,
-            pageSizes: []
+            pageSizes: [],
         };
         @Provide() private tableIdIndex = 7;
 
@@ -81,15 +81,28 @@
             });
         }
 
+        /**
+         * При создании компонента
+         */
         public async created() {
             await this.administratorContractorTosGetAll();
         }
 
+        /**
+         * Выбрать ТОС
+         * @param contractorTosId
+         */
         public contractorTosSetSingle(contractorTosId: any) {
             const contractorTos = arrayFindFirst(this.contractorTosState.contractorToses, parseInt(contractorTosId, 10));
             this.administratorContractorTosSetSingle(contractorTos);
         }
 
+        /**
+         * Открыть модальное окно для изменения ТОС
+         * @param rowIndex
+         * @param columnIndex
+         * @param data
+         */
         public showSingleContractorTosModal(rowIndex, columnIndex, data) {
 
             if (columnIndex === this.tableIdIndex) {
@@ -108,11 +121,15 @@
             this.$bvModal.show('singleContractorTosModal');
         }
 
+        /**
+         * Открыть диалог удаления ТОС
+         * @param contractorTosId
+         */
         public setSureModalContent(contractorTosId: any) {
             const contractorTos = arrayFindFirst(this.contractorTosState.contractorToses, parseInt(contractorTosId, 10));
             this.setSureModal({
-                title: 'Удалить физическое лицо?',
-                text: `Вы уверены, что хотите удалить физическое лицо "${contractorTos.lastname} ${contractorTos.firstname}" из системы?`,
+                title: 'Удалить ТОС?',
+                text: `Вы уверены, что хотите удалить ТОС "${contractorTos.constructor.name}" из системы?`,
                 action: async () => {
                     this.administratorContractorTosSetSingle(contractorTos);
                     await this.administratorContractorTosDelete();
@@ -121,6 +138,9 @@
             });
         }
 
+        /**
+         * Экспорт таблицы в EXCEL
+         */
         public excelExport() {
 
             const contractorsTosTable: HTMLElement = this.$refs.contractorsTosTable as HTMLElement;
@@ -139,7 +159,9 @@
             const data = td.activatedRows.map((row, i) => {
                 const firstCell = i === 0 ? '№ п/п' : i;
                 return [ firstCell ].concat(row.cells.map((cell, j) => {
-                    return (j + 1) < row.cells.length ? cell.data : false;
+                    if (j !== this.tableIdIndex) {
+                        return (j + 1) < row.cells.length ? cell.data : false;
+                    }
                 }));
             });
 

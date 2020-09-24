@@ -1,4 +1,4 @@
-import IAddress from '@/domain/interfaces/IAddress';
+import IFiasAddress from '@/domain/interfaces/IFiasAddress';
 import IModule from '@/domain/interfaces/IModule';
 
 export default interface IContractor {
@@ -7,8 +7,8 @@ export default interface IContractor {
     full_name: string;
     inn?: string;
     kpp?: string;
-    address_id?: number;
-    address?: IAddress;
+    fias_address_id?: number;
+    address?: IFiasAddress;
     logo?: string;
     modules?: IModule[];
     edited?: boolean;

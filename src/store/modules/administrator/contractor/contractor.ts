@@ -14,18 +14,10 @@ export const state: ContractorState = {
         full_name: '',
         inn: '',
         kpp: '',
-        address_id: 0,
+        fias_address_id: 0,
         address: {
             id: 0,
-            build: '',
-            city: '',
-            district: '',
-            region_id: 0,
-            region: {
-                id: 0,
-                name: '',
-            },
-            street: '',
+            unrestricted_value: '',
         },
         logo: '',
         parent_id: 0,
@@ -112,18 +104,10 @@ export const actions: ActionTree<ContractorState, RootState> = {
             full_name: '',
             inn: '',
             kpp: '',
-            address_id: 0,
+            fias_address_id: 0,
             address: {
                 id: 0,
-                build: '',
-                city: '',
-                district: '',
-                region_id: 0,
-                region: {
-                    id: 0,
-                    name: '',
-                },
-                street: '',
+                unrestricted_value: '',
             },
             logo: '',
         };
@@ -177,16 +161,6 @@ export const actions: ActionTree<ContractorState, RootState> = {
         }
 
     },
-
-    // async detachParentContractor({state}, payload) {
-    //     try {
-    //         const res = await axios.post(`${baseUrlAPI}contractor/detach_parent_contractor`, payload);
-    //         SuccessNotifier.notify('', 'Родительский контрагент удален');
-    //         state.contractor.parent_id = null;
-    //     } catch {
-    //         ErrorNotifier.notify();
-    //     }
-    // },
 
 };
 

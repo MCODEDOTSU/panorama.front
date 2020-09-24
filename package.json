@@ -16,6 +16,7 @@
     "@types/vue-color": "^2.4.2",
     "axios": "^0.18.1",
     "bootstrap": "^4.5.2",
+    "dadata-suggestions": "^1.1.1",
     "jquery": "^3.5.1",
     "register-service-worker": "^1.7.1",
     "vee-validate": "^2.2.15",

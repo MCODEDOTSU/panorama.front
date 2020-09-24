@@ -93,7 +93,7 @@
 
         private toggle() {
             this.toggleLeftMenu();
-            localStorage.setItem('left-menu-full', this.leftMenuState.full);
+            localStorage.setItem('left-menu-full', this.leftMenuState.full.toString());
         }
     }
 </script>

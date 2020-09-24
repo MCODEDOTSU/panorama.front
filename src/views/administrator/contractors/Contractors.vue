@@ -8,47 +8,48 @@
             Создать
         </b-button>
 
-        <!-- Список контрагентов -->
-        <div class="grid-data">
-            <div class="row row-header">
-                <div class="col-5">Наименование</div>
-                <div class="col-2">ИНН</div>
-                <div class="col-2">КПП</div>
-                <div class="col-3">Адрес</div>
-            </div>
-            <div class="row row-body" v-for="contractor in contractorState.contractors">
-                <div class="col-5">
-                    <label class="title">{{ contractor.name }}</label>
-                    <label class="description">{{ contractor.full_name }}</label>
-                    <div class="actions">
-                        <b-button v-b-modal.singleContractorModal @click="administratorContractorSetSingle(contractor)" variant="info">
-                            Изменить
-                        </b-button>
-                        <button class="btn-info" data-toggle="modal" data-target="#contractorModules" @click="administratorContractorSetSingle(contractor)">Доступные модули</button>
-                        <button class="btn-info" @click="getContractorUsers(contractor)">Пользователи</button>
-                        <button class="btn-danger"data-toggle="modal" data-target="#sureModal" @click="setSureModalContent(contractor)">Удалить</button>
-                    </div>
-                </div>
-                <div class="col-2"><label class="title">{{ contractor.inn }}</label></div>
-                <div class="col-2"><label class="title">{{ contractor.kpp }}</label></div>
-                <div class="col-3"><label class="title">
-                    <span v-if="contractor.address">
-                        <span>{{ contractor.address.city }}</span>
-                        <span v-if="contractor.address.city && contractor.address.street">, </span>
-                        <span>{{ contractor.address.street }}</span>
-                        <span v-if="(contractor.address.city || contractor.address.street) && contractor.address.build">, </span>
-                        <span>{{ contractor.address.build }}</span>
-                    </span>
-                </label></div>
-            </div>
-            <div class="row row-footer">
-                <div class="col-5">Наименование</div>
-                <div class="col-2">ИНН</div>
-                <div class="col-2">КПП</div>
-                <div class="col-3">Адрес</div>
-            </div>
-        </div>
-        <!-- конец Список контрагентов -->
+        <button @click="excelExport" class="btn btn-info">
+            <i class="fa fa-floppy-o"></i>
+            Выгрузить в Excel
+        </button>
+
+        <!-- Список -->
+        <vue-table-dynamic :params="contractors" v-on:cell-click="showSingleContractorModal" ref="contractorsTable">
+
+            <!-- Address -->
+            <template v-slot:column-7="{ props }">
+                <span v-if="props.cellData !== null">
+                    {{ props.street_with_type }}, {{ props.house_type }} {{ props.house }} {{ props.block_type }} {{ props.block }}
+                </span>
+                <span v-else>-</span>
+            </template>
+
+            <!-- Actions -->
+            <template v-slot:column-8="{ props }">
+                <b-button v-b-modal.singleContractorModal @click="contractorSetSingle(props.cellData)" variant="info">
+                    Изменить
+                </b-button>
+                <button class="btn btn-danger" data-toggle="modal" data-target="#sureModal" @click="setSureModalContent(props.cellData)">
+                    Удалить
+                </button>
+            </template>
+
+            <!-- Action: Modules -->
+            <template v-slot:column-9="{ props }">
+                <b-button v-b-modal.contractorModules @click="contractorSetSingle(props.cellData)" variant="info">
+                    Доступные модули
+                </b-button>
+            </template>
+
+            <!-- Action: Users -->
+            <template v-slot:column-10="{ props }">
+                <b-button @click="getContractorUsers(props.cellData)" variant="info">
+                    Пользователи
+                </b-button>
+            </template>
+
+        </vue-table-dynamic>
+        <!-- конец Список -->
 
         <single-contractor></single-contractor>
 
@@ -60,11 +61,12 @@
 </template>
 <script lang="ts">
 
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Provide, Watch, Component, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-
+    import {arrayFindFirst} from '@/domain/services/common/ArrayActions';
+    import axios from 'axios';
+    import {baseUrl, baseUrlAPI} from '@/globals';
     import ContractorState from '@/store/modules/administrator/contractor/types';
-
     import SingleContractor from '@/views/administrator/contractors/SingleContractor.vue';
     import ContractorModule from '@/views/administrator/contractors/ContractorModules.vue';
     import SureModal from '@/components/common/SureModal.vue';
@@ -82,15 +84,79 @@
 
         @State('administratorContractor') public contractorState: ContractorState;
 
+        @Provide() public contractors = {
+            data: [],
+            header: 'row', stripe: true, enableSearch: true,
+            sort: [0, 1, 2, 3, 4, 5, 6],
+            pagination: true,
+            pageSize: 50,
+            pageSizes: [],
+        };
+        @Provide() private tableIdIndexes = [8, 9, 10];
+
+        @Watch('contractorState.contractors', {deep: true})
+        public onContractors() {
+            this.contractors.data = [ [
+                'Наименование', 'Полное наименование', 'ИНН', 'КПП',
+                'Регион', 'Район', 'Город', 'Адрес', '', '', ''
+            ] ];
+            this.contractorState.contractors.forEach((item, i) => {
+                this.contractors.data.push([
+                    item.name, item.full_name, item.inn, item.kpp,
+                    item.address !== null ? (`${item.address.region} ${item.address.region_type}`) : '-',
+                    item.address !== null ? (`${item.address.area} ${item.address.area_type}`) : '-',
+                    item.address !== null ? (`${item.address.city} ${item.address.city_type}`) : '-',
+                    item.address, item.id.toString(), item.id.toString(), item.id.toString(),
+                ]);
+            });
+        }
+
+        /**
+         * При создании компонента
+         */
         public async created() {
             await this.administratorContractorGetAll();
         }
 
         /**
-         * Выкинуть окно: "Вы уверены, что хотите удалить?"
-         * @param contractor
+         * Выбрать контрагента
+         * @param contractorId
          */
-        public setSureModalContent(contractor: any) {
+        public contractorSetSingle(contractorId: any) {
+            const contractor = arrayFindFirst(this.contractorState.contractors, parseInt(contractorId, 10));
+            this.administratorContractorSetSingle(contractor);
+        }
+
+        /**
+         * Открыть модальное окно для изменения контрагента
+         * @param rowIndex
+         * @param columnIndex
+         * @param data
+         */
+        public showSingleContractorModal(rowIndex, columnIndex, data) {
+
+            if (this.tableIdIndexes.indexOf(columnIndex) !== -1) {
+                return;
+            }
+
+            const contractorsTable: HTMLElement = this.$refs.contractorsTable as HTMLElement;
+            if (!contractorsTable) {
+                return;
+            }
+
+            // @ts-ignore
+            const id = contractorsTable.tableData.rows[rowIndex].cells[this.tableIdIndexes[0]].data;
+            this.contractorSetSingle(id);
+            // @ts-ignore
+            this.$bvModal.show('singleContractorModal');
+        }
+
+        /**
+         * Открыть диалог удаления контрагента
+         * @param contractorId
+         */
+        public setSureModalContent(contractorId: any) {
+            const contractor = arrayFindFirst(this.contractorState.contractors, parseInt(contractorId, 10));
             this.setSureModal({
                 title: 'Удалить контрагента?',
                 text: `Вы уверены, что хотите удалить контрагента "${contractor.name}" из системы?`,
@@ -103,12 +169,44 @@
         }
 
         /**
+         * Экспорт таблицы в EXCEL
+         */
+        public excelExport() {
+
+            const contractorsTable: HTMLElement = this.$refs.contractorsTable as HTMLElement;
+            if (!contractorsTable) {
+                return;
+            }
+
+            // @ts-ignore
+            const td = contractorsTable.tableData;
+
+            if (!td || !td.activatedRows) {
+                return;
+            }
+
+            // @ts-ignore
+            const data = td.activatedRows.map((row, i) => {
+                const firstCell = i === 0 ? '№ п/п' : i;
+                return [ firstCell ].concat(row.cells.map((cell, j) => {
+                    if (this.tableIdIndexes.indexOf(j) === -1) {
+                        return (j + 1) < row.cells.length ? cell.data : false;
+                    }
+                }));
+            });
+
+            axios.post(`${baseUrlAPI}export/excel`, { data }).then((response) => {
+                window.open(`${baseUrl}${response.data}`);
+            });
+        }
+
+        /**
          * Перейти на компонент редактирования пользователей контрагента
          * @param contractor
          */
-        public getContractorUsers(contractor: any) {
-            this.administratorContractorSetSingle(contractor);
-            this.$router.push(`/administrator/contractors/users/${contractor.id}`);
+        public getContractorUsers(contractorId: any) {
+            this.contractorSetSingle(contractorId);
+            this.$router.push(`/administrator/contractors/users/${contractorId}`);
         }
 
     }

@@ -15,21 +15,35 @@
 
         <!-- Список физических лиц -->
         <vue-table-dynamic :params="persons" v-on:cell-click="showSinglePersonModal" ref="personsTable">
-            <template v-slot:column-5="{ props }">
+
+            <!-- Address -->
+            <template v-slot:column-7="{ props }">
+                <span v-if="props.cellData !== null">
+                    {{ props.street_with_type }}, {{ props.house_type }} {{ props.house }} {{ props.block_type }} {{ props.block }}
+                </span>
+                <span v-else>-</span>
+            </template>
+
+            <!-- Phones -->
+            <template v-slot:column-8="{ props }">
                 <span v-if="props.cellData.length > 0">
                     {{ props.cellData[0].value }}
                 </span>
                 <span v-else>-</span>
                 <span v-if="props.cellData.length > 1">, ...</span>
             </template>
-            <template v-slot:column-6="{ props }">
+
+            <!-- Note -->
+            <template v-slot:column-9="{ props }">
                 <span v-if="props.cellData.length > 1">..., </span>
                 <span v-if="props.cellData.length > 0">
                     {{ props.cellData[props.cellData.length - 1].value }}
                 </span>
                 <span v-else>-</span>
             </template>
-            <template v-slot:column-7="{ props }">
+
+            <!-- Actions -->
+            <template v-slot:column-10="{ props }">
                 <b-button v-b-modal.singlePersonModal @click="personSetSingle(props.cellData)" variant="info">
                     Изменить
                 </b-button>
@@ -37,6 +51,7 @@
                     Удалить
                 </button>
             </template>
+
         </vue-table-dynamic>
         <!-- конец Список физических лиц -->
 
@@ -53,7 +68,7 @@
     import {Action, State} from 'vuex-class';
     import {arrayFindFirst} from '@/domain/services/common/ArrayActions';
     import axios from 'axios';
-    import {baseUrl, baseUrlAPI} from '@/globals';
+    import {baseUrl, baseUrlAPI, dadataApiKey} from '@/globals';
     import PersonState from '@/store/modules/administrator/person/types';
     import SinglePerson from '@/views/administrator/persons/SinglePerson.vue';
     import SureModal from '@/components/common/SureModal.vue';
@@ -72,29 +87,42 @@
         @State('administratorPerson') public personState: PersonState;
 
         @Provide() public persons = {
-            data: [ ],
+            data: [],
             header: 'row', stripe: true, enableSearch: true,
             sort: [0, 1, 2, 3, 4, 5, 6],
             pagination: true,
             pageSize: 50,
-            pageSizes: []
+            pageSizes: [],
         };
-        @Provide() private tableIdIndex = 7;
+        @Provide() private tableIdIndex = 10;
 
         @Watch('personState.persons', {deep: true})
         public onPersons() {
-            this.persons.data = [ ['Фамилия', 'Имя', 'Отчество', 'Дата Рождения', 'Адрес', 'Телефоны', 'Заметка', ''] ];
+            this.persons.data = [ [
+                'Фамилия', 'Имя', 'Отчество', 'Дата Рождения',
+                'Регион', 'Район', 'Город', 'Адрес', 'Телефоны', 'Заметка', ''
+            ] ];
             this.personState.persons.forEach((item, i) => {
                 this.persons.data.push([
                     item.lastname, item.firstname, item.middlename, item.date_of_birth,
-                    `${item.address.city} ${item.address.street} ${item.address.build}`,
-                    this.resolvedPhones(item.phones), this.resolvedNote(item.note), item.id.toString(),
+                    item.address !== null ? (`${item.address.region} ${item.address.region_type}`) : '-',
+                    item.address !== null ? (`${item.address.area} ${item.address.area_type}`) : '-',
+                    item.address !== null ? (`${item.address.city} ${item.address.city_type}`) : '-',
+                    item.address, this.resolvedPhones(item.phones), this.resolvedNote(item.note), item.id.toString(),
                 ]);
             });
         }
 
         public async created() {
             await this.administratorPersonGetAll();
+            // const Dadata = require('dadata-suggestions');
+            // const dadata = new Dadata(dadataApiKey);
+            // dadata.address({ query: 'волгоград сел комсомолец комсомольская ул 13', count: 5 })
+            //     .then((data) => {
+            //         console.log(data);
+            //         // debugger;
+            //     })
+            //     .catch(console.error)
         }
 
         /**

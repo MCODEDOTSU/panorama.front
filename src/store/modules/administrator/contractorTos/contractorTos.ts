@@ -14,7 +14,7 @@ export const state: ContractorTosState = {
         contractor: {
             id: 0,
             name: '',
-            full_name: ''
+            full_name: '',
         },
     },
     contractorToses: [],
@@ -70,7 +70,7 @@ export const actions: ActionTree<ContractorTosState, RootState> = {
             contractor: {
                 id: 0,
                 name: '',
-                full_name: ''
+                full_name: '',
             },
         };
     },

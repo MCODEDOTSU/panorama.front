@@ -1,26 +1,32 @@
 <template>
-    <!-- Modal -->
-    <div class="modal fade" id="contractorModules" tabindex="-1" role="dialog" aria-labelledby="contractorModulesLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="contractorModulesLabel">
-                        <span>Модули контрагента "{{ contractorState.contractor.name }}"</span>
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <include-list></include-list>
-                    </form>
-                    <p><span class="parent-assigned-module">*</span> Данный модуль присвоен на основе родительского контрагента</p>
-                </div>
+
+    <b-modal id="contractorModules" size="xl"
+             :title='`Модули контрагента ${contractorState.contractor.name}`'>
+
+        <b-container>
+
+            <div>
+
+                <form>
+                    <include-list></include-list>
+                </form>
+
+                <p><span class="parent-assigned-module">*</span> Данный модуль присвоен на основе родительского контрагента</p>
+
             </div>
+
+        </b-container>
+
+        <div slot="modal-footer">
+
+            <b-button variant="secondary" @click="close">
+                Закрыть
+            </b-button>
+
         </div>
-    </div>
+
+    </b-modal>
+
 </template>
 
 <script lang="ts">
@@ -60,6 +66,11 @@
                 attach: this.administratorContractorAttachToModule,
                 detach: this.administratorContractorDetachToModule,
             });
+        }
+
+        public close() {
+            // @ts-ignore
+            this.$bvModal.hide('contractorModules');
         }
 
     }

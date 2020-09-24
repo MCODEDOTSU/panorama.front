@@ -1,4 +1,4 @@
-import IAddress from '@/domain/interfaces/IAddress';
+import IFiasAddress from '@/domain/interfaces/IFiasAddress';
 
 export default interface IPerson {
     id: number;
@@ -6,8 +6,8 @@ export default interface IPerson {
     lastname: string;
     middlename: string;
     date_of_birth?: string;
-    address_id?: number | undefined;
-    address?: IAddress;
+    fias_address_id: number;
+    address: IFiasAddress;
     phones?: string;
     note?: string;
     post?: string;

@@ -58,12 +58,12 @@
         @State('administratorContractorTszh') public contractorTszhState: ContractorTszhState;
 
         @Provide() public contractorsTszh = {
-            data: [ ],
+            data: [],
             header: 'row', stripe: true, enableSearch: true,
             sort: [0, 1, 2, 3, 4, 5, 6],
             pagination: true,
             pageSize: 50,
-            pageSizes: []
+            pageSizes: [],
         };
         @Provide() private tableIdIndex = 7;
 
@@ -111,8 +111,8 @@
         public setSureModalContent(contractorTszhId: any) {
             const contractorTszh = arrayFindFirst(this.contractorTszhState.contractorTszhes, parseInt(contractorTszhId, 10));
             this.setSureModal({
-                title: 'Удалить физическое лицо?',
-                text: `Вы уверены, что хотите удалить физическое лицо "${contractorTszh.lastname} ${contractorTszh.firstname}" из системы?`,
+                title: 'Удалить ТСЖ?',
+                text: `Вы уверены, что хотите удалить ТСЖ "${contractorTszh.constructor.name}" из системы?`,
                 action: async () => {
                     this.administratorContractorTszhSetSingle(contractorTszh);
                     await this.administratorContractorTszhDelete();
@@ -139,7 +139,9 @@
             const data = td.activatedRows.map((row, i) => {
                 const firstCell = i === 0 ? '№ п/п' : i;
                 return [ firstCell ].concat(row.cells.map((cell, j) => {
-                    return (j + 1) < row.cells.length ? cell.data : false;
+                    if (j !== this.tableIdIndex) {
+                        return (j + 1) < row.cells.length ? cell.data : false;
+                    }
                 }));
             });
 

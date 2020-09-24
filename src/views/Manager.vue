@@ -13,7 +13,7 @@
     import {Component, Provide, Vue} from 'vue-property-decorator';
     import {State, Action} from 'vuex-class';
     import TopMenu from '@/components/common/TopMenu.vue';
-    import LeftMenu from '@/components/common/LeftMenu';
+    import LeftMenu from '@/components/common/LeftMenu.vue';
     import LeftMenuState from '@/store/modules/components/common/leftMenu/types';
     @Component({
         components: {LeftMenu, TopMenu },

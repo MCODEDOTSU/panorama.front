@@ -51,19 +51,18 @@
         @Provide() private phone = { type: 'Мобильный', value: '' };
 
         private addPhone() {
-            let phones = this.resolvedPhones;
+            const phones = this.resolvedPhones;
             phones.push(this.phone);
             this.personState.person.phones = JSON.stringify(phones);
         }
 
         private removePhone(i) {
-            let phones = this.resolvedPhones;
+            const phones = this.resolvedPhones.splice(i, 1);
             phones.splice(i, 1);
             this.personState.person.phones = JSON.stringify(phones);
         }
 
-        set resolvedPhones(phones)
-        {
+        set resolvedPhones(phones) {
             this.personState.person.phones = JSON.stringify(phones);
         }
 

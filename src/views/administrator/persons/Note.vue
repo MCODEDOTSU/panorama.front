@@ -42,26 +42,24 @@
         @Provide() private note = { dt: Date.now(), value: '' };
 
         private addNote() {
-            let note = this.resolvedNote;
+            const note = this.resolvedNote;
             this.note.dt = Date.now();
             note.push(this.note);
             this.personState.person.note = JSON.stringify(note);
         }
 
         private removeNote(i) {
-            let note = this.resolvedNote;
+            const note = this.resolvedNote;
             note.splice(i, 1);
             this.personState.person.note = JSON.stringify(note);
         }
 
-        private getDateFormat(dt)
-        {
-            let date = new Date(dt);
+        private getDateFormat(dt) {
+            const date = new Date(dt);
             return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
         }
 
-        set resolvedNote(note)
-        {
+        set resolvedNote(note) {
             this.personState.person.note = JSON.stringify(note);
         }
 
