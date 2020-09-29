@@ -19,7 +19,8 @@
             <!-- Address -->
             <template v-slot:column-7="{ props }">
                 <span v-if="props.cellData !== null">
-                    {{ props.street_with_type }}, {{ props.house_type }} {{ props.house }} {{ props.block_type }} {{ props.block }}
+                    {{ props.cellData.street_with_type }}, {{ props.cellData.house_type }}
+                    {{ props.cellData.house }} {{ props.cellData.block_type }} {{ props.cellData.block }}
                 </span>
                 <span v-else>-</span>
             </template>
@@ -106,7 +107,7 @@
                 this.persons.data.push([
                     item.lastname, item.firstname, item.middlename, item.date_of_birth,
                     item.address !== null ? (`${item.address.region} ${item.address.region_type}`) : '-',
-                    item.address !== null ? (`${item.address.area} ${item.address.area_type}`) : '-',
+                    item.address !== null && item.address.area !== null ? (`${item.address.area} ${item.address.area_type}`) : '-',
                     item.address !== null ? (`${item.address.city} ${item.address.city_type}`) : '-',
                     item.address, this.resolvedPhones(item.phones), this.resolvedNote(item.note), item.id.toString(),
                 ]);

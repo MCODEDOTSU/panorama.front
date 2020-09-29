@@ -81,65 +81,16 @@
 
 
                 <div class="row">
-
-                    <div class="col-4">
-
+                    <div class="col-12">
                         <div class="form-group">
-                            <label for="singleContractorAddressRegion">Регион</label>
-                            <select id="singleContractorAddressRegion" class="form-control" v-model="resolvedRegion">
-                                <option v-for="region in regionState.regions" :value="region.id">
-                                    {{ region.id < 10 ? `0${region.id}` : region.id }}: {{ region.name }}
-                                </option>
-                            </select>
-                        </div>
-
-                    </div>
-
-                    <div class="col-4">
-
-                        <div class="form-group">
-                            <label for="singleContractorAddressDistrict">Район</label>
-                            <input type="text" id="singleContractorAddressDistrict"
-                                   class="form-control"
-                                   v-model="resolvedDistrict">
-                        </div>
-
-                    </div>
-
-                    <div class="col-4">
-
-                        <div class="form-group">
-                            <label for="singleContractorAddressCity">Город (поселок, село)</label>
-                            <input type="text" id="singleContractorAddressCity"
-                                   class="form-control"
-                                   placeholder="г. Астрахань"
-                                   v-model="resolvedCity">
+                            <label>Адрес</label>
+                            <vue-dadata
+                                    :onChange="changeAddress"
+                                    :query="contractorState.contractor.address ?contractorState.contractor.address.unrestricted_value : ''"
+                                    :token="dadataApiKey"
+                            ></vue-dadata>
                         </div>
                     </div>
-
-                    <div class="col-8">
-
-                        <div class="form-group">
-                            <label for="singleContractorAddressStreet">Улица (переулок)</label>
-                            <input type="text" id="singleContractorAddressStreet"
-                                   class="form-control"
-                                   placeholder="ул. Красная Набережная"
-                                   v-model="resolvedStreet">
-                        </div>
-
-                    </div>
-
-                    <div class="col-4">
-
-                        <div class="form-group">
-                            <label for="singleContractorAddressBuild">Дом (строение)</label>
-                            <input type="text" id="singleContractorAddressBuild"
-                                   class="form-control"
-                                   v-model="resolvedBuild">
-                        </div>
-
-                    </div>
-
                 </div>
 
                 <div class="row">
@@ -192,8 +143,9 @@
 
 <script lang="ts">
 
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Provide, Component, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
+    import {dadataApiKey} from '@/globals';
 
     import ContractorState from '@/store/modules/administrator/contractor/types';
     import RegionState from '@/store/modules/region/types';
@@ -209,91 +161,7 @@
         @State('administratorContractor') public contractorState: ContractorState;
         @State('region') public regionState: RegionState;
 
-        public async created() {
-            await this.getRegions();
-        }
-
-        get resolvedRegion() {
-            if (this.contractorState.contractor.address  === null) {
-                return 0;
-            }
-            return (this.contractorState.contractor.address.region_id === 0 || this.contractorState.contractor.address.region_id === null) ?
-                0 : this.contractorState.contractor.address.region_id;
-        }
-
-        set resolvedRegion(regionId: number) {
-            if (this.contractorState.contractor.address  === null) {
-                this.contractorState.contractor.address = { id: 0, district: '', city: '', street: '', build: '', region_id: 0 };
-            }
-            this.contractorState.contractor.address.region_id = regionId;
-        }
-
-        get resolvedDistrict() {
-            if (this.contractorState.contractor.address  === null) {
-                return '';
-            }
-            return (this.contractorState.contractor.address.district === '' || this.contractorState.contractor.address.district === null) ?
-                '' : this.contractorState.contractor.address.district;
-        }
-
-        set resolvedDistrict(district: string) {
-            if (this.contractorState.contractor.address === null) {
-                this.contractorState.contractor.address = {
-                    id: 0,
-                    district: '',
-                    city: '',
-                    street: '',
-                    build: '',
-                    region_id: 0,
-                };
-            }
-            this.contractorState.contractor.address.district = district;
-        }
-
-        get resolvedCity() {
-            if (this.contractorState.contractor.address === null) {
-                return '';
-            }
-            return (this.contractorState.contractor.address.city === '' || this.contractorState.contractor.address.city === null) ?
-                '' : this.contractorState.contractor.address.city;
-        }
-
-        set resolvedCity(city: string) {
-            if (this.contractorState.contractor.address === null) {
-                this.contractorState.contractor.address = { id: 0, district: '', city: '', street: '', build: '', region_id: 0 };
-            }
-            this.contractorState.contractor.address.city = city;
-        }
-
-        get resolvedStreet() {
-            if (this.contractorState.contractor.address === null) {
-                return '';
-            }
-            return (this.contractorState.contractor.address.street === '' || this.contractorState.contractor.address.street === null) ?
-                '' : this.contractorState.contractor.address.street;
-        }
-
-        set resolvedStreet(street: string) {
-            if (this.contractorState.contractor.address === null) {
-                this.contractorState.contractor.address = { id: 0, district: '', city: '', street: '', build: '', region_id: 0 };
-            }
-            this.contractorState.contractor.address.street = street;
-        }
-
-        get resolvedBuild() {
-            if (this.contractorState.contractor.address === null) {
-                return '';
-            }
-            return (this.contractorState.contractor.address.build === '' || this.contractorState.contractor.address.build === null) ?
-                '' : this.contractorState.contractor.address.build;
-        }
-
-        set resolvedBuild(build: string) {
-            if (this.contractorState.contractor.address === null) {
-                this.contractorState.contractor.address = { id: 0, district: '', city: '', street: '', build: '', region_id: 0 };
-            }
-            this.contractorState.contractor.address.build = build;
-        }
+        @Provide() private dadataApiKey = dadataApiKey;
 
         get parentContractors() {
             const parentContractors = [];
@@ -326,6 +194,10 @@
 
         public deleteLogo() {
             this.contractorState.contractor.logo = '';
+        }
+
+        public changeAddress(address) {
+            this.contractorState.contractor.address = { ...address.data, unrestricted_value: address.unrestricted_value };
         }
 
         public save() {

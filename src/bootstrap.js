@@ -34,7 +34,10 @@ import 'vue2-scrollbar/dist/style/vue2-scrollbar.css';
 
 /* Маски */
 import VueTheMask from 'vue-the-mask'
-Vue.use(VueTheMask)
+Vue.use(VueTheMask);
+
+import VueDadata from 'vue-dadata'
+Vue.use(VueDadata);
 
 /* Loading Jquery */
 try {

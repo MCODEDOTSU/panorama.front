@@ -19,7 +19,8 @@
             <!-- Address -->
             <template v-slot:column-7="{ props }">
                 <span v-if="props.cellData !== null">
-                    {{ props.street_with_type }}, {{ props.house_type }} {{ props.house }} {{ props.block_type }} {{ props.block }}
+                    {{ props.cellData.street_with_type }}, {{ props.cellData.house_type }}
+                    {{ props.cellData.house }} {{ props.cellData.block_type }} {{ props.cellData.block }}
                 </span>
                 <span v-else>-</span>
             </template>
@@ -104,7 +105,7 @@
                 this.contractors.data.push([
                     item.name, item.full_name, item.inn, item.kpp,
                     item.address !== null ? (`${item.address.region} ${item.address.region_type}`) : '-',
-                    item.address !== null ? (`${item.address.area} ${item.address.area_type}`) : '-',
+                    item.address !== null && item.address.area !== null ? (`${item.address.area} ${item.address.area_type}`) : '-',
                     item.address !== null ? (`${item.address.city} ${item.address.city_type}`) : '-',
                     item.address, item.id.toString(), item.id.toString(), item.id.toString(),
                 ]);
@@ -116,6 +117,7 @@
          */
         public async created() {
             await this.administratorContractorGetAll();
+            console.log(this.contractorState.contractors);
         }
 
         /**

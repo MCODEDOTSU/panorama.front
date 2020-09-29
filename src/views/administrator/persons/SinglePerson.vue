@@ -88,7 +88,22 @@
 
                     </div>
 
-                    <fias-address v-model="personState.persons.address"></fias-address>
+                    <div class="row">
+
+                        <div class="col-12">
+
+                            <div class="form-group">
+                                <label>Адрес</label>
+                                <vue-dadata
+                                        :onChange="changeAddress"
+                                        :query="personState.person.address ? personState.person.address.unrestricted_value : ''"
+                                        :token="dadataApiKey"
+                                ></vue-dadata>
+                            </div>
+
+                        </div>
+
+                    </div>
 
                     <phones></phones>
 
@@ -118,6 +133,7 @@
 
     import {Provide, Component, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
+    import {dadataApiKey} from '@/globals';
 
     import PersonState from '@/store/modules/administrator/person/types';
     import RegionState from '@/store/modules/region/types';
@@ -125,12 +141,11 @@
 
     import {ru} from 'vuejs-datepicker/dist/locale';
     import Datepicker from 'vuejs-datepicker';
-    import FiasAddress from '@/components/utils/fiasAddress/FiasAddress.vue';
     import Phones from '@/views/administrator/persons/Phones.vue';
     import Note from '@/views/administrator/persons/Note.vue';
 
     @Component({
-        components: { Datepicker, FiasAddress, Phones, Note },
+        components: { Datepicker, Phones, Note },
     })
     export default class SinglePerson extends Vue {
 
@@ -144,10 +159,7 @@
 
         @Provide() private ru: any = ru;
         @Provide() private phone = { type: 'Мобильный', value: '' };
-
-        public async created() {
-            await this.getRegions();
-        }
+        @Provide() private dadataApiKey = dadataApiKey;
 
         public uploadPhoto() {
             const $fileInput: HTMLInputElement = (this.$refs.photo as HTMLInputElement);
@@ -167,79 +179,8 @@
                 '/images/social.png' : this.personState.person.photo;
         }
 
-        get resolvedRegion() {
-            if (this.personState.person.address  === null) {
-                return 0;
-            }
-            return (this.personState.person.address.region_id === 0 || this.personState.person.address.region_id === null) ?
-                0 : this.personState.person.address.region_id;
-        }
-
-        set resolvedRegion(regionId: number) {
-            if (this.personState.person.address  === null) {
-                this.personState.person.address = { id: 0, district: '', city: '', street: '', build: '', region_id: 0 };
-            }
-            this.personState.person.address.region_id = regionId;
-        }
-
-        get resolvedDistrict() {
-            if (this.personState.person.address  === null) {
-                return '';
-            }
-            return (this.personState.person.address.district === '' || this.personState.person.address.district === null) ?
-                '' : this.personState.person.address.district;
-        }
-
-        set resolvedDistrict(district: string) {
-            if (this.personState.person.address  === null) {
-                this.personState.person.address = { id: 0, district: '', city: '', street: '', build: '', region_id: 0 };
-            }
-            this.personState.person.address.district = district;
-        }
-
-        get resolvedCity() {
-            if (this.personState.person.address  === null) {
-                return '';
-            }
-            return (this.personState.person.address.city === '' || this.personState.person.address.city === null) ?
-                '' : this.personState.person.address.city;
-        }
-
-        set resolvedCity(city: string) {
-            if (this.personState.person.address  === null) {
-                this.personState.person.address = { id: 0, district: '', city: '', street: '', build: '', region_id: 0 };
-            }
-            this.personState.person.address.city = city;
-        }
-
-        get resolvedStreet() {
-            if (this.personState.person.address  === null) {
-                return '';
-            }
-            return (this.personState.person.address.street === '' || this.personState.person.address.street === null) ?
-                '' : this.personState.person.address.street;
-        }
-
-        set resolvedStreet(street: string) {
-            if (this.personState.person.address  === null) {
-                this.personState.person.address = { id: 0, district: '', city: '', street: '', build: '', region_id: 0 };
-            }
-            this.personState.person.address.street = street;
-        }
-
-        get resolvedBuild() {
-            if (this.personState.person.address  === null) {
-                return '';
-            }
-            return (this.personState.person.address.build === '' || this.personState.person.address.build === null) ?
-                '' : this.personState.person.address.build;
-        }
-
-        set resolvedBuild(build: string) {
-            if (this.personState.person.address  === null) {
-                this.personState.person.address = { id: 0, district: '', city: '', street: '', build: '', region_id: 0};
-            }
-            this.personState.person.address.build = build;
+        public changeAddress(address) {
+            this.personState.person.address = { ...address.data, unrestricted_value: address.unrestricted_value };
         }
 
         public save() {
