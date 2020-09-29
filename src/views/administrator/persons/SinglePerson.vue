@@ -89,9 +89,7 @@
                     </div>
 
                     <div class="row">
-
                         <div class="col-12">
-
                             <div class="form-group">
                                 <label>Адрес</label>
                                 <vue-dadata
@@ -99,10 +97,11 @@
                                         :query="personState.person.address ? personState.person.address.unrestricted_value : ''"
                                         :token="dadataApiKey"
                                 ></vue-dadata>
+                                <span class="form-group-info" v-if="tszh">
+                                    По данному адресу найдено ТСЖ <b>"{{ tszh.name }}"</b>. Физическое лицо автоматически будет привязано к данному ТСЖ
+                                </span>
                             </div>
-
                         </div>
-
                     </div>
 
                     <phones></phones>
@@ -131,9 +130,10 @@
 
 <script lang="ts">
 
-    import {Provide, Component, Vue} from 'vue-property-decorator';
+    import {Provide, Watch, Component, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import {dadataApiKey} from '@/globals';
+    import {baseUrl, baseUrlAPI, dadataApiKey} from '@/globals';
+    import axios from 'axios';
 
     import PersonState from '@/store/modules/administrator/person/types';
     import RegionState from '@/store/modules/region/types';
@@ -160,6 +160,14 @@
         @Provide() private ru: any = ru;
         @Provide() private phone = { type: 'Мобильный', value: '' };
         @Provide() private dadataApiKey = dadataApiKey;
+        @Provide() private tszh = {};
+
+        @Watch('personState.person.address', {deep: true})
+        public onChangePersonAddress() {
+            if (this.personState.person.address && this.personState.person.address.fias_id) {
+                this.getTszhByAddress();
+            }
+        }
 
         public uploadPhoto() {
             const $fileInput: HTMLInputElement = (this.$refs.photo as HTMLInputElement);
@@ -192,6 +200,16 @@
         public close() {
             // @ts-ignore
             this.$bvModal.hide('singlePersonModal');
+        }
+
+        public async getTszhByAddress() {
+            if (!this.personState.person.address || !this.personState.person.address.fias_id) {
+                return;
+            }
+            try {
+                const res = await axios.get(`${baseUrlAPI}tszh/fias/${this.personState.person.address.fias_id}`);
+                this.tszh = { ...res.data };
+            } catch { }
         }
 
     }

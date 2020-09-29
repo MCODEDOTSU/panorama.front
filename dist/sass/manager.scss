@@ -373,7 +373,6 @@ header {
             }
 
             .sub-menu {
-                background: $first-dark;
 
                 a {
                     padding: 8px 8px 8px 32px;
@@ -432,7 +431,6 @@ header {
 
         .manager-container {
             padding: 80px 20px 0;
-            max-width: 1170px;
             margin: 0 auto;
             -webkit-box-sizing: border-box;
             -moz-box-sizing: border-box;
@@ -838,6 +836,12 @@ header {
         margin: 0 0 8px;
         border-radius: 3px;
         padding: 4px 8px;
+    }
+
+    .form-group-info {
+        color: $first;
+        display: block;
+        text-align: right;
     }
 
 }

@@ -69,7 +69,7 @@
     import {Action, State} from 'vuex-class';
     import {arrayFindFirst} from '@/domain/services/common/ArrayActions';
     import axios from 'axios';
-    import {baseUrl, baseUrlAPI, dadataApiKey} from '@/globals';
+    import {baseUrl, baseUrlAPI} from '@/globals';
     import PersonState from '@/store/modules/administrator/person/types';
     import SinglePerson from '@/views/administrator/persons/SinglePerson.vue';
     import SureModal from '@/components/common/SureModal.vue';
@@ -116,14 +116,6 @@
 
         public async created() {
             await this.administratorPersonGetAll();
-            // const Dadata = require('dadata-suggestions');
-            // const dadata = new Dadata(dadataApiKey);
-            // dadata.address({ query: 'волгоград сел комсомолец комсомольская ул 13', count: 5 })
-            //     .then((data) => {
-            //         console.log(data);
-            //         // debugger;
-            //     })
-            //     .catch(console.error)
         }
 
         /**
