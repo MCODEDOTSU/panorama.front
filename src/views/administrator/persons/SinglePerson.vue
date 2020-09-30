@@ -206,7 +206,7 @@
         public async getTszhByAddress() {
             try {
                 const res = await axios.get(`${baseUrlAPI}tszh/fias/${this.personState.person.address.fias_id}`);
-                this.tszh = { ...res.data };
+                this.tszh = res.data !== "" ? { ...res.data } : false;
             } catch { }
         }
 

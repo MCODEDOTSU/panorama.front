@@ -117,7 +117,6 @@
          */
         public async created() {
             await this.administratorContractorGetAll();
-            console.log(this.contractorState.contractors);
         }
 
         /**
