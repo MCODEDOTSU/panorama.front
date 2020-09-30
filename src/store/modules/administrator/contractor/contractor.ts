@@ -56,6 +56,7 @@ export const actions: ActionTree<ContractorState, RootState> = {
      */
     async administratorContractorUpdate() {
         try {
+            console.log(state.contractor);
             if (state.contractor.id !== 0) {
                 const res = await axios.put(`${baseUrlAPI}contractor`, state.contractor);
                 SuccessNotifier.notify('Данные сохранены', `Контрагент "${state.contractor.name}" изменен`);

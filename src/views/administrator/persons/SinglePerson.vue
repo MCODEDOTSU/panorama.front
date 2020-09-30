@@ -160,10 +160,11 @@
         @Provide() private ru: any = ru;
         @Provide() private phone = { type: 'Мобильный', value: '' };
         @Provide() private dadataApiKey = dadataApiKey;
-        @Provide() private tszh = {};
+        @Provide() private tszh = false;
 
         @Watch('personState.person.address', {deep: true})
         public onChangePersonAddress() {
+            this.tszh = false;
             if (this.personState.person.address && this.personState.person.address.fias_id) {
                 this.getTszhByAddress();
             }
@@ -203,9 +204,6 @@
         }
 
         public async getTszhByAddress() {
-            if (!this.personState.person.address || !this.personState.person.address.fias_id) {
-                return;
-            }
             try {
                 const res = await axios.get(`${baseUrlAPI}tszh/fias/${this.personState.person.address.fias_id}`);
                 this.tszh = { ...res.data };
