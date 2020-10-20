@@ -63,9 +63,9 @@
                                     <div class="form-group">
                                         <label for="singlePersonDateOfBirth">Дата рождения</label>
                                         <datepicker id="singlePersonDateOfBirth"
-                                                    format="yyyy-MM-dd"
+                                                    format="dd.MM.yyyy"
                                                     :input-class="'form-control'"
-                                                    v-model="personState.person.date_of_birth"
+                                                    v-model="resolvedDate"
                                                     placeholder="Дата Рождения"
                                                     :language="ru" :typeable="true">
                                         </datepicker>
@@ -208,6 +208,19 @@
                 const res = await axios.get(`${baseUrlAPI}tszh/fias/${this.personState.person.address.fias_id}`);
                 this.tszh = res.data !== "" ? { ...res.data } : false;
             } catch { }
+        }
+
+        get resolvedDate() {
+            if (this.personState.person.date_of_birth) {
+                return this.personState.person.date_of_birth;
+            } else {
+                return '';
+            }
+        }
+
+        set resolvedDate(value) {
+            const date = new Date(value);
+            this.personState.person.date_of_birth = value;
         }
 
     }

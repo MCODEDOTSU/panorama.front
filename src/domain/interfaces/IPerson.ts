@@ -7,7 +7,7 @@ export default interface IPerson {
     middlename: string;
     date_of_birth?: string;
     fias_address_id: number;
-    address: IFiasAddress;
+    address?: IFiasAddress;
     phones?: string;
     note?: string;
     post?: string;

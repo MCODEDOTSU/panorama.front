@@ -15,7 +15,18 @@
 
         <!-- Список -->
         <vue-table-dynamic :params="contractorsTszh" v-on:cell-click="showSingleContractorTszhModal" ref="contractorsTszhTable">
+
+            <!-- Address -->
             <template v-slot:column-7="{ props }">
+                <span v-if="props.cellData !== null">
+                    {{ props.cellData.street_with_type }}, {{ props.cellData.house_type }}
+                    {{ props.cellData.house }} {{ props.cellData.block_type }} {{ props.cellData.block }}
+                </span>
+                <span v-else>-</span>
+            </template>
+
+            <!-- Actions -->
+            <template v-slot:column-8="{ props }">
                 <b-button v-b-modal.singleContractorTszhModal @click="contractorTszhSetSingle(props.cellData)" variant="info">
                     Изменить
                 </b-button>
@@ -23,6 +34,7 @@
                     Удалить
                 </button>
             </template>
+
         </vue-table-dynamic>
         <!-- конец Список -->
 
@@ -65,17 +77,21 @@
             pageSize: 50,
             pageSizes: [],
         };
-        @Provide() private tableIdIndex = 7;
+        @Provide() private tableIdIndex = 8;
 
         @Watch('contractorTszhState.contractorTszhes', {deep: true})
         public onContractorTszhes() {
-            this.contractorsTszh.data = [ ['Наименование', 'Полное наименование', 'ИНН', 'КПП', 'Регион', 'Район', 'Город', ''] ];
+            this.contractorsTszh.data = [ ['Наименование', 'Полное наименование', 'ИНН', 'КПП', 'Регион', 'Район', 'Город/село', 'Улица, дом', ''] ];
             this.contractorTszhState.contractorTszhes.forEach((item, i) => {
                 this.contractorsTszh.data.push([
-                    item.contractor.name, item.contractor.full_name, item.contractor.inn, item.contractor.kpp,
-                    item.contractor.address ? (item.contractor.address.region ? item.contractor.address.region.name : '') : '',
-                    item.contractor.address ? item.contractor.address.district : '',
-                    item.contractor.address ? item.contractor.address.city : '',
+                    item.full_contractor.name,
+                    item.full_contractor.full_name,
+                    item.full_contractor.inn,
+                    item.full_contractor.kpp,
+                    this.resolvedRegion(item.full_contractor.address),
+                    this.resolvedArea(item.full_contractor.address),
+                    this.resolvedCity(item.full_contractor.address),
+                    item.full_contractor.address,
                     item.id.toString(),
                 ]);
             });
@@ -148,6 +164,34 @@
             axios.post(`${baseUrlAPI}export/excel`, { data }).then((response) => {
                 window.open(`${baseUrl}${response.data}`);
             });
+        }
+
+        /**
+         * Обработка региона
+         * @param region
+         */
+        public resolvedRegion(address) {
+            return address !== null && address.region !== null ?
+                (`${address.region} ${address.region_type}`) : '-';
+        }
+
+        /**
+         * Обработка района
+         * @param address
+         */
+        public resolvedArea(address) {
+            return address !== null && address.area !== null ?
+                (`${address.area} ${address.area_type}`) : '-';
+        }
+
+        /**
+         * Обработка города
+         * @param address
+         */
+        public resolvedCity(address) {
+            return address !== null && address.city !== null ?
+                (`${address.city} ${address.city_type}`) : (address !== null && address.settlement !== null ?
+                    (`${address.settlement} ${address.settlement_type}`) : '-');
         }
 
     }

@@ -126,11 +126,13 @@
                 firstname: title[1] !== undefined ? title[1] : '',
                 lastname: title[0] !== undefined ? title[0] : '',
                 middlename: title[2] !== undefined ? title[2] : '',
+                fias_address_id: null,
             } : {
                 id: 0,
                 firstname: '',
                 lastname: '',
                 middlename: '',
+                fias_address_id: null,
             };
         }
 

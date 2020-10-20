@@ -99,15 +99,21 @@
         public onContractors() {
             this.contractors.data = [ [
                 'Наименование', 'Полное наименование', 'ИНН', 'КПП',
-                'Регион', 'Район', 'Город', 'Адрес', '', '', ''
+                'Регион', 'Район', 'Город/село', 'Улица, дом', '', '', ''
             ] ];
             this.contractorState.contractors.forEach((item, i) => {
                 this.contractors.data.push([
-                    item.name, item.full_name, item.inn, item.kpp,
-                    item.address !== null ? (`${item.address.region} ${item.address.region_type}`) : '-',
-                    item.address !== null && item.address.area !== null ? (`${item.address.area} ${item.address.area_type}`) : '-',
-                    item.address !== null ? (`${item.address.city} ${item.address.city_type}`) : '-',
-                    item.address, item.id.toString(), item.id.toString(), item.id.toString(),
+                    item.name,
+                    item.full_name,
+                    item.inn,
+                    item.kpp,
+                    this.resolvedRegion(item.address),
+                    this.resolvedArea(item.address),
+                    this.resolvedCity(item.address),
+                    item.address,
+                    item.id.toString(),
+                    item.id.toString(),
+                    item.id.toString(),
                 ]);
             });
         }
@@ -208,6 +214,34 @@
         public getContractorUsers(contractorId: any) {
             this.contractorSetSingle(contractorId);
             this.$router.push(`/administrator/contractors/users/${contractorId}`);
+        }
+
+        /**
+         * Обработка региона
+         * @param region
+         */
+        public resolvedRegion(address) {
+            return address !== null && address.region !== null ?
+                (`${address.region} ${address.region_type}`) : '-';
+        }
+
+        /**
+         * Обработка района
+         * @param address
+         */
+        public resolvedArea(address) {
+            return address !== null && address.area !== null ?
+                (`${address.area} ${address.area_type}`) : '-';
+        }
+
+        /**
+         * Обработка города
+         * @param address
+         */
+        public resolvedCity(address) {
+            return address !== null && address.city !== null ?
+                (`${address.city} ${address.city_type}`) : (address !== null && address.settlement !== null ?
+                    (`${address.settlement} ${address.settlement_type}`) : '-');
         }
 
     }
