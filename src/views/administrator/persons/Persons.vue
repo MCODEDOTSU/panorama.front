@@ -13,6 +13,7 @@
             Выгрузить в Excel
         </button>
 
+        <!-- Фильтр -->
         <div class="table-dynamic-filter">
             <label class="title">Расширенный поиск:
                 <button v-if="filterShow" class="btn btn-link" @click="toggleFilterShow()">[свернуть]</button>
@@ -58,7 +59,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-3">
+                    <div class="col-2">
                         <div class="form-group">
                             <input
                                 type="text"
@@ -67,7 +68,7 @@
                                 v-model="filter.region">
                         </div>
                     </div>
-                    <div class="col-3">
+                    <div class="col-2">
                         <div class="form-group">
                             <input
                                 type="text"
@@ -99,6 +100,15 @@
                             <input
                                 type="text"
                                 class="form-control"
+                                placeholder="Дом"
+                                v-model="filter.build">
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group">
+                            <input
+                                type="text"
+                                class="form-control"
                                 placeholder="Телефон"
                                 v-model="filter.phone">
                         </div>
@@ -113,6 +123,7 @@
                 </div>
             </div>
         </div>
+        <!-- конец Фильтр -->
 
         <!-- Список физических лиц -->
         <vue-table-dynamic
@@ -123,7 +134,7 @@
         >
 
             <!-- Actions -->
-            <template class="actions" v-slot:column-8="{ props }">
+            <template class="actions" v-slot:column-9="{ props }">
                 <b-button v-b-modal.singlePersonModal @click="personSetSingle(props.cellData)" variant="info">
                     <i class="fa fa-pencil"></i>
                 </b-button>
@@ -170,15 +181,15 @@
         @Provide() public params = {
             data: [],
             header: 'row',
-            sort: [0, 1, 2, 3, 4, 5, 6],
+            sort: [0, 1, 2, 3, 4, 5, 6, 7],
             pagination: true,
             pageSize: 50,
             pageSizes: [],
             columnWidth: [
-                {column: 8, width: 64}
+                {column: 9, width: 64}
             ],
         };
-        @Provide() private tableIdIndex = 8;
+        @Provide() private tableIdIndex = 9;
         @Provide() private selectedRow = 0;
 
         @Provide() public persons = [];
@@ -192,6 +203,7 @@
             area: '',
             city: '',
             street: '',
+            build: '',
             phone: '',
         };
         @Provide() public filterShow: boolean = true;
@@ -217,7 +229,8 @@
                 'Регион',
                 'Район',
                 'Город/село',
-                'Улица, дом',
+                'Улица',
+                'Дом',
                 ''
             ] ];
             this.persons.forEach((item, i) => {
@@ -229,7 +242,8 @@
                     this.resolvedRegion(item.address),
                     this.resolvedArea(item.address),
                     this.resolvedCity(item.address),
-                    this.resolvedStreetHouse(item.address),
+                    this.resolvedStreet(item.address),
+                    this.resolvedBuild(item.address),
                     item.id.toString(),
                 ]);
             });
@@ -260,11 +274,15 @@
                     && (this.filter.region === '' || this.resolvedRegion(item.address).toLowerCase().indexOf(this.filter.region.toLowerCase()) + 1)
                     && (this.filter.area === '' || this.resolvedArea(item.address).toLowerCase().indexOf(this.filter.area.toLowerCase()) + 1)
                     && (this.filter.city === '' || this.resolvedCity(item.address).toLowerCase().indexOf(this.filter.city.toLowerCase()) + 1)
-                    && (this.filter.street === '' || this.resolvedStreetHouse(item.address).toLowerCase().indexOf(this.filter.street.toLowerCase()) + 1)
+                    && (this.filter.street === '' || this.resolvedStreet(item.address).toLowerCase().indexOf(this.filter.street.toLowerCase()) + 1)
+                    && (this.filter.build === '' || this.resolvedBuild(item.address).toLowerCase().indexOf(this.filter.build.toLowerCase()) + 1)
                     && (this.filter.phone === '' || item.phones.toLowerCase().indexOf(this.filter.phone.toLowerCase()) + 1);
             });
         }
 
+        /**
+         * Сбросить фильтр
+         */
         public cleanFilter() {
             this.filter = {
                 lastname: '',
@@ -275,22 +293,28 @@
                 area: '',
                 city: '',
                 street: '',
+                build: '',
                 phone: '',
             };
         }
 
+        /**
+         * Свернуть/развернуть фильтр
+         */
         public toggleFilterShow() {
             this.filterShow = !this.filterShow;
             localStorage.setItem('persons.filterShow', this.filterShow.toString());
         }
 
+        /**
+         * Получить состоние фильтра
+         */
         public filterState() {
             if (localStorage.getItem('persons.filterShow')) {
-                const a = localStorage.getItem('persons.filterShow');
                 this.filterShow = localStorage.getItem('persons.filterShow') === 'true';
             }
             if (localStorage.getItem('persons.filter')) {
-                this.filter = JSON.parse(localStorage.getItem('persons.filter'));
+                this.filter = Object.assign(this.filter, JSON.parse(localStorage.getItem('persons.filter')));
             }
         }
 
@@ -381,7 +405,8 @@
                         'Регион',
                         'Район',
                         'Город/село',
-                        'Улица, дом',
+                        'Улица',
+                        'Дом',
                         'Телефон',
                     ];
                 }
@@ -396,12 +421,11 @@
                     this.resolvedRegion(item.address),
                     this.resolvedArea(item.address),
                     this.resolvedCity(item.address),
-                    this.resolvedStreetHouse(item.address),
+                    this.resolvedStreet(item.address),
+                    this.resolvedBuild(item.address),
                     this.resolvedPhones(item.phones),
                 ];
             });
-
-            debugger;
 
             axios.post(`${baseUrlAPI}export/excel`, { data }).then((response) => {
                 window.open(`${baseUrl}${response.data}`);
@@ -466,11 +490,18 @@
          * Обработка улицы и дома
          * @param address
          */
-        public resolvedStreetHouse(address) {
-            const house = address !== null && address.house !== null ?
-                (`, ${address.house} ${address.house_type}`) : '';
+        public resolvedStreet(address) {
             return address !== null && address.street !== null ?
-                (`${address.street} ${address.street_type}${house}`) : '-';
+                (`${address.street} ${address.street_type}`) : '';
+        }
+
+        /**
+         * Обработка улицы и дома
+         * @param address
+         */
+        public resolvedBuild(address) {
+            return address !== null && address.house !== null ?
+                (`${address.house} ${address.house_type}`) : '';
         }
 
     }

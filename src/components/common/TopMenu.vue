@@ -2,8 +2,7 @@
     <div class="top-menu">
         <div class="top-menu-left">
             <div class="contractor-logo top-menu-item" v-if="userState.user.contractor !== null && userState.user.contractor !== undefined">
-                <img v-if="userState.user.contractor.logo !== '' && userState.user.contractor.logo !== null" :src="userState.user.contractor.logo" />
-                <img v-else src="/images/logo-24.png" />
+                <img :src="logoSrc" />
             </div>
             <div class="contractor-name top-menu-item" v-if="userState.user.contractor !== null && userState.user.contractor !== undefined">
                 <label>{{ userState.user.contractor.name }}</label>
@@ -38,8 +37,18 @@
         @State('user') public userState!: UserState;
         @Action public logout: any;
         get photoSrc() {
+            if (this.userState.user.person === null || this.userState.user.person === undefined) {
+                return `/images/social-24.png`;
+            }
             return (this.userState.user.person.photo === '' || this.userState.user.person.photo === null) ?
-                `${baseUrl}/images/social-24.png` : `${baseUrl}/storage/${this.userState.user.person.photo}`;
+                `/images/social-24.png` : `${baseUrl}/storage/${this.userState.user.person.photo}`;
+        }
+        get logoSrc() {
+            if (this.userState.user.contractor === null || this.userState.user.contractor === undefined) {
+                return `/images/logo-24.png`;
+            }
+            return (this.userState.user.contractor.logo === '' || this.userState.user.contractor.logo === null) ?
+                `/images/logo-24.png` : `${baseUrl}/storage/${this.userState.user.contractor.logo}`;
         }
     }
 </script>
