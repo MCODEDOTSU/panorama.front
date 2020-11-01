@@ -12,4 +12,10 @@ export default interface IPerson {
     note?: string;
     post?: string;
     photo?: string;
+    passport_series?: string;
+    passport_number?: string;
+    passport_issued_by?: string;
+    passport_issued_when?: string;
+    passport_department_number?: string;
+    own?: string;
 }

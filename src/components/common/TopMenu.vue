@@ -10,10 +10,7 @@
             </div>
         </div>
         <div class="top-menu-right">
-            <div class="person-photo top-menu-item" v-if="userState.user.person !== null && userState.user.person !== undefined">
-                <img v-if="userState.user.person.photo !== '' && userState.user.person.photo !== null" :src="userState.user.person.photo" />
-                <img v-else src="/images/social-24.png" />
-            </div>
+            <div class="person-photo top-menu-item" :style="`background-image: url(${photoSrc})`"></div>
             <div class="person-name top-menu-item" v-if="userState.user.person !== null && userState.user.person !== undefined">
                 <router-link to="/manager/cabinet" tag="label" class="nav-link" title="Профиль пользователя">
                     {{ userState.user.person.lastname }} {{ userState.user.person.firstname }} {{ userState.user.person ? userState.user.person.middlename : '' }}
@@ -32,12 +29,17 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Component, Vue, Provide} from 'vue-property-decorator';
     import {State, Action} from 'vuex-class';
+    import {baseUrl} from '@/globals';
     import UserState from '@/store/modules/user/types';
     @Component({})
     export default class TopMenu extends Vue {
         @State('user') public userState!: UserState;
         @Action public logout: any;
+        get photoSrc() {
+            return (this.userState.user.person.photo === '' || this.userState.user.person.photo === null) ?
+                `${baseUrl}/images/social-24.png` : `${baseUrl}/storage/${this.userState.user.person.photo}`;
+        }
     }
 </script>

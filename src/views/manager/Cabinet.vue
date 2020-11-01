@@ -6,7 +6,11 @@
         <div class="content">
 
             <div class="row">
-                <div class="col-2"><img :src="resolvedPhotoSrc" class="photo"/></div>
+                <div class="col-2">
+                    <b-button v-if="userState.user.person.photo !== ''" v-b-modal.imageModal>
+                        <img :src="photoThumbnailSrc" class="photo"/>
+                    </b-button>
+                </div>
                 <div class="col-10">
 
                     <div class="row bg">
@@ -87,6 +91,8 @@
 
         </div>
 
+        <image-modal v-model="photoSrc"></image-modal>
+
     </div>
 </template>
 
@@ -94,11 +100,12 @@
 
     import {Component, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-
+    import {baseUrl} from '@/globals';
+    import ImageModal from '@/components/common/ImageModal.vue';
     import UserState from '@/store/modules/user/types';
 
     @Component({
-        components: {},
+        components: { ImageModal },
     })
     export default class Desktop extends Vue {
 
@@ -110,12 +117,20 @@
             return this.userState.user.role === 'superadmin' ? 'Администратор' : 'Управляющий';
         }
 
-        get resolvedPhotoSrc() {
+        get photoThumbnailSrc() {
             if (!this.userState.user.person) {
                 return '/images/social.png';
             }
             return (this.userState.user.person.photo === '' || this.userState.user.person.photo === null) ?
-                '/images/social.png' : this.userState.user.person.photo;
+                '/images/social.png' : `${baseUrl}/storage/${this.userState.user.person.photo}`;
+        }
+
+        get photoSrc() {
+            if (!this.userState.user.person) {
+                return '/images/social.png';
+            }
+            return (this.userState.user.person.photo === '' || this.userState.user.person.photo === null) ?
+                '/images/social.png' : `${baseUrl}/storage/${this.userState.user.person.photo}`;
         }
 
         get resolvedLogoSrc() {

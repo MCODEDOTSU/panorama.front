@@ -3,9 +3,9 @@
 
         <h1>Справочник физических лиц</h1>
 
-        <b-button v-b-modal.singlePersonModal @click="administratorPersonUnsetSingle" variant="info">
-            <i class="fas fa-plus-circle"></i>
-            Создать
+        <b-button v-b-modal.singlePersonModal @click="administratorPersonUnsetSingle" variant="success">
+            <i class="fa fa-user-plus"></i>
+            Добавить
         </b-button>
 
         <button @click="excelExport" class="btn btn-info">
@@ -13,28 +13,122 @@
             Выгрузить в Excel
         </button>
 
-        <!--
-        <vuetable
-                ref="vuetable"
-                :api-mode="false"
-                :fields="fields"
-                :data="resolvedPersons"
-                :sort-order="[{field:'lastname',direction:'asc'}]"
-                @vuetable:loaded="onLoaded"
-        >
-        </vuetable>
-        -->
+        <div class="table-dynamic-filter">
+            <label class="title">Расширенный поиск:
+                <button v-if="filterShow" class="btn btn-link" @click="toggleFilterShow()">[свернуть]</button>
+                <button v-else class="btn btn-link" @click="toggleFilterShow()">[развернуть]</button>
+            </label>
+            <div v-show="filterShow">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="form-group">
+                            <input
+                                type="text"
+                               class="form-control"
+                               placeholder="Фамилия"
+                               v-model="filter.lastname">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <input
+                                type="text"
+                               class="form-control"
+                               placeholder="Имя"
+                               v-model="filter.firstname">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <input
+                                type="text"
+                               class="form-control"
+                               placeholder="Отчество"
+                               v-model="filter.middlename">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <input
+                                type="text"
+                               class="form-control"
+                               placeholder="Дата рождения"
+                               v-model="filter.date_of_birth">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <div class="form-group">
+                            <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Регион"
+                                v-model="filter.region">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Район"
+                                v-model="filter.area">
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group">
+                            <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Город, село"
+                                v-model="filter.city">
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group">
+                            <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Улица"
+                                v-model="filter.street">
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group">
+                            <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Телефон"
+                                v-model="filter.phone">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 actions">
+                        <button class="btn btn-link" @click="cleanFilter()">
+                            Сбросить фильтр
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Список физических лиц -->
-        <vue-table-dynamic :params="persons" v-on:cell-click="showSinglePersonModal" ref="personsTable">
+        <vue-table-dynamic
+                :params="params"
+                v-on:cell-click="onClickRow"
+                v-on:cell-dblclick="showSinglePersonModal"
+                ref="personsTable"
+        >
 
             <!-- Actions -->
-            <template v-slot:column-9="{ props }">
+            <template class="actions" v-slot:column-8="{ props }">
                 <b-button v-b-modal.singlePersonModal @click="personSetSingle(props.cellData)" variant="info">
-                    Изменить
+                    <i class="fa fa-pencil"></i>
                 </b-button>
                 <button class="btn btn-danger" data-toggle="modal" data-target="#sureModal" @click="setSureModalContent(props.cellData)">
-                    Удалить
+                    <i class="fa fa-trash"></i>
                 </button>
             </template>
 
@@ -73,61 +167,49 @@
 
         @State('administratorPerson') public personState: PersonState;
 
-        @Provide() private fields = [
-            {
-                name: 'lastname',
-                title: 'Фамилия',
-                sortField: 'lastname',
-            },
-            {
-                name: 'firstname',
-                title: 'Имя',
-            },
-            {
-                name: 'middlename',
-                title: 'Отчество',
-            },
-            {
-                name: 'date_of_birth',
-                title: 'Дата рождения',
-            },
-            {
-                name: 'region',
-                title: 'Регион',
-            },
-            {
-                name: 'area',
-                title: 'Район',
-            },
-            {
-                name: 'city',
-                title: 'Город/село',
-            },
-            {
-                name: 'house',
-                title: 'Улица, дом',
-            },
-            {
-                name: 'phone',
-                title: 'Телефоны',
-            },
-        ];
-
-        @Provide() public persons = {
+        @Provide() public params = {
             data: [],
             header: 'row',
-            stripe: true,
-            enableSearch: true,
-            sort: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+            sort: [0, 1, 2, 3, 4, 5, 6],
             pagination: true,
             pageSize: 50,
             pageSizes: [],
+            columnWidth: [
+                {column: 8, width: 64}
+            ],
         };
-        @Provide() private tableIdIndex = 9;
+        @Provide() private tableIdIndex = 8;
+        @Provide() private selectedRow = 0;
+
+        @Provide() public persons = [];
+
+        @Provide() public filter = {
+            lastname: '',
+            firstname: '',
+            middlename: '',
+            date_of_birth: '',
+            region: '',
+            area: '',
+            city: '',
+            street: '',
+            phone: '',
+        };
+        @Provide() public filterShow: boolean = true;
 
         @Watch('personState.persons', {deep: true})
+        public onPersonState() {
+            this.personFilter();
+        }
+
+        @Watch('filter', {deep: true})
+        public onPersonState() {
+            this.personFilter();
+            localStorage.setItem('persons.filter', JSON.stringify(this.filter));
+        }
+
+        @Watch('persons', {deep: true})
         public onPersons() {
-            this.persons.data = [ [
+            this.params.data = [ [
                 'Фамилия',
                 'Имя',
                 'Отчество',
@@ -136,11 +218,10 @@
                 'Район',
                 'Город/село',
                 'Улица, дом',
-                'Телефоны',
                 ''
             ] ];
-            this.personState.persons.forEach((item, i) => {
-                this.persons.data.push([
+            this.persons.forEach((item, i) => {
+                this.params.data.push([
                     item.lastname,
                     item.firstname,
                     item.middlename,
@@ -149,14 +230,78 @@
                     this.resolvedArea(item.address),
                     this.resolvedCity(item.address),
                     this.resolvedStreetHouse(item.address),
-                    this.resolvedPhones(item.phones),
                     item.id.toString(),
                 ]);
             });
         }
 
+        @Watch('selectedRow')
+        public onSelectedRow() {
+            const params = { ...this.params };
+            params.selectedRow = this.selectedRow;
+            this.params = { ...params };
+        }
+
         public async created() {
-            await this.administratorPersonGetAll();
+            this.administratorPersonGetAll();
+            // Состояние фильтра
+            this.filterState();
+        }
+
+        /**
+         * Фильтрация
+         */
+        public personFilter() {
+            this.persons = this.personState.persons.filter((item) => {
+                return (this.filter.lastname === '' || item.lastname.toLowerCase().indexOf(this.filter.lastname.toLowerCase()) + 1)
+                    && (this.filter.firstname === '' || item.firstname.toLowerCase().indexOf(this.filter.firstname.toLowerCase()) + 1)
+                    && (this.filter.middlename === '' || item.middlename.toLowerCase().indexOf(this.filter.middlename.toLowerCase()) + 1)
+                    && (this.filter.date_of_birth === '' || item.date_of_birth.toLowerCase().indexOf(this.filter.date_of_birth.toLowerCase()) + 1)
+                    && (this.filter.region === '' || this.resolvedRegion(item.address).toLowerCase().indexOf(this.filter.region.toLowerCase()) + 1)
+                    && (this.filter.area === '' || this.resolvedArea(item.address).toLowerCase().indexOf(this.filter.area.toLowerCase()) + 1)
+                    && (this.filter.city === '' || this.resolvedCity(item.address).toLowerCase().indexOf(this.filter.city.toLowerCase()) + 1)
+                    && (this.filter.street === '' || this.resolvedStreetHouse(item.address).toLowerCase().indexOf(this.filter.street.toLowerCase()) + 1)
+                    && (this.filter.phone === '' || item.phones.toLowerCase().indexOf(this.filter.phone.toLowerCase()) + 1);
+            });
+        }
+
+        public cleanFilter() {
+            this.filter = {
+                lastname: '',
+                firstname: '',
+                middlename: '',
+                date_of_birth: '',
+                region: '',
+                area: '',
+                city: '',
+                street: '',
+                phone: '',
+            };
+        }
+
+        public toggleFilterShow() {
+            this.filterShow = !this.filterShow;
+            localStorage.setItem('persons.filterShow', this.filterShow.toString());
+        }
+
+        public filterState() {
+            if (localStorage.getItem('persons.filterShow')) {
+                const a = localStorage.getItem('persons.filterShow');
+                this.filterShow = localStorage.getItem('persons.filterShow') === 'true';
+            }
+            if (localStorage.getItem('persons.filter')) {
+                this.filter = JSON.parse(localStorage.getItem('persons.filter'));
+            }
+        }
+
+        /**
+         * Обработка клика по таблице
+         */
+        public onClickRow(rowIndex, columnIndex, data) {
+            if (this.selectedRow === rowIndex) {
+                this.showSinglePersonModal(rowIndex, columnIndex, data);
+            }
+            this.selectedRow = rowIndex;
         }
 
         /**
@@ -225,34 +370,41 @@
 
             // @ts-ignore
             const data = td.activatedRows.map((row, i) => {
-                const firstCell = i === 0 ? '№ п/п' : i;
-                return [ firstCell ].concat(row.cells.map((cell, j) => {
-                    return (j + 1) < row.cells.length ? cell.data : false;
-                }));
+
+                if (i === 0) {
+                    return [
+                        '№ п/п',
+                        'Фамилия',
+                        'Имя',
+                        'Отчество',
+                        'Дата Рождения',
+                        'Регион',
+                        'Район',
+                        'Город/село',
+                        'Улица, дом',
+                        'Телефон',
+                    ];
+                }
+
+                const item = arrayFindFirst(this.personState.persons, parseInt(row.cells[this.tableIdIndex].data, 10));
+                return [
+                    i,
+                    item.lastname,
+                    item.firstname,
+                    item.middlename,
+                    this.resolvedDate(item.date_of_birth),
+                    this.resolvedRegion(item.address),
+                    this.resolvedArea(item.address),
+                    this.resolvedCity(item.address),
+                    this.resolvedStreetHouse(item.address),
+                    this.resolvedPhones(item.phones),
+                ];
             });
+
+            debugger;
 
             axios.post(`${baseUrlAPI}export/excel`, { data }).then((response) => {
                 window.open(`${baseUrl}${response.data}`);
-            });
-        }
-
-        /**
-         * Обработка данных
-         */
-        private get resolvedPersons() {
-            return this.personState.persons.map((person) => {
-                return {
-                    lastname: person.lastname,
-                    firstname: person.firstname,
-                    middlename: person.middlename,
-                    date_of_birth: this.resolvedDate(person.date_of_birth),
-                    region: this.resolvedRegion(person.address),
-                    area: this.resolvedArea(person.address),
-                    city: this.resolvedCity(person.address),
-                    house: this.resolvedStreetHouse(person.address),
-                    phone: this.resolvedPhones(person.phones),
-                    id: person.id,
-                };
             });
         }
 

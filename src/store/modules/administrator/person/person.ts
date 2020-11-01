@@ -141,7 +141,7 @@ export const actions: ActionTree<PersonState, RootState> = {
             const res = await axios.post(`${baseUrlAPI}person/upload`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
-            state.person.photo = `${baseUrl}${res.data.filename}`;
+            state.person.photo = res.data.filename;
             SuccessNotifier.notify('Загрузка завершена', `Изображение "${payload.file.name}" загружено на сервер`);
         } catch {
             ErrorNotifier.notify();

@@ -28,17 +28,17 @@
             <!-- Actions -->
             <template v-slot:column-8="{ props }">
                 <b-button v-b-modal.singleContractorModal @click="contractorSetSingle(props.cellData)" variant="info">
-                    Изменить
+                    <i class="fa fa-pencil"></i>
                 </b-button>
                 <button class="btn btn-danger" data-toggle="modal" data-target="#sureModal" @click="setSureModalContent(props.cellData)">
-                    Удалить
+                    <i class="fa fa-trash"></i>
                 </button>
             </template>
 
             <!-- Action: Modules -->
             <template v-slot:column-9="{ props }">
                 <b-button v-b-modal.contractorModules @click="contractorSetSingle(props.cellData)" variant="info">
-                    Доступные модули
+                    модули
                 </b-button>
             </template>
 

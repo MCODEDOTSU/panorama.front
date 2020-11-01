@@ -289,15 +289,12 @@ header {
 
         &.person-photo {
             width: 24px;
-            height: 32px;
-            padding: 4px 0;
+            height: 24px;
+            margin: 3px;
             line-height: 1;
-
-            img {
-                @include border-radius(50%);
-                max-width: 24px;
-                height: auto;
-            }
+            @include border-radius(50%);
+            background-size: cover;
+            border: 1px solid $white;
         }
 
         &.person-logout {
@@ -805,6 +802,19 @@ header {
         @include border-radius(3px);
         @include box-sizing(border-box);
 
+        .btn {
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+            margin: 0;
+            padding: 0 0 6px 6px;
+
+            &:hover {
+                background: none;
+                opacity: 0.8;
+            }
+        }
+
         img {
             width: 100%;
             height: auto;
@@ -903,6 +913,20 @@ header {
                 display: inline-block;
                 padding: 10px;
             }
+        }
+    }
+
+    .btn {
+        max-width: 100%;
+        height: auto;
+        background: none;
+        border: none;
+        margin: 0;
+        padding: 0;
+
+        &:hover {
+            background: none;
+            opacity: 0.8;
         }
     }
 
@@ -1169,8 +1193,46 @@ header {
         line-height: 1.2;
         .table-cell-content {
             white-space: normal !important;
-            padding: 4px 0;
+            padding: 2px 0;
         }
+    }
+    .btn {
+        padding: 4px;
+        text-align: center;
+        min-width: 24px;
+        height: 24px;
+        @include box-sizing(border-box);
+        i {
+            margin: 0;
+        }
+    }
+}
+
+.table-dynamic-filter {
+    margin: 24px 0;
+
+    > div {
+        padding: 16px 16px 8px;
+        border: 1px solid $gray-200;
+    }
+
+    .title {
+        font-size: 14px;
+        color: $gray-600;
+
+        .btn {
+            font-size: 14px;
+            vertical-align: initial;
+            margin: 0 0 0 16px;
+        }
+    }
+
+    .form-control {
+        font-size: 12px;
+        padding: 4px;
+    }
+    .actions {
+        margin: -16px 0 0;
     }
 }
 
