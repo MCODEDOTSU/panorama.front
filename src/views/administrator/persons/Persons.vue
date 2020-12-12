@@ -3,10 +3,10 @@
 
         <h1>Справочник физических лиц</h1>
 
-        <b-button v-b-modal.singlePersonModal @click="administratorPersonUnsetSingle" variant="success">
+        <button @click="createPerson" class="btn btn-success">
             <i class="fa fa-user-plus"></i>
             Добавить
-        </b-button>
+        </button>
 
         <button @click="excelExport" class="btn btn-info">
             <i class="fa fa-floppy-o"></i>
@@ -18,6 +18,9 @@
             <label class="title">Расширенный поиск:
                 <button v-if="filterShow" class="btn btn-link" @click="toggleFilterShow()">[свернуть]</button>
                 <button v-else class="btn btn-link" @click="toggleFilterShow()">[развернуть]</button>
+            </label>
+            <label class="title info">
+                Всего записей: <b>{{ persons.length }}</b>
             </label>
             <div v-show="filterShow">
                 <div class="row">
@@ -126,27 +129,32 @@
         <!-- конец Фильтр -->
 
         <!-- Список физических лиц -->
-        <vue-table-dynamic
-                :params="params"
-                v-on:cell-click="onClickRow"
-                v-on:cell-dblclick="showSinglePersonModal"
-                ref="personsTable"
-        >
+        <div class="table-scroll persons" v-bind:class="{full: !filterShow}">
+            <vue-table-dynamic
+                    :params="params"
+                    v-on:cell-click="onClickCell"
+                    v-on:cell-dblclick="onDblclickCell"
+                    ref="personsTable"
+            >
+                <!-- Фамилия и статус -->
+                <template class="actions" v-slot:column-0="{ props }">
+                    <span v-html="props.cellData"></span>
+                </template>
 
-            <!-- Actions -->
-            <template class="actions" v-slot:column-9="{ props }">
-                <b-button v-b-modal.singlePersonModal @click="personSetSingle(props.cellData)" variant="info">
-                    <i class="fa fa-pencil"></i>
-                </b-button>
-                <button class="btn btn-danger" data-toggle="modal" data-target="#sureModal" @click="setSureModalContent(props.cellData)">
-                    <i class="fa fa-trash"></i>
-                </button>
-            </template>
+                <!-- Actions -->
+                <template class="actions" v-slot:column-9="{ props }">
+                    <button class="btn btn-default" @click="editPerson(props.cellData)">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                    <button class="btn btn-default" data-toggle="modal" data-target="#sureModal" @click="setSureModalContent(props.cellData)">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </template>
 
-        </vue-table-dynamic>
+            </vue-table-dynamic>
+        </div>
+
         <!-- конец Список физических лиц -->
-
-        <single-person></single-person>
 
         <sure-modal></sure-modal>
 
@@ -161,12 +169,11 @@
     import axios from 'axios';
     import {baseUrl, baseUrlAPI} from '@/globals';
     import PersonState from '@/store/modules/administrator/person/types';
-    import SinglePerson from '@/views/administrator/persons/SinglePerson.vue';
     import SureModal from '@/components/common/SureModal.vue';
     import Vuetable from 'vuetable-2';
 
     @Component({
-        components: {SinglePerson, SureModal, Vuetable },
+        components: {SureModal, Vuetable },
     })
     export default class Persons extends Vue {
 
@@ -183,17 +190,18 @@
             header: 'row',
             sort: [0, 1, 2, 3, 4, 5, 6, 7],
             pagination: true,
-            pageSize: 50,
+            pageSize: 100,
             pageSizes: [],
             columnWidth: [
-                {column: 9, width: 64}
+                {column: 3, width: 100},
+                {column: 8, width: 64},
+                {column: 9, width: 64},
             ],
+            selectedRow: 0,
         };
-        @Provide() private tableIdIndex = 9;
-        @Provide() private selectedRow = 0;
-
+        @Provide() public tableIdIndex = 9;
+        @Provide() public selectedRow = 0;
         @Provide() public persons = [];
-
         @Provide() public filter = {
             lastname: '',
             firstname: '',
@@ -208,19 +216,44 @@
         };
         @Provide() public filterShow: boolean = true;
 
-        @Watch('personState.persons', {deep: true})
-        public onPersonState() {
-            this.personFilter();
-        }
-
         @Watch('filter', {deep: true})
-        public onPersonState() {
+        public onFilterChange() {
             this.personFilter();
             localStorage.setItem('persons.filter', JSON.stringify(this.filter));
         }
 
         @Watch('persons', {deep: true})
         public onPersons() {
+            this.initTable();
+        }
+
+        @Watch('selectedRow')
+        public onSelectedRow() {
+            const params = { ...this.params };
+            params.selectedRow = this.selectedRow;
+            this.params = { ...params };
+        }
+
+        /**
+         * Создание компонента
+         */
+        public async created() {
+            if (this.personState.persons.length === 0) {
+                await this.administratorPersonGetAll();
+            }
+            // Состояние фильтра
+            this.filterState();
+            // Инициализация списка
+            this.personFilter();
+            // Инициализация
+            this.initTable();
+        }
+
+        /**
+         * Инициализация таблицы
+         */
+        public initTable() {
+            // Иниицализация таблицы
             this.params.data = [ [
                 'Фамилия',
                 'Имя',
@@ -231,11 +264,11 @@
                 'Город/село',
                 'Улица',
                 'Дом',
-                ''
+                '',
             ] ];
             this.persons.forEach((item, i) => {
                 this.params.data.push([
-                    item.lastname,
+                    item.lastname + (item.status === 'vip' ? ' <i class="fas fa-crown"></i>' : ''),
                     item.firstname,
                     item.middlename,
                     this.resolvedDate(item.date_of_birth),
@@ -247,19 +280,6 @@
                     item.id.toString(),
                 ]);
             });
-        }
-
-        @Watch('selectedRow')
-        public onSelectedRow() {
-            const params = { ...this.params };
-            params.selectedRow = this.selectedRow;
-            this.params = { ...params };
-        }
-
-        public async created() {
-            this.administratorPersonGetAll();
-            // Состояние фильтра
-            this.filterState();
         }
 
         /**
@@ -319,43 +339,19 @@
         }
 
         /**
-         * Обработка клика по таблице
+         * Создать новое Физическое лицо
          */
-        public onClickRow(rowIndex, columnIndex, data) {
-            if (this.selectedRow === rowIndex) {
-                this.showSinglePersonModal(rowIndex, columnIndex, data);
-            }
-            this.selectedRow = rowIndex;
+        public createPerson() {
+            this.administratorPersonUnsetSingle();
+            this.$router.push('/administrator/person/0');
         }
 
         /**
-         * Выбрать физическое лицо для изменения
+         * Изменить Физическое лицо
          * @param personId
          */
-        public personSetSingle(personId: any) {
-            const person = arrayFindFirst(this.personState.persons, parseInt(personId, 10));
-            this.administratorPersonSetSingle(person);
-        }
-
-        /**
-         * Окно изменения физического лица
-         */
-        public showSinglePersonModal(rowIndex, columnIndex, data) {
-
-            if (columnIndex === this.tableIdIndex) {
-                return;
-            }
-
-            const personsTable: HTMLElement = this.$refs.personsTable as HTMLElement;
-            if (!personsTable) {
-                return;
-            }
-
-            // @ts-ignore
-            const id = personsTable.tableData.rows[rowIndex].cells[this.tableIdIndex].data;
-            this.personSetSingle(id);
-            // @ts-ignore
-            this.$bvModal.show('singlePersonModal');
+        public editPerson(personId: any) {
+            this.$router.push(`/administrator/person/${personId}`);
         }
 
         /**
@@ -407,6 +403,7 @@
                         'Город/село',
                         'Улица',
                         'Дом',
+                        'Квартира',
                         'Телефон',
                     ];
                 }
@@ -423,6 +420,7 @@
                     this.resolvedCity(item.address),
                     this.resolvedStreet(item.address),
                     this.resolvedBuild(item.address),
+                    this.resolvedFlat(item.address),
                     this.resolvedPhones(item.phones),
                 ];
             });
@@ -430,6 +428,32 @@
             axios.post(`${baseUrlAPI}export/excel`, { data }).then((response) => {
                 window.open(`${baseUrl}${response.data}`);
             });
+        }
+
+        /**
+         * Двойной клик по ячейке
+         */
+        public onDblclickCell(rowIndex, columnIndex, data) {
+            if (columnIndex === this.tableIdIndex) {
+                return;
+            }
+            const personsTable: HTMLElement = this.$refs.personsTable as HTMLElement;
+            if (!personsTable) {
+                return;
+            }
+            // @ts-ignore
+            const id = personsTable.tableData.rows[rowIndex].cells[this.tableIdIndex].data;
+            this.editPerson(id);
+        }
+
+        /**
+         * Клик по ячейке
+         */
+        public onClickCell(rowIndex, columnIndex, data) {
+            if (this.selectedRow === rowIndex) {
+                this.onDblclickCell(rowIndex, columnIndex, data);
+            }
+            this.selectedRow = rowIndex;
         }
 
         /**
@@ -487,7 +511,7 @@
         }
 
         /**
-         * Обработка улицы и дома
+         * Обработка улицы
          * @param address
          */
         public resolvedStreet(address) {
@@ -496,12 +520,21 @@
         }
 
         /**
-         * Обработка улицы и дома
+         * Обработка дома
          * @param address
          */
         public resolvedBuild(address) {
             return address !== null && address.house !== null ?
                 (`${address.house} ${address.house_type}`) : '';
+        }
+
+        /**
+         * Обработка квартиры
+         * @param address
+         */
+        public resolvedFlat(address) {
+            return address !== null && address.flat !== null ?
+                (`${address.flat} ${address.flat_type}`) : '';
         }
 
     }

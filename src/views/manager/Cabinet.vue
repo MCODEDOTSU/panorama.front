@@ -3,11 +3,11 @@
 
         <h1>Профиль пользователя</h1>
 
-        <div class="content">
+        <div class="content" v-if="userState.user.person">
 
             <div class="row">
                 <div class="col-2">
-                    <b-button v-if="userState.user.person.photo !== ''" v-b-modal.imageModal>
+                    <b-button v-if="userState.user.person.photo" v-b-modal.imageModal>
                         <img :src="photoThumbnailSrc" class="photo"/>
                     </b-button>
                 </div>
@@ -78,20 +78,15 @@
                 </div>
             </div>
 
-            <div class="row cabinet-actions">
-                <div class="col-12">
-                    <router-link class="nav-link btn btn-primary" to="/manager/gis" tag="button">
-                        Перейти к редактору карты
-                    </router-link>
-                    <button @click="logout" title="Выйти из Системы" class="btn btn btn-warning">
-                        Выйти из системы
-                    </button>
-                </div>
-            </div>
+            <image-modal v-model="photoSrc"></image-modal>
 
         </div>
 
-        <image-modal v-model="photoSrc"></image-modal>
+        <div class="content" v-else>
+            <div class="alert alert-info">
+                Для пользователя не задано Физическое Лицо
+            </div>
+        </div>
 
     </div>
 </template>

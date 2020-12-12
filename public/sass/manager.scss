@@ -87,6 +87,9 @@ button, .btn {
     i {
         margin: 0 8px 0 0;
     }
+    &.btn-back {
+        margin: 0 20px 0 0;
+    }
 }
 
 .actions {
@@ -342,7 +345,7 @@ header {
                 padding: 8px;
 
                 &:hover {
-                    background: $first-hover;
+                    background: $second;
                 }
 
                 &.parent {
@@ -354,6 +357,10 @@ header {
                             background: $second;
                         }
                     }
+                }
+
+                &.router-link-active {
+                    background: $second;
                 }
 
             }
@@ -373,13 +380,14 @@ header {
 
                 a {
                     padding: 8px 8px 8px 32px;
-
-                    &.router-link-active {
-                        font-weight: 700;
-                    }
                 }
             }
         }
+    }
+
+    hr {
+        background: $white;
+        margin: 0;
     }
 
     &.full {
@@ -402,13 +410,31 @@ header {
         padding: 0 0 0 160px;
     }
 
+    .content-header {
+        margin: 0 0 20px;
+
+        h1 {
+            max-width: 100%;
+            font-weight: 400;
+        }
+
+        .accent {
+            color: $second;
+        }
+    }
+
+    .content-footer {
+        margin: 20px 0;
+        text-align: right;
+    }
+
     h1 {
-        margin: 0;
         text-align: left;
         font-size: 24px;
         display: inline-block;
-        vertical-align: top;
         max-width: 50%;
+        line-height: 1;
+        vertical-align: middle;
     }
 
     h2 {
@@ -536,6 +562,10 @@ header {
             margin-bottom: 8px;
         }
 
+    }
+
+    .card-body {
+        font-size: 16px;
     }
 
     .step {
@@ -786,8 +816,8 @@ header {
     &.file-upload {
         display: inline-block;
         vertical-align: top;
-        width: 140px;
-        height: 140px;
+        width: 160px;
+        height: 160px;
         margin-right: -145px;
         position: relative;
         z-index: 1;
@@ -795,6 +825,12 @@ header {
         padding: 3px;
         @include border-radius(3px);
         @include box-sizing(border-box);
+
+        .image {
+            width: 152px;
+            height: 152px;
+            background-size: cover;
+        }
 
         .btn {
             width: 100%;
@@ -848,32 +884,6 @@ header {
         text-align: right;
     }
 
-}
-
-.modal-body {
-    font-size: 12px;
-
-    label {
-        margin: 0 0 4px;
-    }
-
-    input {
-        font-size: 14px;
-        height: auto;
-        padding: 4px 8px;
-    }
-
-    textarea {
-        font-size: 14px;
-        height: auto;
-        padding: 4px 8px;
-    }
-
-    select {
-        font-size: 14px;
-        height: auto;
-        padding: 4px 8px;
-    }
 }
 
 .modal-dialog-user {
@@ -1115,7 +1125,10 @@ header {
     tfoot {
         tr {
             td {
-                padding: 4px 8px;
+                padding: 20px 8px 0;
+                &:first-child {
+                    padding: 20px 8px 0 0;
+                }
             }
         }
     }
@@ -1161,10 +1174,16 @@ header {
             width: 180px;
             font-weight: 700;
         }
+
+        .cell-author {
+            width: 300px;
+            font-weight: 100;
+        }
     }
 
     .cell-action {
         width: 40px;
+
         button {
             width: 24px;
             height: 24px;
@@ -1175,6 +1194,30 @@ header {
             -webkit-border-radius: 50% !important;
             -moz-border-radius: 50% !important;
             border-radius: 50% !important;
+            text-align: center;
+            border: none;
+            background: none;
+
+            i {
+                font-size: 10px !important;
+                margin: 0;
+                padding: 0;
+            }
+        }
+    }
+
+    &.model {
+        margin-top: 16px;
+        .cell-action {
+            button {
+                background: $green;
+                &:hover {
+                    background: $green-hover;
+                }
+            }
+        }
+        .cell-value {
+            padding: 4px 8px 4px 0;
         }
     }
 }
@@ -1195,9 +1238,15 @@ header {
         text-align: center;
         min-width: 24px;
         height: 24px;
+        background: none;
+        border: none;
         @include box-sizing(border-box);
         i {
             margin: 0;
+        }
+        &:hover {
+            background: none;
+            border: none;
         }
     }
 }
@@ -1213,6 +1262,12 @@ header {
     .title {
         font-size: 14px;
         color: $gray-600;
+        display: inline-block;
+        width: 50%;
+        vertical-align: middle;
+        &.info {
+            text-align: right;
+        }
 
         .btn {
             font-size: 14px;
@@ -1241,5 +1296,43 @@ header {
         &:last-child {
             border-right: 1px solid #dee2e6;
         }
+    }
+}
+
+.mx-datepicker {
+    width: 100%;
+}
+
+#imageModal {
+    .modal-content {
+        border: none;
+    }
+    header {
+        padding: 0;
+        border: none;
+    }
+    footer {
+        display: none;
+    }
+    .modal-body {
+        padding: 0;
+        .container {
+            padding: 0;
+            @include border-radius(3px);
+            overflow: hidden;
+        }
+    }
+    .close {
+        position: absolute;
+        top: -16px;
+        right: -16px;
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        font-size: 25px;
+        line-height: 1;
+        color: $white;
+        text-shadow: none;
+        font-weight: 100;
     }
 }

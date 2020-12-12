@@ -6,6 +6,7 @@
                     <i class="fa fa-desktop"></i>
                     <label>Рабочий стол</label>
                 </router-link>
+                <hr>
             </li>
             <li>
                 <router-link to="/administrator/persons" tag="a" v-if="userState.role === 'superadmin'">
@@ -18,10 +19,11 @@
                     <i class="fa fa-building"></i>
                     <label>Контрагенты</label>
                 </router-link>
+                <hr>
                 <ul class="sub-menu">
                     <li>
                         <router-link to="/administrator/contractors/tos" tag="a" v-if="userState.role === 'superadmin'">
-                            <label>ТОСы</label>
+                            <label>ТОС</label>
                         </router-link>
                     </li>
                     <li>
@@ -30,6 +32,7 @@
                         </router-link>
                     </li>
                 </ul>
+                <hr>
             </li>
             <li>
                 <router-link to="/manager/gis" tag="a">

@@ -19,6 +19,7 @@ export const state: ContractorState = {
             id: 0,
             unrestricted_value: '',
         },
+        addresses: [],
         logo: '',
         parent_id: 0,
     },
@@ -56,7 +57,6 @@ export const actions: ActionTree<ContractorState, RootState> = {
      */
     async administratorContractorUpdate() {
         try {
-            console.log(state.contractor);
             if (state.contractor.id !== 0) {
                 const res = await axios.put(`${baseUrlAPI}contractor`, state.contractor);
                 SuccessNotifier.notify('Данные сохранены', `Контрагент "${state.contractor.name}" изменен`);
@@ -110,6 +110,7 @@ export const actions: ActionTree<ContractorState, RootState> = {
                 id: 0,
                 unrestricted_value: '',
             },
+            addresses: [],
             logo: '',
         };
     },

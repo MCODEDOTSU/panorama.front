@@ -1,5 +1,8 @@
 <template>
     <b-modal id="imageModal" centered>
+        <div slot="modal-header">
+            <button @click="$bvModal.hide('imageModal')" type="button" aria-label="Close" class="close">×</button>
+        </div>
         <b-container>
            <div>
                <b-img :src="value" fluid></b-img>

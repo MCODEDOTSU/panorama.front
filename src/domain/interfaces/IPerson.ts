@@ -18,4 +18,5 @@ export default interface IPerson {
     passport_issued_when?: string;
     passport_department_number?: string;
     own?: string;
+    status?: string;
 }

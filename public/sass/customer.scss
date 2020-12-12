@@ -13,26 +13,56 @@ body, html {
     line-height: 1.5;
 }
 
+.btn-success {
+    background: $green !important;
+
+    &:hover {
+        background: $green-hover !important;
+    }
+}
+
+.form-check {
+    .form-check-input {
+        width: 24px;
+        height: 24px;
+        margin-top: 6px;
+    }
+
+    .form-check-label {
+        margin: 6px 0 6px 16px;
+    }
+
+    i {
+        margin: 0 8px;
+        color: $second;
+    }
+}
+
 body {
     a {
         color: $first;
         text-decoration: none;
         @include transition(all 0.2s ease-out);
+
         &:focus, &:hover {
             text-decoration: none;
         }
     }
+
     ul,
     ol {
         list-style: none;
     }
-    button, .btn {
+
+    button, .btn, input[type="button"] {
         @include transition(all 0.2s ease-out);
     }
-    button:active, button:focus {
+
+    button:active, button:focus, input[type="button"]:active, input[type="button"]:focus {
         outline: none;
     }
-    button::-moz-focus-inner {
+
+    button::-moz-focus-inner, input[type="button"]::-moz-focus-inner {
         border: 0;
     }
 }
@@ -47,18 +77,22 @@ body {
     left: 0;
     width: 100%;
     padding: 0 20px 10px;
+
     p {
         margin: 0;
         text-align: left;
         font-size: 16px;
         color: $first;
         line-height: 1.5;
+
         &.pink {
             color: $second;
         }
     }
+
     a {
         color: $first;
+
         &:hover {
             opacity: 0.75;
         }
@@ -68,15 +102,19 @@ body {
 #app {
     height: 100vh;
     width: 100%;
+
     > div {
         height: 100vh;
         width: 100%;
         overflow: auto;
     }
+
     .notifications {
         padding-top: 5px;
+
         .notification-wrapper {
             overflow: inherit;
+
             .vue-notification {
                 background: $light-green;
                 border-left: 5px solid $green;
@@ -89,12 +127,14 @@ body {
 
 .home {
     background: $white;
+
     .main {
         position: absolute;
         top: 50%;
         left: 50%;
         margin: -175px 0 0 -250px;
         animation: animation-opacity 3s ease-out 0s 1;
+
         .logo {
             display: block;
             width: 300px;
@@ -103,9 +143,11 @@ body {
             background-size: cover;
             margin: 0 auto;
         }
+
         .form-group {
             margin: 52px 0 0;
         }
+
         input {
             display: inline-block;
             vertical-align: middle;
@@ -113,6 +155,7 @@ body {
             width: 190px;
             margin: 0 10px 0 0;
         }
+
         button, .btn {
             display: inline-block;
             vertical-align: middle;
@@ -146,11 +189,14 @@ body {
         margin: 0 auto;
         text-align: center;
     }
+
     .content {
         padding: 20px 0;
     }
+
     .grid-data {
         margin: 40px 0 0;
+
         .row-header, .row-footer {
             .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {
                 padding: 20px 10px;
@@ -159,21 +205,25 @@ body {
                 background: $gray-100;
                 border: 1px solid $gray-200;
                 border-right: none;
+
                 &:last-child {
                     border-right: 1px solid $gray-200;
                 }
             }
         }
+
         .row-body {
             .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {
                 padding: 10px;
                 border: 1px solid $gray-200;
                 border-right: none;
                 border-bottom: none;
+
                 &:last-child {
                     border-right: 1px solid $gray-200;
                 }
             }
+
             &:hover {
                 .actions {
                     opacity: 1;
@@ -181,18 +231,22 @@ body {
                 }
             }
         }
+
         label {
             display: block;
             line-height: 1;
             font-size: 12px;
+
             &.title {
                 font-size: 14px;
                 margin: 0 0 20px 0;
             }
+
             &.description {
                 font-style: italic;
             }
         }
+
         p {
             margin-bottom: 8px;
         }
@@ -284,6 +338,7 @@ body {
         width: 50%;
         margin: 0 -4px 20px 0;
     }
+
     .checkbox-awesome {
         width: 64px;
         height: 32px;
@@ -295,6 +350,7 @@ body {
         cursor: pointer;
         @include box-shadow(inset 2px 2px 10px 0px rgba(0, 0, 0, 0.1));
         @include transition(background 0.2s ease-out);
+
         &:after {
             content: "";
             width: 28px;
@@ -306,17 +362,21 @@ body {
             @include transition(left 0.2s ease-out);
             @include box-shadow(2px 2px 4px 0px rgba(0, 0, 0, 0.1));
         }
+
         &:hover {
             background: $gray-200;
         }
     }
+
     .checked {
         .checkbox-awesome {
             background: $green;
+
             &:after {
                 left: auto;
                 right: 2px;
             }
+
             &:hover {
                 background: $light-green;
             }
@@ -329,6 +389,7 @@ body {
         &.ql-toolbar {
             padding: 0 !important;
             border: 1px solid $gray-400 !important;
+
             .ql-formats {
                 margin: 0 !important;
             }
@@ -352,9 +413,11 @@ body {
                 }
             }
         }
+
         &.ql-container {
             border: 1px solid $gray-400 !important;
         }
+
         .ql-color-picker {
             .ql-picker-label {
                 svg {
@@ -364,6 +427,7 @@ body {
                     right: auto !important;
                 }
             }
+
             &.ql-expanded {
                 .ql-picker-options {
                     right: 0 !important;
@@ -371,6 +435,7 @@ body {
             }
         }
     }
+
     .ql-editor {
         font-size: 14px;
         padding: 8px;
@@ -435,6 +500,22 @@ body {
     }
 }
 
+.table-scroll {
+    .v-table-body {
+        overflow-y: auto;
+    }
+    &.persons {
+        .v-table-body {
+            max-height: calc(100vh - 415px);
+        }
+        &.full {
+            .v-table-body {
+                max-height: calc(100vh - 290px);
+            }
+        }
+    }
+}
+
 .v-table-dynamic {
     margin: 16px 0;
 
@@ -478,4 +559,26 @@ body {
             }
         }
     }
+
+    .fas {
+        margin: 0 0 0 4px;
+        color: $second;
+    }
+
+    .v-table-header-wrap {
+        & > .v-table-row {
+            background: $first;
+            color: $white;
+
+            &.is-hovering {
+                background: $first;
+                color: $white;
+            }
+        }
+    }
+}
+
+.col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12, .col, .col-auto, .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm, .col-sm-auto, .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12, .col-md, .col-md-auto, .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg, .col-lg-auto, .col-xl-1, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl, .col-xl-auto {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
 }

@@ -27,24 +27,24 @@
 
             <!-- Actions -->
             <template v-slot:column-8="{ props }">
-                <b-button v-b-modal.singleContractorModal @click="contractorSetSingle(props.cellData)" variant="info">
+                <b-button v-b-modal.singleContractorModal @click="contractorSetSingle(props.cellData)" variant="default">
                     <i class="fa fa-pencil"></i>
                 </b-button>
-                <button class="btn btn-danger" data-toggle="modal" data-target="#sureModal" @click="setSureModalContent(props.cellData)">
+                <button class="btn btn-default" data-toggle="modal" data-target="#sureModal" @click="setSureModalContent(props.cellData)">
                     <i class="fa fa-trash"></i>
                 </button>
             </template>
 
             <!-- Action: Modules -->
             <template v-slot:column-9="{ props }">
-                <b-button v-b-modal.contractorModules @click="contractorSetSingle(props.cellData)" variant="info">
+                <b-button v-b-modal.contractorModules @click="contractorSetSingle(props.cellData)" variant="default">
                     модули
                 </b-button>
             </template>
 
             <!-- Action: Users -->
             <template v-slot:column-10="{ props }">
-                <b-button @click="getContractorUsers(props.cellData)" variant="info">
+                <b-button @click="getContractorUsers(props.cellData)" variant="default">
                     Пользователи
                 </b-button>
             </template>

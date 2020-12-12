@@ -27,10 +27,10 @@
 
             <!-- Actions -->
             <template v-slot:column-8="{ props }">
-                <b-button v-b-modal.singleContractorTosModal @click="contractorTosSetSingle(props.cellData)" variant="info">
+                <b-button v-b-modal.singleContractorTosModal @click="contractorTosSetSingle(props.cellData)" variant="default">
                     Изменить
                 </b-button>
-                <button class="btn btn-danger" data-toggle="modal" data-target="#sureModal" @click="setSureModalContent(props.cellData)">
+                <button class="btn btn-default" data-toggle="modal" data-target="#sureModal" @click="setSureModalContent(props.cellData)">
                     Удалить
                 </button>
             </template>

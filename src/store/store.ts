@@ -29,6 +29,8 @@ import {leftMenu} from '@/store/modules/components/common/leftMenu/leftMenu';
 
 import {map} from '@/store/modules/components/utils/map/map';
 import {fileuploader} from '@/store/modules/components/utils/fileuploader/fileuploader';
+import {notes} from '@/store/modules/components/utils/notes/notes';
+import {phones} from '@/store/modules/components/utils/phones/phones';
 
 // Constructor
 import {directoryForConstructor} from '@/store/modules/administrator/constructor/directory/directory';
@@ -69,6 +71,8 @@ export default new Vuex.Store<RootState>({
         map,
         fileuploader,
         leftMenu,
+        notes,
+        phones,
 
         // constructor
         directoryForConstructor,
