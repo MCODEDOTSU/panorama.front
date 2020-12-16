@@ -13,14 +13,6 @@ body, html {
     line-height: 1.5;
 }
 
-.btn-success {
-    background: $green !important;
-
-    &:hover {
-        background: $green-hover !important;
-    }
-}
-
 .form-check {
     .form-check-input {
         width: 24px;
@@ -506,18 +498,19 @@ body {
     }
     &.persons {
         .v-table-body {
-            max-height: calc(100vh - 415px);
+            max-height: calc(100vh - 385px);
         }
         &.full {
             .v-table-body {
-                max-height: calc(100vh - 290px);
+                max-height: calc(100vh - 250px);
             }
         }
     }
 }
 
 .v-table-dynamic {
-    margin: 16px 0;
+    margin: 0;
+    padding: 0 !important;
 
     .v-table-tools {
         margin: 0 0 8px;

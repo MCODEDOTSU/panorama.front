@@ -17,7 +17,7 @@ export const state: ContractorTosState = {
             full_name: '',
         },
     },
-    contractorToses: [],
+    contractorsTos: [],
 };
 
 export const actions: ActionTree<ContractorTosState, RootState> = {
@@ -25,7 +25,16 @@ export const actions: ActionTree<ContractorTosState, RootState> = {
     async administratorContractorTosGetAll() {
         try {
             const res = await axios.get(`${baseUrlAPI}tos`);
-            state.contractorToses = res.data;
+            state.contractorsTos = res.data;
+        } catch {
+            ErrorNotifier.notify();
+        }
+    },
+
+    async administratorContractorTosGetById({}, payload) {
+        try {
+            const res = await axios.get(`${baseUrlAPI}tos/${payload.id}`);
+            state.contractorTos = Object.assign({}, res.data);
         } catch {
             ErrorNotifier.notify();
         }
@@ -36,12 +45,32 @@ export const actions: ActionTree<ContractorTosState, RootState> = {
             if (state.contractorTos.id !== 0) {
                 const res = await axios.put(`${baseUrlAPI}tos/${state.contractorTos.id}`, state.contractorTos);
                 SuccessNotifier.notify('Данные сохранены', `ТОС изменён`);
-                state.contractorToses = editUpdatedItem(state.contractorToses, res.data);
+                state.contractorsTos = editUpdatedItem(state.contractorsTos, res.data);
             } else {
                 const res = await axios.post(`${baseUrlAPI}tos`, state.contractorTos);
                 SuccessNotifier.notify('Данные сохранены', `Создан новый ТОС`);
-                state.contractorToses.push(res.data);
+                state.contractorsTos.push(res.data);
             }
+        } catch {
+            ErrorNotifier.notify();
+        }
+    },
+
+    async administratorContractorTosAddAddress({}, payload) {
+        try {
+            const res = await axios.post(`${baseUrlAPI}tos/address/${state.contractorTos.id}`, { address: payload.address} );
+            state.contractorTos.addresses.push(res.data);
+            SuccessNotifier.notify('Адрес добавлен', `Адрес добавлен в список адресов ТОС`);
+        } catch {
+            ErrorNotifier.notify();
+        }
+    },
+
+    async administratorContractorTosDeleteAddress({}, payload) {
+        try {
+            const res = await axios.delete(`${baseUrlAPI}tos/address/${state.contractorTos.id}/${payload.address.id}`);
+            state.contractorTos.addresses = removeDeletedItem(state.contractorTos.addresses, payload.address);
+            SuccessNotifier.notify('Адрес удален', `Адрес удален из списка адресов ТОС`);
         } catch {
             ErrorNotifier.notify();
         }
@@ -52,7 +81,7 @@ export const actions: ActionTree<ContractorTosState, RootState> = {
             if (state.contractorTos.id !== 0) {
                 const res = await axios.delete(`${baseUrlAPI}tos/${state.contractorTos.id}`);
                 SuccessNotifier.notify('Данные удалены', `ТОС удалён`);
-                state.contractorToses = removeDeletedItem(state.contractorToses, state.contractorTos);
+                state.contractorsTos = removeDeletedItem(state.contractorsTos, state.contractorTos);
             }
         } catch {
             ErrorNotifier.notify();

@@ -19,7 +19,6 @@ export const state: ContractorState = {
             id: 0,
             unrestricted_value: '',
         },
-        addresses: [],
         logo: '',
         parent_id: 0,
     },
@@ -110,7 +109,6 @@ export const actions: ActionTree<ContractorState, RootState> = {
                 id: 0,
                 unrestricted_value: '',
             },
-            addresses: [],
             logo: '',
         };
     },

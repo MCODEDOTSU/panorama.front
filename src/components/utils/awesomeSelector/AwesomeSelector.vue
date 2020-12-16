@@ -11,8 +11,7 @@
             <a class="btn btn-link btn-danger" @click="clean">Очистить</a>
         </div>
 
-        <b-modal id="awesomeSelectorList" size="l"
-                 :title="`Выбрать ${title}`">
+        <b-modal id="awesomeSelectorList" size="l" :title="`Выбрать ${title}`">
 
             <b-container>
 
@@ -26,7 +25,7 @@
                     <div class="awesome-selector-items">
 
                         <div class="awesome-selector-item" v-for="item in resolveList">
-                            <a :href="`#${item.id}`" :title="item.title" @click="select(item)">{{ item.title }}</a>
+                            <a href="javascript:void(0);" :title="item.title" @click="select(item)">{{ item.title }}</a>
                         </div>
 
                     </div>

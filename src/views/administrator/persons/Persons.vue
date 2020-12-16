@@ -33,7 +33,7 @@
                                v-model="filter.lastname">
                         </div>
                     </div>
-                    <div class="col-3">
+                    <div class="col-2">
                         <div class="form-group">
                             <input
                                 type="text"
@@ -42,7 +42,7 @@
                                v-model="filter.firstname">
                         </div>
                     </div>
-                    <div class="col-3">
+                    <div class="col-2">
                         <div class="form-group">
                             <input
                                 type="text"
@@ -51,13 +51,23 @@
                                v-model="filter.middlename">
                         </div>
                     </div>
-                    <div class="col-3">
+                    <div class="col-2">
                         <div class="form-group">
                             <input
                                 type="text"
-                               class="form-control"
-                               placeholder="Дата рождения"
-                               v-model="filter.date_of_birth">
+                                class="form-control"
+                                placeholder="Дата рождения"
+                                v-model="filter.date_of_birth">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <select class="form-control" v-model="filter.tos">
+                                <option value="">Все</option>
+                                <option :value="tos" v-for="(tos, i) in contractorTosState.contractorsTos">
+                                    {{ tos.full_contractor.name }}
+                                </option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -131,10 +141,10 @@
         <!-- Список физических лиц -->
         <div class="table-scroll persons" v-bind:class="{full: !filterShow}">
             <vue-table-dynamic
-                    :params="params"
-                    v-on:cell-click="onClickCell"
-                    v-on:cell-dblclick="onDblclickCell"
-                    ref="personsTable"
+                :params="params"
+                v-on:cell-click="onClickCell"
+                v-on:cell-dblclick="onDblclickCell"
+                ref="personsTable"
             >
                 <!-- Фамилия и статус -->
                 <template class="actions" v-slot:column-0="{ props }">
@@ -169,11 +179,11 @@
     import axios from 'axios';
     import {baseUrl, baseUrlAPI} from '@/globals';
     import PersonState from '@/store/modules/administrator/person/types';
+    import ContractorTosState from '@/store/modules/administrator/contractorTos/types';
     import SureModal from '@/components/common/SureModal.vue';
-    import Vuetable from 'vuetable-2';
 
     @Component({
-        components: {SureModal, Vuetable },
+        components: {SureModal},
     })
     export default class Persons extends Vue {
 
@@ -182,16 +192,15 @@
         @Action public administratorPersonDelete: any;
         @Action public administratorPersonSetSingle: any;
         @Action public administratorPersonUnsetSingle: any;
+        @Action public administratorContractorTosGetAll: any;
 
         @State('administratorPerson') public personState: PersonState;
+        @State('administratorContractorTos') public contractorTosState: ContractorTosState;
 
         @Provide() public params = {
             data: [],
             header: 'row',
             sort: [0, 1, 2, 3, 4, 5, 6, 7],
-            pagination: true,
-            pageSize: 100,
-            pageSizes: [],
             columnWidth: [
                 {column: 3, width: 100},
                 {column: 8, width: 64},
@@ -213,6 +222,7 @@
             street: '',
             build: '',
             phone: '',
+            tos: '',
         };
         @Provide() public filterShow: boolean = true;
 
@@ -247,6 +257,8 @@
             this.personFilter();
             // Инициализация
             this.initTable();
+            // Список ТОС для фильтра
+            this.administratorContractorTosGetAll();
         }
 
         /**
@@ -286,17 +298,25 @@
          * Фильтрация
          */
         public personFilter() {
+            const filter = { ...this.filter };
             this.persons = this.personState.persons.filter((item) => {
-                return (this.filter.lastname === '' || item.lastname.toLowerCase().indexOf(this.filter.lastname.toLowerCase()) + 1)
-                    && (this.filter.firstname === '' || item.firstname.toLowerCase().indexOf(this.filter.firstname.toLowerCase()) + 1)
-                    && (this.filter.middlename === '' || item.middlename.toLowerCase().indexOf(this.filter.middlename.toLowerCase()) + 1)
-                    && (this.filter.date_of_birth === '' || item.date_of_birth.toLowerCase().indexOf(this.filter.date_of_birth.toLowerCase()) + 1)
-                    && (this.filter.region === '' || this.resolvedRegion(item.address).toLowerCase().indexOf(this.filter.region.toLowerCase()) + 1)
-                    && (this.filter.area === '' || this.resolvedArea(item.address).toLowerCase().indexOf(this.filter.area.toLowerCase()) + 1)
-                    && (this.filter.city === '' || this.resolvedCity(item.address).toLowerCase().indexOf(this.filter.city.toLowerCase()) + 1)
-                    && (this.filter.street === '' || this.resolvedStreet(item.address).toLowerCase().indexOf(this.filter.street.toLowerCase()) + 1)
-                    && (this.filter.build === '' || this.resolvedBuild(item.address).toLowerCase().indexOf(this.filter.build.toLowerCase()) + 1)
-                    && (this.filter.phone === '' || item.phones.toLowerCase().indexOf(this.filter.phone.toLowerCase()) + 1);
+                let hasAddressInTos = true;
+                if (filter.tos !== '' && filter.tos.addresses && filter.tos.addresses.length !== 0) {
+                    hasAddressInTos = item.address && (filter.tos.addresses.filter((address) => {
+                        return address.fias_id === item.address.fias_id;
+                    })).length !== 0;
+                }
+                return (filter.lastname === '' || item.lastname.toLowerCase().indexOf(filter.lastname.toLowerCase()) + 1)
+                    && (filter.firstname === '' || item.firstname.toLowerCase().indexOf(filter.firstname.toLowerCase()) + 1)
+                    && (filter.middlename === '' || item.middlename.toLowerCase().indexOf(filter.middlename.toLowerCase()) + 1)
+                    && (filter.date_of_birth === '' || item.date_of_birth.toLowerCase().indexOf(filter.date_of_birth.toLowerCase()) + 1)
+                    && (filter.region === '' || this.resolvedRegion(item.address).toLowerCase().indexOf(filter.region.toLowerCase()) + 1)
+                    && (filter.area === '' || this.resolvedArea(item.address).toLowerCase().indexOf(filter.area.toLowerCase()) + 1)
+                    && (filter.city === '' || this.resolvedCity(item.address).toLowerCase().indexOf(filter.city.toLowerCase()) + 1)
+                    && (filter.street === '' || this.resolvedStreet(item.address).toLowerCase().indexOf(filter.street.toLowerCase()) + 1)
+                    && (filter.build === '' || this.resolvedBuild(item.address).toLowerCase().indexOf(filter.build.toLowerCase()) + 1)
+                    && (filter.phone === '' || item.phones.toLowerCase().indexOf(filter.phone.toLowerCase()) + 1)
+                    && hasAddressInTos;
             });
         }
 
@@ -315,6 +335,7 @@
                 street: '',
                 build: '',
                 phone: '',
+                tos: '',
             };
         }
 
@@ -339,7 +360,7 @@
         }
 
         /**
-         * Создать новое Физическое лицо
+         * Создать
          */
         public createPerson() {
             this.administratorPersonUnsetSingle();
@@ -347,7 +368,7 @@
         }
 
         /**
-         * Изменить Физическое лицо
+         * Изменить
          * @param personId
          */
         public editPerson(personId: any) {
@@ -525,7 +546,7 @@
          */
         public resolvedBuild(address) {
             return address !== null && address.house !== null ?
-                (`${address.house} ${address.house_type}`) : '';
+                (`${address.house}`) : '';
         }
 
         /**
@@ -534,7 +555,7 @@
          */
         public resolvedFlat(address) {
             return address !== null && address.flat !== null ?
-                (`${address.flat} ${address.flat_type}`) : '';
+                (`${address.flat}`) : '';
         }
 
     }

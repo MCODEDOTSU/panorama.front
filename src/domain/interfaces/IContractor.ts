@@ -9,7 +9,6 @@ export default interface IContractor {
     kpp?: string;
     fias_address_id?: number;
     address?: IFiasAddress;
-    addresses: IFiasAddress[];
     logo?: string;
     modules?: IModule[];
     edited?: boolean;

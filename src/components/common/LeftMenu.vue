@@ -15,23 +15,29 @@
                 </router-link>
             </li>
             <li>
-                <router-link to="/administrator/contractors" tag="a" v-if="userState.role === 'superadmin'" class="parent">
-                    <i class="fa fa-building"></i>
+                <router-link to="/administrator/contractors" tag="a" v-if="userState.role === 'superadmin'">
+                    <i class="fa fa-briefcase"></i>
                     <label>Контрагенты</label>
                 </router-link>
                 <hr>
-                <ul class="sub-menu">
-                    <li>
-                        <router-link to="/administrator/contractors/tos" tag="a" v-if="userState.role === 'superadmin'">
-                            <label>ТОС</label>
-                        </router-link>
-                    </li>
-                    <li>
-                        <router-link to="/administrator/contractors/tszh" tag="a" v-if="userState.role === 'superadmin'">
-                            <label>ТСЖ</label>
-                        </router-link>
-                    </li>
-                </ul>
+            </li>
+            <li>
+                <router-link to="/administrator/mo" tag="a" v-if="userState.role === 'superadmin'">
+                    <i class="fa fa-map-o"></i>
+                    <label>МО</label>
+                </router-link>
+            </li>
+            <li>
+                <router-link to="/administrator/tos" tag="a" v-if="userState.role === 'superadmin'">
+                    <i class="fa fa-cubes"></i>
+                    <label>ТОС</label>
+                </router-link>
+            </li>
+            <li>
+                <router-link to="/administrator/tszh" tag="a" v-if="userState.role === 'superadmin'">
+                    <i class="fa fa-building"></i>
+                    <label>ТСЖ</label>
+                </router-link>
                 <hr>
             </li>
             <li>
@@ -40,18 +46,18 @@
                     <label>Картография</label>
                 </router-link>
             </li>
-            <li>
-                <router-link to="/administrator/modules" tag="a" v-if="userState.role === 'superadmin'">
-                    <i class="fa fa-th"></i>
-                    <label>Модули</label>
-                </router-link>
-            </li>
-            <li>
-                <router-link to="/administrator/layers" tag="a" v-if="userState.role === 'superadmin'">
-                    <i class="fa fa-map-o"></i>
-                    <label>Слои</label>
-                </router-link>
-            </li>
+<!--            <li>-->
+<!--                <router-link to="/administrator/modules" tag="a" v-if="userState.role === 'superadmin'">-->
+<!--                    <i class="fa fa-th"></i>-->
+<!--                    <label>Модули</label>-->
+<!--                </router-link>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--                <router-link to="/administrator/layers" tag="a" v-if="userState.role === 'superadmin'">-->
+<!--                    <i class="fa fa-map-o"></i>-->
+<!--                    <label>Слои</label>-->
+<!--                </router-link>-->
+<!--            </li>-->
             <li>
                 <router-link to="/administrator/parse/kmz" tag="a" v-if="userState.role === 'superadmin'">
                     <i class="fa fa-upload"></i>

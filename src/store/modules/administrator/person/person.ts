@@ -67,6 +67,7 @@ export const actions: ActionTree<PersonState, RootState> = {
                 const res = await axios.post(`${baseUrlAPI}person`, state.person);
                 SuccessNotifier.notify('Данные сохранены', `Создано Физическое Лицо "${state.person.lastname} ${state.person.firstname}"`);
                 state.persons.push(res.data);
+                state.person.id = res.data.id;
             }
         } catch {
             ErrorNotifier.notify();

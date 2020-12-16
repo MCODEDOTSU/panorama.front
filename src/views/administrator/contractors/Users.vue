@@ -70,9 +70,6 @@
             data: [],
             header: 'row', stripe: true, enableSearch: true,
             sort: [0, 1, 2, 3, 4, 5],
-            pagination: true,
-            pageSize: 50,
-            pageSizes: [],
         };
         @Provide() private tableIdIndex = 6;
 

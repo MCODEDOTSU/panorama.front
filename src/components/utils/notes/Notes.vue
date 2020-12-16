@@ -4,9 +4,9 @@
         <table class="note-list-items" v-if="notesState.notes.length > 0">
             <tbody>
                 <tr class="item" v-for="(note, i) in notesState.notes">
-                    <td class="cell-dt">{{ getDateFormat(note.dt) }}</td>
                     <td class="cell-value" v-html="note.value"></td>
                     <td class="cell-author">{{ note.author }}</td>
+                    <td class="cell-dt">{{ getDateFormat(note.dt) }}</td>
                     <td class="cell-action">
                         <button class="btn btn-default" v-if="userState.user.role === 'admin'">
                             <i class="fa fa-pencil"></i>
@@ -16,7 +16,7 @@
                 </tr>
             </tbody>
         </table>
-        <table class="note-list-items model">
+        <table class="note-list-items model" v-if="!disabled">
             <tr>
                 <td class="cell-value" rowspan="2">
                     <textarea class="form-control" placeholder="Примечание" v-model="notesState.note.value"></textarea>
@@ -49,6 +49,7 @@
         @Action public unsetNote: any;
 
         @Prop() private value: string;
+        @Prop() private disabled: Boolean;
 
         @State('user') public userState!: UserState;
         @State('notes') public notesState!: NotesState;
@@ -86,7 +87,12 @@
          */
         private getDateFormat(dt) {
             const date = new Date(dt);
-            return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+            const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
+            const month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+            const year = date.getFullYear();
+            const hours = date.getHours() < 10 ? `0${date.getHours()}` : date.getHours();
+            const minutes = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
+            return `${day}.${month}.${year} ${hours}:${minutes}`;
         }
     }
 </script>

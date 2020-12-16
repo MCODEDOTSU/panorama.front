@@ -6,6 +6,18 @@ button, .btn {
     margin: 0 0 0 20px;
     vertical-align: middle;
 
+    &.btn-success {
+        background: $green !important;
+        border-color: $green !important;
+        &:hover {
+            background: $green-hover !important;
+            border-color: $green-hover !important;
+            &:disabled {
+                background: $green !important;
+            }
+        }
+    }
+
     &.btn-default {
         background: $gray-200;
         border-color: $gray-300;
@@ -84,9 +96,28 @@ button, .btn {
             }
         }
     }
+
+    &.btn-circle {
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        margin: 0;
+        line-height: 1;
+        -webkit-border-radius: 50% !important;
+        -moz-border-radius: 50% !important;
+        border-radius: 50% !important;
+        margin-top: 12px;
+        font-size: 10px;
+
+        i {
+            margin: 0;
+        }
+    }
+
     i {
         margin: 0 8px 0 0;
     }
+
     &.btn-back {
         margin: 0 20px 0 0;
     }
@@ -231,7 +262,7 @@ header {
     top: 0;
     left: 0;
     width: 100%;
-    height: 32px;
+    height: 64px;
     background: $first;
     line-height: 1;
     z-index: 11;
@@ -274,15 +305,15 @@ header {
         }
 
         &.contractor-logo {
-            width: 24px;
-            height: 32px;
+            width: 50px;
+            height: 64px;
             padding: 4px 0;
             line-height: 1;
 
             img {
                 @include border-radius(50%);
-                max-width: 24px;
-                height: auto;
+                width: 50px;
+                height: 50px;
             }
         }
 
@@ -291,8 +322,8 @@ header {
         }
 
         &.person-photo {
-            width: 24px;
-            height: 24px;
+            width: 50px;
+            height: 50px;
             margin: 3px;
             line-height: 1;
             @include border-radius(50%);
@@ -323,11 +354,12 @@ header {
 .left-menu {
     position: fixed;
     width: 36px;
-    height: calc(100vh - 32px);
-    top: 32px;
+    height: calc(100vh - 64px);
+    top: 64px;
     left: 0;
     background: $first;
     z-index: 11;
+    padding: 38px 0 0;
 
     ul {
         list-style: none;
@@ -453,7 +485,7 @@ header {
         min-height: 100vh;
 
         .manager-container {
-            padding: 80px 20px 0;
+            padding: 80px 20px 20px;
             margin: 0 auto;
             -webkit-box-sizing: border-box;
             -moz-box-sizing: border-box;
@@ -881,7 +913,12 @@ header {
     .form-group-info {
         color: $first;
         display: block;
-        text-align: right;
+        font-size: 12px;
+        margin: 4px 0;
+        line-height: 1.5;
+        i {
+            margin: 0 8px 0 0;
+        }
     }
 
 }
@@ -1273,6 +1310,7 @@ header {
             font-size: 14px;
             vertical-align: initial;
             margin: 0 0 0 16px;
+            color: $second;
         }
     }
 
@@ -1282,6 +1320,12 @@ header {
     }
     .actions {
         margin: -16px 0 0;
+        text-align: left;
+
+        .btn {
+            margin: 8px 0 0;
+            color: $gray-600;
+        }
     }
 }
 

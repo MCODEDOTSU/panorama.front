@@ -25,13 +25,8 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#passport" role="tab" aria-controls="passport" aria-selected="false">
-                    Паспортные данные
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#own" role="tab" aria-controls="own" aria-selected="false">
-                    Данные о собственности
+                <a class="nav-link" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">
+                    История
                 </a>
             </li>
             <li class="nav-item">
@@ -53,8 +48,14 @@
                                     <div class="image" :style="`background-image: url(${resolvePhotoSrc})`"></div>
                                 </b-button>
                                 <img v-else :src="resolvePhotoSrc" class="photo" @click="$refs.photo.click()"/>
-                                <input type="file" ref="photo" class="form-control-file" @change="uploadPhoto"
-                                       accept="image/jpeg,image/png,image/gif"/>
+                                <input
+                                    type="file"
+                                    ref="photo"
+                                    class="form-control-file"
+                                    @change="uploadPhoto"
+                                    accept="image/jpeg,image/png,image/gif"
+                                    :disabled="!hasWrite"
+                                >
                                 <button v-if="resolvePhotoSrc !== ''" @click="deletePhoto()">&times;</button>
                             </div>
                         </div>
@@ -66,7 +67,9 @@
                                         <input type="text" id="singlePersonLastname" required
                                                class="form-control"
                                                placeholder="Фамилия"
-                                               v-model="personState.person.lastname">
+                                               v-model="personState.person.lastname"
+                                               :disabled="!hasWrite"
+                                        >
                                     </div>
                                 </div>
                                 <div class="col-4">
@@ -75,7 +78,9 @@
                                         <input type="text" id="singlePersonFirstname" required
                                                class="form-control"
                                                placeholder="Имя"
-                                               v-model="personState.person.firstname">
+                                               v-model="personState.person.firstname"
+                                               :disabled="!hasWrite"
+                                        >
                                     </div>
                                 </div>
                                 <div class="col-4">
@@ -84,7 +89,9 @@
                                         <input type="text" id="singlePersonMiddlename"
                                                class="form-control"
                                                placeholder="Отчество"
-                                               v-model="personState.person.middlename">
+                                               v-model="personState.person.middlename"
+                                               :disabled="!hasWrite"
+                                        >
                                     </div>
                                 </div>
                             </div>
@@ -99,7 +106,9 @@
                                                 :editable="true"
                                                 :input-class="'form-control'"
                                                 v-model="resolvedDate"
-                                                placeholder="Дата Рождения">
+                                                placeholder="Дата Рождения"
+                                                :disabled="!hasWrite"
+                                        >
                                         </date-picker>
                                     </div>
                                 </div>
@@ -109,14 +118,16 @@
                                         <input type="text" id="singlePersonPost"
                                                class="form-control"
                                                placeholder="Должность"
-                                               v-model="personState.person.post">
+                                               v-model="personState.person.post"
+                                               :disabled="!hasWrite"
+                                        >
                                     </div>
                                 </div>
                                 <div class="col-4">
                                     <div class="form-group">
                                         <label for="singlePersonStatus">Статус</label>
                                         <div class="form-check">
-                                            <input type="checkbox" id="singlePersonStatus" class="form-check-input" v-model="resolvedStatus"/>
+                                            <input type="checkbox" id="singlePersonStatus" class="form-check-input" v-model="resolvedStatus" :disabled="!hasWrite"/>
                                             <label class="form-check-label" for="singlePersonStatus">VIP-статус <i class="fas fa-crown"></i></label>
                                         </div>
                                     </div>
@@ -127,7 +138,7 @@
 
                     <div class="row">
                         <div class="col-12">
-                            <phones v-model="personState.person.phones"></phones>
+                            <phones v-model="personState.person.phones" :disabled="!hasWrite"></phones>
                         </div>
                     </div>
 
@@ -136,29 +147,23 @@
                             <div class="form-group">
                                 <label>Адрес</label>
                                 <vue-dadata
-                                        :onChange="changeAddress"
-                                        :query="personState.person.address ? personState.person.address.unrestricted_value : ''"
-                                        :token="dadataApiKey"
+                                    :onChange="changeAddress"
+                                    :query="personState.person.address ? personState.person.address.unrestricted_value : ''"
+                                    :token="dadataApiKey"
+                                    :disabled="!hasWrite"
                                 ></vue-dadata>
                                 <span class="form-group-info" v-if="tszh">
-                                По данному адресу найдено ТСЖ <b>"{{ tszh.name }}"</b>. Физическое лицо автоматически будет привязано к данному ТСЖ
-                            </span>
+                                    <i class="fa fa-building" aria-hidden="true"></i>
+                                    По данному адресу найдено ТСЖ <b>"{{ tszh.name }}"</b>. Физическое лицо автоматически будет привязано к данному ТСЖ
+                                </span>
+                                <span class="form-group-info" v-if="tos">
+                                    <i class="fa fa-cubes" aria-hidden="true"></i>
+                                    По данному адресу найдено ТОС <b>"{{ tos.full_contractor.name }}"</b>. Физическое лицо автоматически будет привязано к данному ТОС
+                                </span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-12">
-                            <notes v-model="personState.person.note"></notes>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Паспортные данные -->
-            <div class="tab-pane fade" id="passport" role="tabpanel" aria-labelledby="passport-tab">
-                <div class="card-body">
                     <div class="row">
                         <div class="col-2">
                             <div class="form-group">
@@ -166,7 +171,8 @@
                                 <input type="text" id="singlePersonPassportSeries"
                                        class="form-control"
                                        placeholder="Серия"
-                                       v-model="personState.person.passport_series">
+                                       v-model="personState.person.passport_series"
+                                       :disabled="!hasWrite">
                             </div>
                         </div>
                         <div class="col-2">
@@ -175,7 +181,8 @@
                                 <input type="text" id="singlePersonPassportNumber"
                                        class="form-control"
                                        placeholder="Номер"
-                                       v-model="personState.person.passport_number">
+                                       v-model="personState.person.passport_number"
+                                       :disabled="!hasWrite">
                             </div>
                         </div>
                         <div class="col-4">
@@ -184,7 +191,8 @@
                                 <input type="text" id="singlePersonPassportPassportIssuedBy"
                                        class="form-control"
                                        placeholder="Выдан кем"
-                                       v-model="personState.person.passport_issued_by">
+                                       v-model="personState.person.passport_issued_by"
+                                       :disabled="!hasWrite">
                             </div>
                         </div>
                         <div class="col-2">
@@ -197,7 +205,8 @@
                                         :editable="true"
                                         :input-class="'form-control'"
                                         v-model="resolvedDatePassport"
-                                        placeholder="Выдан когда">
+                                        placeholder="Выдан когда"
+                                        :disabled="!hasWrite">
                                 </date-picker>
                             </div>
                         </div>
@@ -207,16 +216,12 @@
                                 <input type="text" id="singlePersonPassportDepartmentNumber"
                                        class="form-control"
                                        placeholder="Номер подразделения"
-                                       v-model="personState.person.passport_department_number">
+                                       v-model="personState.person.passport_department_number"
+                                       :disabled="!hasWrite">
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Данные о собственности -->
-            <div class="tab-pane fade" id="own" role="tabpanel" aria-labelledby="own-tab">
-                <div class="card-body">
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
@@ -224,9 +229,22 @@
                                 <textarea id="singlePersonOwn"
                                           class="form-control"
                                           placeholder="Данные о собственности"
-                                          v-model="personState.person.own">
+                                          v-model="personState.person.own"
+                                          :disabled="!hasWrite">
                             </textarea>
                             </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- История -->
+            <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <notes v-model="personState.person.note" :disabled="!hasWrite"></notes>
                         </div>
                     </div>
                 </div>
@@ -250,14 +268,15 @@
         </div>
 
         <footer class="content-footer">
-            <button @click="save(false)" class="btn btn-success">
+            <button @click="save" class="btn btn-success" v-if="hasWrite" :disabled="!hasChanges">
                 <i class="fa fa-floppy-o"></i>
                 Сохранить
             </button>
-            <button @click="save" class="btn btn-info">
-                Сохранить и закрыть
+            <button @click="toggleHasWrite" v-else class="btn btn-warning">
+                <i class="fa fa-pencil"></i>
+                Редактировать
             </button>
-            <button @click="back" class="btn btn-warning">
+            <button @click="back" class="btn btn-info">
                 <i class="fa fa-angle-left"></i>
                 К списку
             </button>
@@ -273,12 +292,10 @@
 
     import {Provide, Watch, Component, Vue} from 'vue-property-decorator';
     import {Action, State} from 'vuex-class';
-    import {arrayFindFirst} from '@/domain/services/common/ArrayActions';
+    import {deepEqual} from '@/domain/services/common/ObjectActions';
     import {baseUrl, baseUrlAPI, dadataApiKey} from '@/globals';
     import axios from 'axios';
-
     import PersonState from '@/store/modules/administrator/person/types';
-    import RegionState from '@/store/modules/region/types';
     import UserState from '@/store/modules/user/types';
     import NotesState from '@/store/modules/components/utils/notes/types';
     import PhonesState from '@/store/modules/components/utils/phones/types';
@@ -289,16 +306,16 @@
     import {userSignature} from '@/domain/services/User/UserService';
     import Notes from '@/components/utils/notes/Notes.vue';
     import Phones from '@/components/utils/phones/Phones.vue';
+    import IPerson from "@/domain/interfaces/IPerson";
 
     @Component({
         components: { DatePicker, ImageModal, Notes, Phones },
     })
     export default class SinglePerson extends Vue {
 
-        @Action public administratorPersonGetAll: any;
+        @Action public administratorPersonGetById: any;
         @Action public administratorPersonUpdate: any;
         @Action public administratorPersonUploadPhoto: any;
-        @Action public getRegions: any;
         @Action public administratorPersonSetSingle: any;
         @Action public administratorPersonUnsetSingle: any;
         @Action public addNote: any;
@@ -307,19 +324,28 @@
         @Action public unsetPhone: any;
 
         @State('administratorPerson') public personState: PersonState;
-        @State('region') public regionState: RegionState;
         @State('user') public userState!: UserState;
         @State('notes') public notesState!: NotesState;
         @State('phones') public phonesState!: PhonesState;
 
         @Provide() private dadataApiKey = dadataApiKey;
         @Provide() private tszh = false;
+        @Provide() private tos = false;
+        @Provide() private person: IPerson = {
+            id: 0,
+            firstname: '',
+            lastname: '',
+            middlename: '',
+            fias_address_id: 0,
+        };
+        @Provide() private hasWrite: Boolean = false;
 
         @Watch('personState.person.address', {deep: true})
         public onChangePersonAddress() {
             this.tszh = false;
             if (this.personState.person.address && this.personState.person.address.fias_id) {
                 this.getTszhByAddress();
+                this.getTosByAddress();
             }
         }
 
@@ -327,15 +353,14 @@
          * Создание компонента
          */
         public async created() {
-            if (this.personState.persons.length === 0) {
-                await this.administratorPersonGetAll();
-            }
             if (this.personId === 0) {
+                this.hasWrite = true;
                 this.administratorPersonUnsetSingle();
             } else {
-                const person = arrayFindFirst(this.personState.persons, this.personId);
-                this.administratorPersonSetSingle(person);
+                await this.administratorPersonGetById({ id: this.personId });
             }
+            this.person = { ...this.personState.person };
+            console.log(this.person);
         }
 
         /**
@@ -375,13 +400,18 @@
         /**
          * Сохранить
          */
-        public async save(isBack = true) {
+        public async save() {
             this.parseNotes();
             this.parsePhones();
+
             await this.administratorPersonUpdate();
-            if (isBack) {
-                this.back();
+
+            if (this.personId === 0) {
+                this.$router.push(`/administrator/person/${this.personState.person.id}`);
             }
+            this.person = { ...this.personState.person };
+
+            this.toggleHasWrite();
         }
 
         /**
@@ -419,10 +449,25 @@
             this.$router.push('/administrator/persons/');
         }
 
+        /**
+         * Получить ТСЖ по адресу ФЛ
+         */
         public async getTszhByAddress() {
             try {
                 const res = await axios.get(`${baseUrlAPI}tszh/fias/${this.personState.person.address.fias_id}`);
                 this.tszh = res.data !== '' ? { ...res.data } : false;
+            } catch {
+                // ...
+            }
+        }
+
+        /**
+         * Получить ТОС по адресу ФЛ
+         */
+        public async getTosByAddress() {
+            try {
+                const res = await axios.get(`${baseUrlAPI}tos/fias/${this.personState.person.address.fias_id}`);
+                this.tos = res.data !== '' ? { ...res.data } : false;
             } catch {
                 // ...
             }
@@ -471,6 +516,25 @@
         }
         set resolvedStatus(status) {
             this.personState.person.status = status === true ? 'vip' : null;
+        }
+
+        /**
+         * Есть ли изменения в карточке
+         */
+        get hasChanges() {
+            if (this.personId !== 0 && this.person.id === 0) {
+                return false;
+            }
+            return !deepEqual(this.person, this.personState.person)
+                || !deepEqual(this.person.note, this.notesState.notes)
+                || !deepEqual(this.person.phones, this.phonesState.phones);
+        }
+
+        /**
+         * Включить/отключить режим редактирования
+         */
+        public toggleHasWrite() {
+            this.hasWrite = !this.hasWrite;
         }
 
     }

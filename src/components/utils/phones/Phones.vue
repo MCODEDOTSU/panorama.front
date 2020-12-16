@@ -14,7 +14,7 @@
             </tr>
             </tbody>
             <tfoot>
-            <tr>
+            <tr v-if="!disabled">
                 <td class="cell-type">
                     <select v-model="phonesState.phone.type" class="form-control">
                         <option value="Домашний">Домашний</option>
@@ -55,6 +55,7 @@
         @Action public unsetPhone: any;
 
         @Prop() private value: IPhone[];
+        @Prop() private disabled: Boolean;
 
         @State('user') public userState!: UserState;
         @State('phones') public phonesState!: PhonesState;
