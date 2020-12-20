@@ -82,7 +82,7 @@
                     item.person ? item.person.firstname : '',
                     item.person ? item.person.middlename : '',
                     item.email,
-                    item.person ? item.person.post : '',
+                    item.post,
                     this.resolvedRole(item),
                     item.id.toString(),
                 ]);

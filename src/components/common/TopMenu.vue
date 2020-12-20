@@ -16,7 +16,7 @@
                 </router-link>
             </div>
             <div class="person-post top-menu-item" v-if="userState.user.person !== null && userState.user.person !== undefined">
-                <label>{{ userState.user.person ? `(${userState.user.person.post})` : '' }}</label>
+                <label>{{ userState.user.post ? `(${userState.user.post})` : '' }}</label>
             </div>
             <div class="person-logout top-menu-item">
                 <button @click="logout" title="Выйти из Системы" class="btn btn-link">
@@ -38,17 +38,17 @@
         @Action public logout: any;
         get photoSrc() {
             if (this.userState.user.person === null || this.userState.user.person === undefined) {
-                return `/images/social-24.png`;
+                return `/images/social.png`;
             }
             return (this.userState.user.person.photo === '' || this.userState.user.person.photo === null) ?
-                `/images/social-24.png` : `${baseUrl}/storage/${this.userState.user.person.photo}`;
+                `/images/social.png` : `${baseUrl}/storage/${this.userState.user.person.photo}`;
         }
         get logoSrc() {
             if (this.userState.user.contractor === null || this.userState.user.contractor === undefined) {
-                return `/images/logo-24.png`;
+                return `/images/logo.png`;
             }
             return (this.userState.user.contractor.logo === '' || this.userState.user.contractor.logo === null) ?
-                `/images/logo-24.png` : `${baseUrl}/storage/${this.userState.user.contractor.logo}`;
+                `/images/logo.png` : `${baseUrl}/storage/${this.userState.user.contractor.logo}`;
         }
     }
 </script>

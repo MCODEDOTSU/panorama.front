@@ -25,6 +25,13 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="singleUserPost">Должность</label>
+                    <input type="text" id="singleUserPost" required
+                           class="form-control"
+                           v-model="userState.user.post">
+                </div>
+
+                <div class="form-group">
                     <awesome-selector title="Физическое лицо" id="singleUserPerson"
                                       :list="resolvedPersons"
                                       v-model="resolvedPerson" v-on:onchange="personChange">

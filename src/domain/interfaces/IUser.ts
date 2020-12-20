@@ -8,7 +8,6 @@ interface IUser {
     password?: string | undefined;
     repassword?: string | undefined;
     post: string | undefined;
-    photo: string | undefined;
     role: string | undefined;
     edited?: boolean;
     contractor_id?: number;

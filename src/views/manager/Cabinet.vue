@@ -48,7 +48,7 @@
 
             <div class="row bg" v-if="userState.user.person">
                 <div class="col-3">Занимаемая должность:</div>
-                <div class="col-9">{{ userState.user.person.post }}</div>
+                <div class="col-9">{{ userState.user.post }}</div>
             </div>
 
             <div class="row" v-if="userState.user.contractor">

@@ -7,5 +7,5 @@ export const userSignature = (user: IUser) => {
     if (!user.person) {
         return `${user.email}`;
     }
-    return `${user.person.post}, ${user.person.lastname} ${user.person.firstname} ${user.person.middlename}`;
+    return `${user.post}, ${user.person.lastname} ${user.person.firstname} ${user.person.middlename}`;
 };
