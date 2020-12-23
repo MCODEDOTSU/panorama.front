@@ -183,7 +183,7 @@
     import SureModal from '@/components/common/SureModal.vue';
 
     @Component({
-        components: {SureModal},
+        components: { SureModal },
     })
     export default class Persons extends Vue {
 

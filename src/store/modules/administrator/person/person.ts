@@ -6,7 +6,6 @@ import SuccessNotifier from '@/domain/util/notifications/SuccessNotifier';
 import ErrorNotifier from '@/domain/util/notifications/ErrorNotifier';
 import {editUpdatedItem, removeDeletedItem} from '@/domain/services/common/UpdateItemService';
 import PersonState from '@/store/modules/administrator/person/types';
-import {userSignature} from '@/domain/services/User/UserService';
 
 export const state: PersonState = {
     person: {
@@ -16,7 +15,6 @@ export const state: PersonState = {
         middlename: '',
         date_of_birth: '',
         phones: '',
-        note: '',
         post: '',
         photo: '',
         fias_address_id: 0,
@@ -109,7 +107,6 @@ export const actions: ActionTree<PersonState, RootState> = {
             middlename: '',
             date_of_birth: '',
             phones: '',
-            note: '',
             post: '',
             photo: '',
             fias_address_id: 0,

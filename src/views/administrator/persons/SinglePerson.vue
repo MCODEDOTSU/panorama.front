@@ -20,12 +20,12 @@
         <!-- Вкладки -->
         <ul class="nav nav-tabs" id="tabs" role="tablist" ref="tablist">
             <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#main" role="tab" aria-controls="main" aria-selected="true">
+                <a class="nav-link" data-toggle="tab" href="#main" role="tab" aria-controls="main" aria-selected="true">
                     Основные сведения
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">
+                <a class="nav-link active" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">
                     История
                 </a>
             </li>
@@ -39,7 +39,7 @@
         <div class="tab-content">
 
             <!-- Основные сведения -->
-            <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="main-tab">
+            <div class="tab-pane fade" id="main" role="tabpanel" aria-labelledby="main-tab">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-2">
@@ -240,11 +240,14 @@
             </div>
 
             <!-- История -->
-            <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+            <div class="tab-pane fade show active" id="history" role="tabpanel" aria-labelledby="history-tab">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <notes v-model="personState.person.note" :disabled="!hasWrite"></notes>
+                            <history
+                                    v-model="personState.person.history"
+                                    :object="'person'"
+                            ></history>
                         </div>
                     </div>
                 </div>
@@ -297,19 +300,18 @@
     import axios from 'axios';
     import PersonState from '@/store/modules/administrator/person/types';
     import UserState from '@/store/modules/user/types';
-    import NotesState from '@/store/modules/components/utils/notes/types';
     import PhonesState from '@/store/modules/components/utils/phones/types';
+    import HistorySate from '@/store/modules/components/utils/history/types';
     import DatePicker from 'vue2-datepicker';
     import 'vue2-datepicker/index.css';
     import 'vue2-datepicker/locale/ru';
     import ImageModal from '@/components/common/ImageModal.vue';
-    import {userSignature} from '@/domain/services/User/UserService';
-    import Notes from '@/components/utils/notes/Notes.vue';
+    import History from '@/components/utils/history/History.vue';
     import Phones from '@/components/utils/phones/Phones.vue';
     import IPerson from "@/domain/interfaces/IPerson";
 
     @Component({
-        components: { DatePicker, ImageModal, Notes, Phones },
+        components: { DatePicker, ImageModal, History, Phones },
     })
     export default class SinglePerson extends Vue {
 
@@ -318,15 +320,13 @@
         @Action public administratorPersonUploadPhoto: any;
         @Action public administratorPersonSetSingle: any;
         @Action public administratorPersonUnsetSingle: any;
-        @Action public addNote: any;
-        @Action public unsetNote: any;
         @Action public addPhone: any;
         @Action public unsetPhone: any;
 
         @State('administratorPerson') public personState: PersonState;
         @State('user') public userState!: UserState;
-        @State('notes') public notesState!: NotesState;
         @State('phones') public phonesState!: PhonesState;
+        @State('history') public historyState!: HistorySate;
 
         @Provide() private dadataApiKey = dadataApiKey;
         @Provide() private tszh = false;
@@ -349,6 +349,11 @@
             }
         }
 
+        @Watch('historyState.histories', {deep: true})
+        public onChangeHistory() {
+            this.personState.person.history = this.historyState.histories;
+        }
+
         /**
          * Создание компонента
          */
@@ -360,7 +365,6 @@
                 await this.administratorPersonGetById({ id: this.personId });
             }
             this.person = { ...this.personState.person };
-            console.log(this.person);
         }
 
         /**
@@ -401,7 +405,6 @@
          * Сохранить
          */
         public async save() {
-            this.parseNotes();
             this.parsePhones();
 
             await this.administratorPersonUpdate();
@@ -412,23 +415,6 @@
             this.person = { ...this.personState.person };
 
             this.toggleHasWrite();
-        }
-
-        /**
-         * Обработка заметок
-         */
-        public parseNotes() {
-            const signature = userSignature(this.userState.user);
-            if (this.notesState.note.value !== '') {
-                this.addNote({ author: signature });
-                this.unsetNote();
-            }
-            this.addNote({
-                note: this.personState.person.id === 0 ? '<i>Запись создана</i>' : '<i>Запись сохранена</i>',
-                author: signature,
-            });
-            this.unsetNote();
-            this.personState.person.note = JSON.stringify(this.notesState.notes);
         }
 
         /**
@@ -526,7 +512,6 @@
                 return false;
             }
             return !deepEqual(this.person, this.personState.person)
-                || !deepEqual(this.person.note, this.notesState.notes)
                 || !deepEqual(this.person.phones, this.phonesState.phones);
         }
 

@@ -1,4 +1,5 @@
 import IFiasAddress from '@/domain/interfaces/IFiasAddress';
+import IHistory from '@/domain/interfaces/IHistory';
 
 export default interface IPerson {
     id: number;
@@ -9,7 +10,7 @@ export default interface IPerson {
     fias_address_id: number;
     address?: IFiasAddress;
     phones?: string;
-    note?: string;
+    history?: IHistory[];
     post?: string;
     photo?: string;
     passport_series?: string;

@@ -359,7 +359,7 @@ header {
     left: 0;
     background: $first;
     z-index: 11;
-    padding: 38px 0 0;
+    padding: 10px 0 0;
 
     ul {
         list-style: none;
@@ -1176,7 +1176,7 @@ header {
     }
 
     .cell-action {
-        width: 40px;
+        width: 64px;
 
         button {
             width: 24px;
@@ -1207,19 +1207,31 @@ header {
             }
         }
 
-        .cell-dt {
-            width: 180px;
-            font-weight: 700;
+        .cell-value {
+            font-weight: 400;
+            i {
+                margin: 0 5px 0 0;
+            }
         }
 
         .cell-author {
-            width: 300px;
+            width: 250px;
             font-weight: 100;
+
+            label {
+                display: block;
+                font-size: 12px;
+                margin: 0;
+
+                &.author-name {
+                    font-weight: 400;
+                }
+            }
         }
     }
 
     .cell-action {
-        width: 40px;
+        width: 64px;
 
         button {
             width: 24px;
